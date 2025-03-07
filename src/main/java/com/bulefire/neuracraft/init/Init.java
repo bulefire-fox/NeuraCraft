@@ -2,12 +2,13 @@ package com.bulefire.neuracraft.init;
 
 import com.bulefire.neuracraft.NeuraCraft;
 import com.bulefire.neuracraft.ai.yy.NetWork;
+import com.bulefire.neuracraft.ai.yy.Times;
 import com.bulefire.neuracraft.config.Config;
 import com.bulefire.neuracraft.config.yy.BaseInformation;
+import com.bulefire.neuracraft.config.yy.Variables;
 import com.bulefire.neuracraft.register.RegisterBlock;
 import com.bulefire.neuracraft.register.RegisterCreativeModeTab;
 import com.bulefire.neuracraft.register.RegisterItem;
-import com.bulefire.neuracraft.util.SendMessageToChatBar;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -45,7 +46,7 @@ public class Init {
         // modEventBus.addListener(this::addCreative);
         registerConfig();
         registerNetWork();
-        }
+    }
 
     private static void registerNetWork(){
         NetWork.registerMessage();
@@ -53,9 +54,7 @@ public class Init {
 
     private static void registerConfig(){
         // 注册我们的模组的ForgeConfigSpec，以便Forge可以为我们创建和加载配置文件
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BaseInformation.SPEC);
-
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC);
     }
 
     /**
@@ -63,25 +62,9 @@ public class Init {
      * @param event event
      */
     private static void commonSetup(final FMLCommonSetupEvent event) {
-//        // 一些通用设置代码
-//        logger.info("通用设置中你好");
-//        logger.info("泥土方块 >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
-//
-//        if (Config.logDirtBlock)
-//            logger.info("泥土方块 >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
-//
-//        logger.info(Config.magicNumberIntroduction + Config.magicNumber);
-//
-//        Config.items.forEach((item) -> logger.info("物品 >> {}", item.toString()));
-//        logger.info("初始化银影AI设置 {}", BaseInformation.api_url);
+        // 初始化计时器
+        Times.init();
     }
-
-    // 将示例方块物品添加到建筑方块标签
-//    private void addCreative(BuildCreativeModeTabContentsEvent event) {
-//        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
-//            event.accept(EXAMPLE_BLOCK_ITEM);
-//    }
-    // 可以使用SubscribeEvent并让事件总线发现带有@SubscribeEvent注解的方法
 
     /**
      * 服务器启动时执行某些操作
@@ -89,8 +72,6 @@ public class Init {
      */
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-        // 当服务器启动时执行某些操作
-        // logger.info("服务器启动中你好");
     }
 
     // 可以使用EventBusSubscriber自动注册带有@SubscribeEvent注解的所有静态方法
@@ -99,9 +80,7 @@ public class Init {
 
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            // 一些客户端设置代码
-//            logger.info("客户端设置中你好");
-//            logger.info("MINECRAFT名称 >> {}", Minecraft.getInstance().getUser().getName());
+
         }
     }
 

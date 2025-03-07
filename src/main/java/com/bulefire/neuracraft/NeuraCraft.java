@@ -20,9 +20,12 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
+
+import java.nio.file.Path;
 
 // 模组ID应与META-INF/mods.toml文件中的条目匹配
 @Mod(NeuraCraft.MODID)
@@ -32,6 +35,7 @@ public class NeuraCraft {
      * 模组ID
      */
     public static final String MODID = "neuracraft";
+    public static final Path configPath = FMLPaths.CONFIGDIR.get();
     // 直接引用一个slf4j日志记录器
     private static final Logger logger = LogUtils.getLogger();
 //    // 创建一个新的方块，其ID为"neuracraft:example_block"，结合命名空间和路径

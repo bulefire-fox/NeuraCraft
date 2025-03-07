@@ -6,7 +6,7 @@ public class ReplyBody {
     private String id;
     private String model;
     private Usage usage;
-    private String variables;
+    private Variables variables;
     private List<ChoicesBean> choices;
 
     public static class Usage {
@@ -18,6 +18,45 @@ public class ReplyBody {
 
         public void setTotal_tokens(Integer total_tokens) {
             this.total_tokens = total_tokens;
+        }
+    }
+
+    public static class Variables {
+        private String nickName;
+        private String furryCharacter;
+        private String promptPatch;
+        private String timeNow;
+
+        public String getNickName() {
+            return nickName;
+        }
+
+        public void setNickName(String nickName) {
+            this.nickName = nickName;
+        }
+
+        public String getFurryCharacter() {
+            return furryCharacter;
+        }
+
+        public void setFurryCharacter(String furryCharacter) {
+            this.furryCharacter = furryCharacter;
+        }
+
+        public String getPromptPatch() {
+            return promptPatch;
+        }
+
+        public void setPromptPatch(String promptPatch) {
+            this.promptPatch = promptPatch;
+        }
+
+        public String getTimeNow() {
+            return timeNow;
+        }
+
+        public void setTimeNow(String timeNow) {
+            this.timeNow = timeNow;
         }
     }
 
@@ -96,11 +135,11 @@ public class ReplyBody {
         this.usage = usage;
     }
 
-    public String getVariables() {
+    public Variables getVariables() {
         return variables;
     }
 
-    public void setVariables(String variables) {
+    public void setVariables(Variables variables) {
         this.variables = variables;
     }
 

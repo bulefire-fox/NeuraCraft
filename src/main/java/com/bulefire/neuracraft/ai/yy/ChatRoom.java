@@ -1,6 +1,7 @@
 package com.bulefire.neuracraft.ai.yy;
 
 import com.bulefire.neuracraft.config.yy.BaseInformation;
+import com.bulefire.neuracraft.config.yy.Variables;
 import com.bulefire.neuracraft.util.AIHTTPClient;
 import com.bulefire.neuracraft.util.SendMessageToChatBar;
 import com.google.gson.Gson;
@@ -26,13 +27,24 @@ public class ChatRoom {
      */
     private final String chatId;
 
-    private ServerPlayer player = null;
+    private ServerPlayer serverPlayer = null;
+
+    private String error;
 
     ChatRoom(String name){
         // 设置名字
         this.name = name;
         // 生成聊天ID
         chatId = BaseInformation.appid + "-" +name + "-" +radomString();
+    }
+
+    ChatRoom(String name, String chatId){
+        this.name = name;
+        this.chatId = chatId;
+    }
+
+    public String getChatId() {
+        return chatId;
     }
 
     /**
@@ -57,7 +69,7 @@ public class ChatRoom {
             String response = AIHTTPClient.POST(BaseInformation.api_url+BaseInformation.api_interface, body);
             // 检查请求体
             if (!checkBody(response)){
-                return "Error, 请联系管理员";
+                return "Error, 请联系管理员 \n"+error;
             }
             // 获取回复并解析
             return getReply(response);
@@ -72,6 +84,7 @@ public class ChatRoom {
      * @return 是否正常
      */
     private boolean checkBody(String response) {
+        log.info("check body");
         try {
             // 如果是JSON格式，则继续执行
             JsonParser.parseString(response);
@@ -82,6 +95,7 @@ public class ChatRoom {
                       "data": "Error: appId不存在！"
                     }""")){
                 sendToPlayer("Error: appId不存在！");
+                error = "appId不存在！";
                 log.error("appId不存在！ \n {}", response);
                 return false;
             // token不存在
@@ -92,6 +106,7 @@ public class ChatRoom {
                     }
                     """)){
                 sendToPlayer("Error: token不存在！");
+                error = "token不存在！";
                 log.error("token不存在！\n {}", response);
                 return false;
             // 合法
@@ -100,19 +115,23 @@ public class ChatRoom {
             }
         } catch (JsonSyntaxException e) {
             if (response.contains("POST request failed with response code:")){
+                error = response;
                 return false;
             }
             // 如果解析失败，说明响应不是有效的 JSON
             sendToPlayer("Error: 请求失败！" + response);
+            error = "Error: 请求失败！" + response;
             log.error("Response is not a valid JSON: {}", response);
             return false;
         }
     }
 
     private void sendToPlayer(String message){
-        if (this.player != null){
-            SendMessageToChatBar.sendChatMessage(this.player, BaseInformation.show_name, message);
-        }
+//        if (this.serverPlayer != null){
+//            SendMessageToChatBar.sendChatMessage(this.serverPlayer, BaseInformation.show_name, message);
+//        }else {
+//            SendMessageToChatBar.sendChatMessage(BaseInformation.show_name,message);
+//        }
     }
 
     /**
@@ -121,9 +140,11 @@ public class ChatRoom {
      * @return 回复
      */
     private @NotNull String getReply(@NotNull String response){
+        log.info("start get reply");
         Gson gson = new Gson();
         // 反序列化
         ReplyBody replyBody = gson.fromJson(response, ReplyBody.class);
+        log.info("replyBody: {}", replyBody);
         return replyBody.getChoices().get(0).getMessage().getContent();
     }
 
@@ -133,6 +154,7 @@ public class ChatRoom {
      * @return 请求体
      */
     private @NotNull String buildBody(@NotNull String message){
+        log.info("start build body");
         SendBody body = new SendBody();
         // 设置请求体
         body.setAppId(BaseInformation.appid);
@@ -140,6 +162,10 @@ public class ChatRoom {
         body.setModel(BaseInformation.model);
         body.setSystemPrompt(BaseInformation.system_prompt);
         body.setMessage(message);
+        log.info("start build variables");
+        body.getVariables().setNickName(Variables.nickname);
+        body.getVariables().setFurryCharacter(Variables.furry_charter);
+        body.getVariables().setPromptPatch(Variables.prompt_patch);
 
         Gson gson = new Gson();
         // log.info(gson.toJson(body));

@@ -34,7 +34,7 @@ public class ChatEventListener {
             throw new RuntimeException("Minecraft.getInstance().player is null");
         }
 
-        catchChat(name,message,null,event);
+        CompletableFuture.runAsync(() -> catchChat(name,message,null,event));
     }
 
     @SubscribeEvent
@@ -50,8 +50,7 @@ public class ChatEventListener {
         }else{
             throw new RuntimeException("Minecraft.getInstance().player is null");
         }
-
-        catchChat(name,message,event,null);
+        CompletableFuture.runAsync(() -> catchChat(name,message,event,null));
     }
 
     private static void catchChat(String name, @NotNull String message, ServerChatEvent s, ClientChatEvent c){
@@ -61,13 +60,11 @@ public class ChatEventListener {
         // log.info(message);
         if (key.stream().anyMatch(message::contains)){
             log.info("catch player send chat to AI");
-            CompletableFuture.runAsync(() -> {
-                try {
-                    YY.onChat(name, message,s,c);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            try {
+                YY.onChat(name, message,s,c);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

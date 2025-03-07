@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "uuid": "a1be967c-ce2f-3b81-8d38-48c103cb8aed",
+    "name": "bulefire_fox",
+    "level": 4,
+    "bypassesPlayerLimit": false
+  },
+  {
+    "uuid": "380df991-f603-344c-a090-369bad2a924a",
+    "name": "Dev",
+    "level": 4,
+    "bypassesPlayerLimit": false
+  }
+]

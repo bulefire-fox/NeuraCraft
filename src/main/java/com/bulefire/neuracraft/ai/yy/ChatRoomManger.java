@@ -1,15 +1,20 @@
 package com.bulefire.neuracraft.ai.yy;
 
+import com.mojang.logging.LogUtils;
+import org.slf4j.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClientManger {
+public class ChatRoomManger {
+    private static final Logger log = LogUtils.getLogger();
+
     /**
      * 客户端表
      */
     private final Map<String, ChatRoom> clients;
 
-    ClientManger(){
+    ChatRoomManger(){
         // 初始化客户端表
         clients = new HashMap<>();
         // 初始化一个公共聊天室
@@ -26,6 +31,7 @@ public class ClientManger {
             createClient(chatName);
         }
         // 返回客户端
+        log.info("get client: {}",chatName);
         return clients.get(chatName);
     }
 
