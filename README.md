@@ -1,5 +1,5 @@
-<p style="text-align: center"><img src="resource/img/logo.png" alt="logo" width="150"></p>
-<h1 style="text-align: center;">
+<p align="center"><img src="resource/img/logo.png" alt="logo" width="150"></p>
+<h1 align="center">
     NeuraCraft <br>
     <!--<a href="https://www.curseforge.com/minecraft/mc-mods/neuracraft/files"><img src="https://cf.way2muchnoise.eu/versions/328085(c70039).svg" alt="Supported Versions"></a>-->
     <a href="https://github.com/bulefire-dream/NeuraCraft/blob/main/LICENSE"><img src="https://img.shields.io/github/license/bulefire-dream/NeuraCraft?style=flat&color=900c3f" alt="License"></a>
@@ -20,8 +20,8 @@ You can also visit our [GitHub](https://github.com/bulefire-dream/NeuraCraft) ho
 
 <h1></h1>
 
-<h4 style="text-align: center"> Find out more about NeuraCraft on our <a href="https://www.curseforge.com/minecraft/mc-mods/neuracraft">Curseforge</a> or <a href="https://modrinth.com/mod/neuracraft">Modrinth</a> Page</h4>
-<h4 style="text-align: center"> Looking for the Fabric port? we are find a developer to provide the fabric version</h4>
-<h4 style="text-align: center"> if you can do this,please contact us by send email to <br>
+<h4 align="center"> Find out more about NeuraCraft on our <a href="https://www.curseforge.com/minecraft/mc-mods/neuracraft">Curseforge</a> or <a href="https://modrinth.com/mod/neuracraft">Modrinth</a> Page</h4>
+<h4 align="center"> Looking for the Fabric port? we are find a developer to provide the fabric version</h4>
+<h4 align="center"> if you can do this,please contact us by send email to <br>
 support@bulefire.top</h4>
 
