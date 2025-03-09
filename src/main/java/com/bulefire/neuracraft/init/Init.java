@@ -9,6 +9,7 @@ import com.bulefire.neuracraft.config.yy.Variables;
 import com.bulefire.neuracraft.register.RegisterBlock;
 import com.bulefire.neuracraft.register.RegisterCreativeModeTab;
 import com.bulefire.neuracraft.register.RegisterItem;
+import com.bulefire.neuracraft.util.FileUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -46,6 +47,8 @@ public class Init {
         // modEventBus.addListener(this::addCreative);
         registerConfig();
         registerNetWork();
+
+        FileUtils.initFileAndDir();
     }
 
     private static void registerNetWork(){

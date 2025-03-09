@@ -23,7 +23,7 @@ public class Variables {
 
         NICKNAME = BUILDER.comment("昵称").define("nickname","没有哦");
         FURRY_CHARACTER = BUILDER.comment("设定").define("furryCharacter","没有哦");
-        PROMPT_PATCH = BUILDER.comment("微调提示词").define("promptPatch","你在和一群人对话,每个人以 [name] 前缀区分");
+        PROMPT_PATCH = BUILDER.comment("微调提示词").define("promptPatch","你在和一群人对话,每个人以 [id] 前缀区分,前缀只是用户的唯一标识符,你可以理解为用户id,你可以根据这个id来判断用户是否相同.前缀和用户的设定或者其他任何信息没有任何关系.");
 
         BUILDER.pop();
     }

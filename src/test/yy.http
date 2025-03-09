@@ -18,13 +18,13 @@ Authorization: Bearer yinying-2L8NvWk82J6urz85dree23e6aesOCfOnQUo6M7ojggty
 
 {
   "appId":"lanhuobot",
-  "chatId":"lanhuobot-testmany-1",
+  "chatId":"lanhuobot-testmany-3",
   "variables": {
     "nickName":"没有哦",
     "furryCharacter":"没有哦",
-    "promptPatch":"你在和一群人对话,每个人以 [name] 前缀区分"
+    "promptPatch":"你在和一群人对话,每个人以 [id] 前缀区分,前缀只是用户的唯一标识符,你可以理解为用户id,你可以根据这个id来判断用户是否相同.前缀和用户的设定或者其他任何信息没有任何关系."
   },
   "model":"yinyingllm-latest",
   "systemPrompt":"你的名字叫银影，是翎迹网络开发的仿生灰狼",
-  "message":"[bulefire]:咱要贴贴qwq"
+  "message":"[bulefire_fox]: awa"
 }

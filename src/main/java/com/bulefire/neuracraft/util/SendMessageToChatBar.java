@@ -53,6 +53,7 @@ public class SendMessageToChatBar {
 
     @OnlyIn(Dist.CLIENT)
     public static void broadcastMessage(@NotNull String name,@NotNull String message){
+        log.info("client broadcastMessage called");
         MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
         if (server != null){
             for(ServerPlayer player : server.getPlayerList().getPlayers()) {

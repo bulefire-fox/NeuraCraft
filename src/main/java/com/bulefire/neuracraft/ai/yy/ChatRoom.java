@@ -9,11 +9,12 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.logging.LogUtils;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import java.util.UUID;
+import java.util.*;
 
 public class ChatRoom {
     private static final Logger log = LogUtils.getLogger();
@@ -27,20 +28,28 @@ public class ChatRoom {
      */
     private final String chatId;
 
-    private ServerPlayer serverPlayer = null;
+    private List<String> playerList;
 
     private String error;
 
-    ChatRoom(String name){
+    public ChatRoom(String name){
         // 设置名字
         this.name = name;
         // 生成聊天ID
-        chatId = BaseInformation.appid + "-" +name + "-" +radomString();
+        this.chatId = BaseInformation.appid + "-" +name + "-" +radomString();
+        this.playerList = new ArrayList<>();
     }
 
-    ChatRoom(String name, String chatId){
+    public ChatRoom(String name, String chatId){
         this.name = name;
         this.chatId = chatId;
+        this.playerList = new ArrayList<>();
+    }
+
+    public ChatRoom(String name, String chatId, List<String> playerList){
+        this.name = name;
+        this.chatId = chatId;
+        this.playerList = playerList;
     }
 
     public String getChatId() {
@@ -173,5 +182,13 @@ public class ChatRoom {
         // 序列化
         log.info("build body is: {}", gson.toJson(body));
         return gson.toJson(body);
+    }
+
+    public List<String> getPlayerList() {
+        return playerList;
+    }
+
+    public String getName() {
+        return name;
     }
 }
