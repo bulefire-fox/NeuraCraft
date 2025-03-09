@@ -1,4 +1,4 @@
-<p align="center"><img src="resource/img/logo.png" alt="logo" width="150"></p>
+<p align="center"><img src=".idea/logo.png" alt="logo" width="150"></p>
 <h1 align="center">
     NeuraCraft <br>
     <!--<a href="https://www.curseforge.com/minecraft/mc-mods/neuracraft/files"><img src="https://cf.way2muchnoise.eu/versions/328085(c70039).svg" alt="Supported Versions"></a>-->
