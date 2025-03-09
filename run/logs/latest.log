@@ -1,132 +1,111 @@
-[093月2025 12:37:50.384] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientuserdev, --version, MOD_DEV, --assetIndex, 5, --assetsDir, D:\sys\Users\admin\.gradle\caches\forge_gradle\assets, --gameDir, ., --fml.forgeVersion, 47.3.33, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --mixin.config, neuracraft.mixins.json]
-[093月2025 12:37:50.397] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.3.1 by Oracle Corporation; OS Windows 11 arch amd64 version 10.0
-[093月2025 12:37:50.515] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
-[093月2025 12:37:50.641] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
-[093月2025 12:37:50.796] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.6 got version 4.6
-[093月2025 12:37:50.871] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/D:/sys/Users/admin/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23128!/ Service=ModLauncher Env=CLIENT
-[093月2025 12:37:50.935] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: NVIDIA GeForce RTX 4060 Laptop GPU/PCIe/SSE2 GL version 4.6.0 NVIDIA 566.36, NVIDIA Corporation
-[093月2025 12:37:51.120] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file D:\sys\Users\admin\.gradle\caches\modules-2\files-2.1\net.minecraftforge\javafmllanguage\1.20.1-47.3.33\29591758414c084b41bbd6808bf30309b149da4d\javafmllanguage-1.20.1-47.3.33.jar is missing mods.toml file
-[093月2025 12:37:51.127] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file D:\sys\Users\admin\.gradle\caches\modules-2\files-2.1\net.minecraftforge\lowcodelanguage\1.20.1-47.3.33\31f826407e5bab62abe1130d8d369d7d45e7ce3\lowcodelanguage-1.20.1-47.3.33.jar is missing mods.toml file
-[093月2025 12:37:51.133] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file D:\sys\Users\admin\.gradle\caches\modules-2\files-2.1\net.minecraftforge\mclanguage\1.20.1-47.3.33\fb2db487fa47ae1cdcad118267d714f75569ffc7\mclanguage-1.20.1-47.3.33.jar is missing mods.toml file
-[093月2025 12:37:51.139] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file D:\sys\Users\admin\.gradle\caches\modules-2\files-2.1\net.minecraftforge\fmlcore\1.20.1-47.3.33\2b6f448126f68c8bbc04b942b3fe7aafb12e22c0\fmlcore-1.20.1-47.3.33.jar is missing mods.toml file
-[093月2025 12:37:51.196] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
-[093月2025 12:37:52.166] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientuserdev' with arguments [--version, MOD_DEV, --gameDir, ., --assetsDir, D:\sys\Users\admin\.gradle\caches\forge_gradle\assets, --assetIndex, 5]
-[093月2025 12:37:52.266] [main/WARN] [mixin/]: Reference map 'neuracraft.refmap.json' for neuracraft.mixins.json could not be read. If this is a development environment you can ignore this message
-[093月2025 12:37:55.335] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 188 Datafixer optimizations took 95 milliseconds
-[093月2025 12:37:56.588] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/D:/sys/Users/admin/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.33_mapped_official_1.20.1/forge-1.20.1-47.3.33_mapped_official_1.20.1-recomp.jar%23191!/assets/.mcassetsroot' uses unexpected schema
-[093月2025 12:37:56.588] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/D:/sys/Users/admin/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.33_mapped_official_1.20.1/forge-1.20.1-47.3.33_mapped_official_1.20.1-recomp.jar%23191!/data/.mcassetsroot' uses unexpected schema
-[093月2025 12:37:56.604] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[093月2025 12:37:56.609] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
-[093月2025 12:37:56.692] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.1 build 7
-[093月2025 12:37:56.944] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.3.33, for MC 1.20.1 with MCP 20230612.114412
-[093月2025 12:37:56.944] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.3.33 Initialized
-[093月2025 12:37:56.986] [modloading-worker-0/INFO] [com.bulefire.neuracraft.util.FileUtils/]: initFileAndDir
-[093月2025 12:37:57.700] [Render thread/INFO] [net.minecraftforge.gametest.ForgeGameTestHooks/]: Enabled Gametest Namespaces: [neuracraft]
-[093月2025 12:37:57.793] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources
-[093月2025 12:37:57.822] [modloading-worker-0/INFO] [com.bulefire.neuracraft.config.Config/]: Loaded config file neuracraft-common.toml
-[093月2025 12:37:57.829] [pool-7-thread-1/INFO] [com.bulefire.neuracraft.ai.yy.Times/]: reset times
-[093月2025 12:37:57.933] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
-[093月2025 12:37:57.943] [Worker-Main-29/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-15.0.06.hex, loading
-[093月2025 12:37:58.869] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: OUTDATED Current: 47.3.33 Target: 47.4.0
-[093月2025 12:37:59.716] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
-[093月2025 12:37:59.716] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
-[093月2025 12:37:59.780] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device OpenAL Soft on SteelSeries Sonar - Gaming (SteelSeries Sonar Virtual Audio Device)
-[093月2025 12:37:59.783] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
-[093月2025 12:37:59.877] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
-[093月2025 12:37:59.884] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
-[093月2025 12:37:59.884] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
-[093月2025 12:37:59.885] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
-[093月2025 12:37:59.886] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
-[093月2025 12:37:59.888] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
-[093月2025 12:37:59.890] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
-[093月2025 12:37:59.890] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
-[093月2025 12:37:59.890] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
-[093月2025 12:38:00.169] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
-[093月2025 12:38:00.212] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
-[093月2025 12:38:00.214] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
-[093月2025 12:38:00.214] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
-[093月2025 12:38:00.555] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: Invalid session id
-[093月2025 12:38:57.830] [pool-7-thread-1/INFO] [com.bulefire.neuracraft.ai.yy.Times/]: reset times
-[093月2025 12:39:57.830] [pool-7-thread-1/INFO] [com.bulefire.neuracraft.ai.yy.Times/]: reset times
-[093月2025 12:40:57.830] [pool-7-thread-1/INFO] [com.bulefire.neuracraft.ai.yy.Times/]: reset times
-[093月2025 12:41:57.830] [pool-7-thread-1/INFO] [com.bulefire.neuracraft.ai.yy.Times/]: reset times
-[093月2025 12:42:38.655] [Render thread/WARN] [net.minecraftforge.common.ForgeHooks/WP]: The following mods have version differences that were not resolved:
-neuracraft (version 0.0.2a-alpha-SNAPSHOT -> 1.0.0)
+[093月2025 18:22:33.439] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientuserdev, --version, MOD_DEV, --assetIndex, 5, --assetsDir, D:\sys\Users\admin\.gradle\caches\forge_gradle\assets, --gameDir, ., --fml.forgeVersion, 47.3.33, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --mixin.config, neuracraft.mixins.json]
+[093月2025 18:22:33.445] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.3.1 by Oracle Corporation; OS Windows 11 arch amd64 version 10.0
+[093月2025 18:22:33.556] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+[093月2025 18:22:33.703] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
+[093月2025 18:22:33.875] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.6 got version 4.6
+[093月2025 18:22:33.945] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/D:/sys/Users/admin/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23128!/ Service=ModLauncher Env=CLIENT
+[093月2025 18:22:34.075] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: NVIDIA GeForce RTX 4060 Laptop GPU/PCIe/SSE2 GL version 4.6.0 NVIDIA 566.36, NVIDIA Corporation
+[093月2025 18:22:34.462] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file D:\sys\Users\admin\.gradle\caches\modules-2\files-2.1\net.minecraftforge\javafmllanguage\1.20.1-47.3.33\29591758414c084b41bbd6808bf30309b149da4d\javafmllanguage-1.20.1-47.3.33.jar is missing mods.toml file
+[093月2025 18:22:34.469] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file D:\sys\Users\admin\.gradle\caches\modules-2\files-2.1\net.minecraftforge\lowcodelanguage\1.20.1-47.3.33\31f826407e5bab62abe1130d8d369d7d45e7ce3\lowcodelanguage-1.20.1-47.3.33.jar is missing mods.toml file
+[093月2025 18:22:34.478] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file D:\sys\Users\admin\.gradle\caches\modules-2\files-2.1\net.minecraftforge\mclanguage\1.20.1-47.3.33\fb2db487fa47ae1cdcad118267d714f75569ffc7\mclanguage-1.20.1-47.3.33.jar is missing mods.toml file
+[093月2025 18:22:34.487] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file D:\sys\Users\admin\.gradle\caches\modules-2\files-2.1\net.minecraftforge\fmlcore\1.20.1-47.3.33\2b6f448126f68c8bbc04b942b3fe7aafb12e22c0\fmlcore-1.20.1-47.3.33.jar is missing mods.toml file
+[093月2025 18:22:34.597] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[093月2025 18:22:36.339] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientuserdev' with arguments [--version, MOD_DEV, --gameDir, ., --assetsDir, D:\sys\Users\admin\.gradle\caches\forge_gradle\assets, --assetIndex, 5]
+[093月2025 18:22:36.493] [main/WARN] [mixin/]: Reference map 'neuracraft.refmap.json' for neuracraft.mixins.json could not be read. If this is a development environment you can ignore this message
+[093月2025 18:22:40.542] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 188 Datafixer optimizations took 120 milliseconds
+[093月2025 18:22:42.294] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/D:/sys/Users/admin/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.33_mapped_official_1.20.1/forge-1.20.1-47.3.33_mapped_official_1.20.1-recomp.jar%23191!/assets/.mcassetsroot' uses unexpected schema
+[093月2025 18:22:42.295] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/D:/sys/Users/admin/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.33_mapped_official_1.20.1/forge-1.20.1-47.3.33_mapped_official_1.20.1-recomp.jar%23191!/data/.mcassetsroot' uses unexpected schema
+[093月2025 18:22:42.333] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[093月2025 18:22:42.350] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
+[093月2025 18:22:42.458] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.1 build 7
+[093月2025 18:22:42.839] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.3.33, for MC 1.20.1 with MCP 20230612.114412
+[093月2025 18:22:42.839] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.3.33 Initialized
+[093月2025 18:22:42.877] [modloading-worker-0/INFO] [com.bulefire.neuracraft.util.FileUtils/]: initFileAndDir
+[093月2025 18:22:43.570] [Render thread/INFO] [net.minecraftforge.gametest.ForgeGameTestHooks/]: Enabled Gametest Namespaces: [neuracraft]
+[093月2025 18:22:43.661] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources
+[093月2025 18:22:43.707] [modloading-worker-0/INFO] [com.bulefire.neuracraft.config.Config/]: Loaded config file neuracraft-common.toml
+[093月2025 18:22:43.714] [pool-7-thread-1/INFO] [com.bulefire.neuracraft.ai.yy.Times/]: reset times
+[093月2025 18:22:43.896] [Worker-Main-3/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-15.0.06.hex, loading
+[093月2025 18:22:43.910] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[093月2025 18:22:45.030] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: OUTDATED Current: 47.3.33 Target: 47.4.0
+[093月2025 18:22:45.736] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
+[093月2025 18:22:45.736] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[093月2025 18:22:45.784] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device OpenAL Soft on SteelSeries Sonar - Gaming (SteelSeries Sonar Virtual Audio Device)
+[093月2025 18:22:45.787] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
+[093月2025 18:22:45.883] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
+[093月2025 18:22:45.892] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[093月2025 18:22:45.892] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[093月2025 18:22:45.892] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[093月2025 18:22:45.892] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[093月2025 18:22:45.894] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[093月2025 18:22:45.895] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[093月2025 18:22:45.895] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[093月2025 18:22:45.895] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[093月2025 18:22:46.149] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[093月2025 18:22:46.204] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
+[093月2025 18:22:46.205] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[093月2025 18:22:46.206] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+[093月2025 18:22:46.539] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: Invalid session id
+[093月2025 18:22:52.819] [Render thread/WARN] [net.minecraftforge.common.ForgeHooks/WP]: The following mods have version differences that were not resolved:
+neuracraft (version 1.0.0 -> 1.0.1)
 Things may not work well.
-[093月2025 12:42:38.668] [Render thread/INFO] [net.minecraftforge.registries.GameData/REGISTRIES]: Injecting existing registry data into this CLIENT instance
-[093月2025 12:42:39.743] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
-[093月2025 12:42:39.808] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1271 advancements
-[093月2025 12:42:40.185] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.20.1
-[093月2025 12:42:40.185] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
-[093月2025 12:42:40.952] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
-[093月2025 12:42:42.636] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: 准备生成区域中：0%
-[093月2025 12:42:42.654] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: 准备生成区域中：0%
-[093月2025 12:42:42.671] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: 准备生成区域中：0%
-[093月2025 12:42:42.671] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: 准备生成区域中：0%
-[093月2025 12:42:42.978] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: 准备生成区域中：0%
-[093月2025 12:42:43.480] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: 准备生成区域中：71%
-[093月2025 12:42:43.550] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 2584 ms
-[093月2025 12:42:43.552] [Server thread/INFO] [net.minecraftforge.server.permission.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
-[093月2025 12:42:43.670] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 12, from 10
-[093月2025 12:42:43.671] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 12, from 0
-[093月2025 12:42:43.801] [Render thread/WARN] [io.netty.util.internal.SystemPropertyUtil/]: Unable to parse the boolean system property 'java.net.preferIPv6Addresses':system - using the default value: false
-[093月2025 12:42:44.271] [Netty Local Client IO #0/INFO] [net.minecraftforge.network.NetworkHooks/]: Connected to a modded server.
-[093月2025 12:42:44.306] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:b8c0be66] logged in with entity id 132 at (26.11542982942901, 97.26535019864572, 99.70170776406952)
-[093月2025 12:42:44.349] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev加入了游戏
-[093月2025 12:42:44.891] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 2 advancements
-[093月2025 12:42:45.202] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
-[093月2025 12:42:45.221] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:overworld
-[093月2025 12:42:45.819] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_end
-[093月2025 12:42:45.821] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_nether
-[093月2025 12:42:57.830] [pool-7-thread-1/INFO] [com.bulefire.neuracraft.ai.yy.Times/]: reset times
-[093月2025 12:43:25.434] [Render thread/INFO] [com.bulefire.neuracraft.event.ChatEventListener/]: client catch player send chat
-[093月2025 12:43:25.435] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.event.ChatEventListener/]: catch player send chat to AI
-[093月2025 12:43:25.436] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.YY/]: init yy
-[093月2025 12:43:25.437] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.util.FileUtils/]: start load room from file
-[093月2025 12:43:25.437] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.util.FileUtils/]: load room: public
-[093月2025 12:43:25.439] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.util.FileUtils/]: already load room from file
-[093月2025 12:43:25.439] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoomManger/]: client: public is exists
-[093月2025 12:43:25.439] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.YY/]: player send chat: AI 你好awa
-[093月2025 12:43:25.439] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.YY/]: 单人游戏
-[093月2025 12:43:25.439] [ForkJoinPool.commonPool-worker-1/WARN] [com.bulefire.neuracraft.ai.yy.YY/]: deal in client
-[093月2025 12:43:25.439] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.Times/]: add times
-[093月2025 12:43:25.440] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.YY/]: player send to ai is: [Dev]:  你好awa
-[093月2025 12:43:25.440] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.NameManger/]: get player Dev in chat name: public
-[093月2025 12:43:25.440] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.YY/]: get player Dev in chat name: public
-[093月2025 12:43:25.440] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoomManger/]: get client: public
-[093月2025 12:43:25.440] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoom/]: start build body
-[093月2025 12:43:25.441] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoom/]: start build variables
-[093月2025 12:43:25.442] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoom/]: build body is: {"appId":"lanhuobot","chatId":"lanhuobot-public-db91225bdb1147ba97f304c98fd4d3aa","variables":{"nickName":"没有哦","furryCharacter":"没有哦","promptPatch":"你在和一群人对话,每个人以 [id] 前缀区分,前缀只是用户的唯一标识符,你可以理解为用户id,你可以根据这个id来判断用户是否相同.前缀和用户的设定或者其他任何信息没有任何关系."},"model":"yinyingllm-latest","systemPrompt":"你的名字叫银影，是翎迹网络开发的仿生灰狼","message":"[Dev]:  你好awa"}
-[093月2025 12:43:25.442] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.util.AIHTTPClient/]: send to ai url: https://api-yinying-ng.wingmark.cn/v1/chatWithCyberFurry
-[093月2025 12:43:25.442] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.util.AIHTTPClient/]: send to ai: {"appId":"lanhuobot","chatId":"lanhuobot-public-db91225bdb1147ba97f304c98fd4d3aa","variables":{"nickName":"没有哦","furryCharacter":"没有哦","promptPatch":"你在和一群人对话,每个人以 [id] 前缀区分,前缀只是用户的唯一标识符,你可以理解为用户id,你可以根据这个id来判断用户是否相同.前缀和用户的设定或者其他任何信息没有任何关系."},"model":"yinyingllm-latest","systemPrompt":"你的名字叫银影，是翎迹网络开发的仿生灰狼","message":"[Dev]:  你好awa"}
-[093月2025 12:43:25.443] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: [Not Secure] <Dev> AI 你好awa
-[093月2025 12:43:25.451] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [CHAT] <Dev> AI 你好awa
-[093月2025 12:43:30.802] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
-[093月2025 12:43:30.809] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:overworld
-[093月2025 12:43:30.814] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_end
-[093月2025 12:43:30.815] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_nether
-[093月2025 12:43:33.548] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.util.AIHTTPClient/]: Response from AI: {"id":"lanhuobot-public-db91225bdb1147ba97f304c98fd4d3aa","model":"v-yinyingllm-latest","usage":{"total_tokens":130},"variables":{"nickName":"\u6ca1\u6709\u54e6","furryCharacter":"\u6ca1\u6709\u54e6","promptPatch":"\u4f60\u5728\u548c\u4e00\u7fa4\u4eba\u5bf9\u8bdd\u6bcf\u4e2a\u4eba\u4ee5id\u524d\u7f00\u533a\u5206\u524d\u7f00\u53ea\u662f\u7528\u6237\u7684\u552f\u4e00\u6807\u8bc6\u7b26\u4f60\u53ef\u4ee5\u7406\u89e3\u4e3a\u7528\u6237id\u4f60\u53ef\u4ee5\u6839\u636e\u8fd9\u4e2aid\u6765\u5224\u65ad\u7528\u6237\u662f\u5426\u76f8\u540c\u524d\u7f00\u548c\u7528\u6237\u7684\u8bbe\u5b9a\u6216\u8005\u5176\u4ed6\u4efb\u4f55\u4fe1\u606f\u6ca1\u6709\u4efb\u4f55\u5173\u7cfb","timeNow":"2025\u5e7403\u670809\u65e5\u661f\u671f\u65e5\u4e2d\u534812\u70b943\u5206"},"choices":[{"message":{"role":"assistant","content":"(\u5f00\u5fc3\u5730\u6447\u7740\u5c3e\u5df4\uff0c\u7528\u6700\u707f\u70c2\u7684\u7b11\u5bb9\u8fce\u63a5Dev)  \u4f60\u597d\u5440\uff0cDev\uff01  \u4eca\u5929\u5929\u6c14\u771f\u597d\u5462\uff01  (\u0e51\u02c3\u0335\u1d17\u02c2\u0335)\u0648  \u6709\u4ec0\u4e48\u4e8b\u9700\u8981\u94f6\u5f71\u5e2e\u5fd9\u5417\uff1f  uwu\n"},"finish_reason":"stop","index":0}]}
-[093月2025 12:43:33.548] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoom/]: check body
-[093月2025 12:43:33.549] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoom/]: start get reply
-[093月2025 12:43:33.551] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoom/]: replyBody: com.bulefire.neuracraft.ai.yy.ReplyBody@e503867
-[093月2025 12:43:33.551] [ForkJoinPool.commonPool-worker-1/INFO] [com.bulefire.neuracraft.ai.yy.YY/]: ai reply is: (开心地摇着尾巴，用最灿烂的笑容迎接Dev)  你好呀，Dev！  今天天气真好呢！  (๑˃̵ᴗ˂̵)و  有什么事需要银影帮忙吗？  uwu
+[093月2025 18:22:52.827] [Render thread/INFO] [net.minecraftforge.registries.GameData/REGISTRIES]: Injecting existing registry data into this CLIENT instance
+[093月2025 18:22:53.984] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
+[093月2025 18:22:54.034] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1271 advancements
+[093月2025 18:22:54.320] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.20.1
+[093月2025 18:22:54.320] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[093月2025 18:22:54.897] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[093月2025 18:22:56.483] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: 准备生成区域中：0%
+[093月2025 18:22:56.500] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: 准备生成区域中：0%
+[093月2025 18:22:56.500] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: 准备生成区域中：0%
+[093月2025 18:22:56.500] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: 准备生成区域中：0%
+[093月2025 18:22:56.911] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: 准备生成区域中：1%
+[093月2025 18:22:57.354] [Server thread/INFO] [net.minecraftforge.server.permission.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[093月2025 18:22:57.356] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 2452 ms
+[093月2025 18:22:57.454] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 12, from 10
+[093月2025 18:22:57.455] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 12, from 0
+[093月2025 18:22:57.603] [Render thread/WARN] [io.netty.util.internal.SystemPropertyUtil/]: Unable to parse the boolean system property 'java.net.preferIPv6Addresses':system - using the default value: false
+[093月2025 18:22:58.272] [Netty Local Client IO #0/INFO] [net.minecraftforge.network.NetworkHooks/]: Connected to a modded server.
+[093月2025 18:22:58.309] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:3dd6d30c] logged in with entity id 128 at (26.11542982942901, 97.26535019864572, 99.70170776406952)
+[093月2025 18:22:58.363] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev加入了游戏
+[093月2025 18:22:58.440] [Server thread/INFO] [com.bulefire.neuracraft.ai.yy.YY/]: init yy
+[093月2025 18:22:58.441] [Server thread/INFO] [com.bulefire.neuracraft.util.FileUtils/]: start load room from file
+[093月2025 18:22:58.441] [Server thread/INFO] [com.bulefire.neuracraft.util.FileUtils/]: load room: public
+[093月2025 18:22:58.443] [Server thread/INFO] [com.bulefire.neuracraft.util.FileUtils/]: already load room from file
+[093月2025 18:22:58.444] [Server thread/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoomManger/]: client: public is exists
+[093月2025 18:22:58.444] [Server thread/INFO] [com.bulefire.neuracraft.ai.yy.YY/]: player send to ai is: [Dev]: 加入聊天
+[093月2025 18:22:58.445] [Server thread/INFO] [com.bulefire.neuracraft.ai.yy.NameManger/]: get player Dev in chat name: public
+[093月2025 18:22:58.445] [Server thread/INFO] [com.bulefire.neuracraft.ai.yy.YY/]: get player Dev in chat name: public
+[093月2025 18:22:58.445] [Server thread/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoomManger/]: get client: public
+[093月2025 18:22:58.445] [Server thread/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoom/]: start build body
+[093月2025 18:22:58.447] [Server thread/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoom/]: start build variables
+[093月2025 18:22:58.448] [Server thread/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoom/]: build body is: {"appId":"lanhuobot","chatId":"lanhuobot-public-db91225bdb1147ba97f304c98fd4d3aa","variables":{"nickName":"没有哦","furryCharacter":"没有哦","promptPatch":"你在和一群人对话,每个人以 [id] 前缀区分,前缀只是用户的唯一标识符,你可以理解为用户id,你可以根据这个id来判断用户是否相同.前缀和用户的设定或者其他任何信息没有任何关系."},"model":"yinyingllm-latest","systemPrompt":"你的名字叫银影，是翎迹网络开发的仿生灰狼","message":"[Dev]: 加入聊天"}
+[093月2025 18:22:58.450] [Server thread/INFO] [com.bulefire.neuracraft.util.AIHTTPClient/]: send to ai url: https://api-yinying-ng.wingmark.cn/v1/chatWithCyberFurry
+[093月2025 18:22:58.450] [Server thread/INFO] [com.bulefire.neuracraft.util.AIHTTPClient/]: send to ai: {"appId":"lanhuobot","chatId":"lanhuobot-public-db91225bdb1147ba97f304c98fd4d3aa","variables":{"nickName":"没有哦","furryCharacter":"没有哦","promptPatch":"你在和一群人对话,每个人以 [id] 前缀区分,前缀只是用户的唯一标识符,你可以理解为用户id,你可以根据这个id来判断用户是否相同.前缀和用户的设定或者其他任何信息没有任何关系."},"model":"yinyingllm-latest","systemPrompt":"你的名字叫银影，是翎迹网络开发的仿生灰狼","message":"[Dev]: 加入聊天"}
+[093月2025 18:23:00.769] [Server thread/INFO] [com.bulefire.neuracraft.util.AIHTTPClient/]: Response from AI: {"id":"lanhuobot-public-db91225bdb1147ba97f304c98fd4d3aa","model":"v-yinyingllm-latest","usage":{"total_tokens":149},"variables":{"nickName":"\u6ca1\u6709\u54e6","furryCharacter":"\u6ca1\u6709\u54e6","promptPatch":"\u4f60\u5728\u548c\u4e00\u7fa4\u4eba\u5bf9\u8bdd\u6bcf\u4e2a\u4eba\u4ee5id\u524d\u7f00\u533a\u5206\u524d\u7f00\u53ea\u662f\u7528\u6237\u7684\u552f\u4e00\u6807\u8bc6\u7b26\u4f60\u53ef\u4ee5\u7406\u89e3\u4e3a\u7528\u6237id\u4f60\u53ef\u4ee5\u6839\u636e\u8fd9\u4e2aid\u6765\u5224\u65ad\u7528\u6237\u662f\u5426\u76f8\u540c\u524d\u7f00\u548c\u7528\u6237\u7684\u8bbe\u5b9a\u6216\u8005\u5176\u4ed6\u4efb\u4f55\u4fe1\u606f\u6ca1\u6709\u4efb\u4f55\u5173\u7cfb","timeNow":"2025\u5e7403\u670809\u65e5\u661f\u671f\u65e5\u665a\u4e0a6\u70b922\u5206"},"choices":[{"message":{"role":"assistant","content":"(\u5f00\u5fc3\u5730\u539f\u5730\u8f6c\u4e86\u4e2a\u5708\uff0c\u84ec\u677e\u7684\u5c3e\u5df4\u4e5f\u8ddf\u7740\u65cb\u8f6c)  \u6b22\u8fce\u52a0\u5165\u804a\u5929\uff01  \u0669(\u0e51\u275b\u1d17\u275b\u0e51)\u06f6  \u73b0\u5728\u5df2\u7ecf6\u70b922\u5206\u4e86\u5462\uff0c\u65f6\u95f4\u8fc7\u5f97\u597d\u5feb\u554a\uff01  \u4f60\u6709\u4ec0\u4e48\u60f3\u804a\u7684\u5417\uff1f  owo\n"},"finish_reason":"stop","index":0}]}
+[093月2025 18:23:00.770] [Server thread/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoom/]: check body
+[093月2025 18:23:00.770] [Server thread/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoom/]: start get reply
+[093月2025 18:23:00.773] [Server thread/INFO] [com.bulefire.neuracraft.ai.yy.ChatRoom/]: replyBody: com.bulefire.neuracraft.ai.yy.ReplyBody@7a789da4
+[093月2025 18:23:00.773] [Server thread/INFO] [com.bulefire.neuracraft.ai.yy.YY/]: ai reply is: (开心地原地转了个圈，蓬松的尾巴也跟着旋转)  欢迎加入聊天！  ٩(๑❛ᴗ❛๑)۶  现在已经6点22分了呢，时间过得好快啊！  你有什么想聊的吗？  owo
 
-[093月2025 12:43:33.551] [ForkJoinPool.commonPool-worker-1/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] <银影> (开心地摇着尾巴，用最灿烂的笑容迎接Dev)  你好呀，Dev！  今天天气真好呢！  (๑˃̵ᴗ˂̵)و  有什么事需要银影帮忙吗？  uwu\n
-[093月2025 12:43:48.952] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
-[093月2025 12:43:48.960] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:overworld
-[093月2025 12:43:48.963] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_end
-[093月2025 12:43:48.963] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_nether
-[093月2025 12:43:49.407] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Dev lost connection: 连接中断
-[093月2025 12:43:49.407] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev退出了游戏
-[093月2025 12:43:49.415] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Stopping singleplayer server as player logged out
-[093月2025 12:43:49.456] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
-[093月2025 12:43:49.457] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
-[093月2025 12:43:49.457] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
-[093月2025 12:43:49.703] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:overworld
-[093月2025 12:43:50.072] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_end
-[093月2025 12:43:50.073] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_nether
-[093月2025 12:43:50.084] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (新的世界): All chunks are saved
-[093月2025 12:43:50.084] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[093月2025 12:43:50.084] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[093月2025 12:43:50.084] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
-[093月2025 12:43:51.048] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Stopping!
+[093月2025 18:23:00.783] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] (开心地原地转了个圈，蓬松的尾巴也跟着旋转)  欢迎加入聊天！  ٩(๑❛ᴗ❛๑)۶  现在已经6点22分了呢，时间过得好快啊！  你有什么想聊的吗？  owo\n
+[093月2025 18:23:00.787] [Server thread/WARN] [net.minecraft.server.MinecraftServer/]: Can't keep up! Is the server overloaded? Running 2482ms or 49 ticks behind
+[093月2025 18:23:00.819] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 2 advancements
+[093月2025 18:23:15.605] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[093月2025 18:23:15.617] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:overworld
+[093月2025 18:23:15.627] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_end
+[093月2025 18:23:15.629] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_nether
+[093月2025 18:23:16.160] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Dev lost connection: 连接中断
+[093月2025 18:23:16.161] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev退出了游戏
+[093月2025 18:23:16.169] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Stopping singleplayer server as player logged out
+[093月2025 18:23:16.205] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[093月2025 18:23:16.206] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[093月2025 18:23:16.206] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[093月2025 18:23:16.555] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:overworld
+[093月2025 18:23:16.988] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_end
+[093月2025 18:23:16.989] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_nether
+[093月2025 18:23:17.001] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (新的世界): All chunks are saved
+[093月2025 18:23:17.001] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[093月2025 18:23:17.001] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[093月2025 18:23:17.001] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
+[093月2025 18:23:18.124] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Stopping!

@@ -28,7 +28,7 @@ public class FileUtils {
     public static final String chatRomeFileS = chatRoomS+"chatRoom.json";
     public static final Path chatRomeFile = Path.of(chatRomeFileS);
 
-    public static ConfigFile cf = loadConfigFileFromJsonFile();
+    public static ConfigFile cf;
 
     /**
      * 初始化文件目录
@@ -46,6 +46,7 @@ public class FileUtils {
                 throw new RuntimeException(e);
             }
         }
+        cf = loadConfigFileFromJsonFile();
     }
 
     public static void loadChatRoomToManager(@NotNull ChatRoomManger cm){

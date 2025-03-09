@@ -146,7 +146,7 @@ public class YY {
     }
 
     // 处理消息
-    private static @NotNull String dealWith(@NotNull String name, @NotNull String message){
+    public static @NotNull String dealWith(@NotNull String name, @NotNull String message){
         // 发送消息给AI
         String msg = getMessage(name,message);
         log.info("player send to ai is: {}", msg);
