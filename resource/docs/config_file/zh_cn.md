@@ -109,6 +109,10 @@ NeuraCraft 的配置文件位于 `config/neuracraft-common.toml` 文件中。 <b
 
 <a id="forward_api"></a>
 ## 使用我们提供的转发接口
-我们目前正在开发转发接口,他在 ```2025.3.16``` 就会正式上线
-
-### 稍安勿躁
+如果您想使用我们提供的转发接口,您目前只需要将配置文件中的 ```apiUrl``` 的值替换为 ```https://neuracraft.bulefire.top:39132/v1```
+```toml
+    #API URL
+    apiUrl = "https://neuracraft.bulefire.top:39132/v1"
+```
+其他选项不用变更.  
+需要注意的是我们的转发服务**目前**并不需要```token```和```appId```,但是我们计划在未来的某个版本加入独立的验证措施以区分用户.

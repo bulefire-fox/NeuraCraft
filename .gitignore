@@ -27,3 +27,5 @@ Thumbs.db
 
 /run/
 /run-data/
+
+/src/test/yy.http

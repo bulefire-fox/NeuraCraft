@@ -31,6 +31,7 @@ public class ChatRoom {
     private List<String> playerList;
 
     private String error;
+    private boolean toAdmin;
 
     public ChatRoom(String name){
         // 设置名字
@@ -78,7 +79,10 @@ public class ChatRoom {
             String response = AIHTTPClient.POST(BaseInformation.api_url+BaseInformation.api_interface, body);
             // 检查请求体
             if (!checkBody(response)){
-                return "Error, 请联系管理员 \n"+error;
+                if (toAdmin){
+                    return "Error, 请联系管理员 \n"+error;
+                }
+                return error;
             }
             // 获取回复并解析
             return getReply(response);
@@ -105,6 +109,7 @@ public class ChatRoom {
                     }""")){
                 sendToPlayer("Error: appId不存在！");
                 error = "appId不存在！";
+                toAdmin = true;
                 log.error("appId不存在！ \n {}", response);
                 return false;
             // token不存在
@@ -113,23 +118,34 @@ public class ChatRoom {
                       "status": false,
                       "data": "Error: 凭据无效！"
                     }
-                    """)){
+                    """)) {
                 sendToPlayer("Error: token不存在！");
                 error = "token不存在！";
+                toAdmin = true;
                 log.error("token不存在！\n {}", response);
                 return false;
-            // 合法
+                // 合法
+            }else if(response.contains("""
+                    {
+                    "error": "Rate limit exceeded. Please try again later."
+                    }
+                    """)){
+                error = "频率太快啦,等一下再试吧";
+                toAdmin = false;
+                return false;
             } else {
                 return true;
             }
         } catch (JsonSyntaxException e) {
             if (response.contains("POST request failed with response code:")){
                 error = response;
+                toAdmin = true;
                 return false;
             }
             // 如果解析失败，说明响应不是有效的 JSON
             sendToPlayer("Error: 请求失败！" + response);
             error = "Error: 请求失败！" + response;
+            toAdmin = true;
             log.error("Response is not a valid JSON: {}", response);
             return false;
         }
