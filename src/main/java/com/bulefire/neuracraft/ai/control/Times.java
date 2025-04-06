@@ -1,4 +1,4 @@
-package com.bulefire.neuracraft.ai.yy;
+package com.bulefire.neuracraft.ai.control;
 
 import com.bulefire.neuracraft.config.yy.BaseInformation;
 import com.mojang.logging.LogUtils;

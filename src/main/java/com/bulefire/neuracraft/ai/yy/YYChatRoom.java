@@ -1,56 +1,54 @@
 package com.bulefire.neuracraft.ai.yy;
 
+import com.bulefire.neuracraft.ai.AIChatRoom;
+import com.bulefire.neuracraft.ai.AIModels;
+import com.bulefire.neuracraft.ai.yy.save.YYConfigFile;
 import com.bulefire.neuracraft.config.yy.BaseInformation;
 import com.bulefire.neuracraft.config.yy.Variables;
 import com.bulefire.neuracraft.util.AIHTTPClient;
-import com.bulefire.neuracraft.util.SendMessageToChatBar;
+import com.bulefire.neuracraft.util.FileUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.logging.LogUtils;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.players.PlayerList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
-public class ChatRoom {
+public class YYChatRoom extends AIChatRoom {
     private static final Logger log = LogUtils.getLogger();
 
     /**
-     * 名字
-     */
-    private final String name;
-    /**
      * 聊天ID
      */
-    private final String chatId;
-
-    private List<String> playerList;
+    private String chatId;
 
     private String error;
     private boolean toAdmin;
 
-    public ChatRoom(String name){
-        // 设置名字
-        this.name = name;
+    public YYChatRoom(String name){
+        super(name, AIModels.CyberFurry);
         // 生成聊天ID
         this.chatId = BaseInformation.appid + "-" +name + "-" +radomString();
-        this.playerList = new ArrayList<>();
     }
 
-    public ChatRoom(String name, String chatId){
-        this.name = name;
-        this.chatId = chatId;
-        this.playerList = new ArrayList<>();
+    public YYChatRoom(String name, AIModels model){
+        super(name, model);
     }
 
-    public ChatRoom(String name, String chatId, List<String> playerList){
-        this.name = name;
+    public YYChatRoom(String name, String chatId){
+        super(name, AIModels.CyberFurry);
         this.chatId = chatId;
-        this.playerList = playerList;
+    }
+
+    public YYChatRoom(String name, List<String> playerList, String chatId){
+        super(name, playerList, AIModels.CyberFurry);
+        this.chatId = chatId;
     }
 
     public String getChatId() {
@@ -200,11 +198,36 @@ public class ChatRoom {
         return gson.toJson(body);
     }
 
-    public List<String> getPlayerList() {
-        return playerList;
+    @Override
+    public void save() throws IOException {
+        log.info("try to save chat room to file");
+        String filename = this.model+"-"+this.name+".json";
+        YYConfigFile configFile = new YYConfigFile(this.name, this.playerList, this.model,this.chatId);
+        try {
+            FileUtils.saveJsonToFile(configFile, FileUtils.chatPath.resolve(filename));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public void load(@NotNull Path path) throws IOException {
+        YYConfigFile configFile;
+        try {
+            configFile = FileUtils.loadJsonFromFile(path, YYConfigFile.class);
+        } catch (NullPointerException e){
+            log.error("load config file failed");
+            return;
+        }
+        this.name = configFile.getName();
+        this.chatId = configFile.getChatId();
+        this.playerList = configFile.getPlayerList();
+        this.model = configFile.getModel();
+    }
+
+    @Override
+    public void delete() throws IOException {
+        String filename = this.model+"-"+this.name+".json";
+        Files.deleteIfExists(FileUtils.chatPath.resolve(filename));
     }
 }

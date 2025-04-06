@@ -1,8 +1,11 @@
-package com.bulefire.neuracraft.ai.yy;
+package com.bulefire.neuracraft.ai.control;
 
+import com.bulefire.neuracraft.ai.control.player.PlayerControl;
 import com.mojang.logging.LogUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+
+import java.util.Objects;
 
 
 public class NameManger {
@@ -14,8 +17,7 @@ public class NameManger {
      * @return 聊天室名称
      */
     public static @NotNull String getChatName(@NotNull String username){
-        // TODO: 获取聊天室名称
-        String chatName = "public";
+        String chatName = Objects.requireNonNull(PlayerControl.get(username)).getChatName();
         log.info("get player {} in chat name: {}",username,chatName);
         return chatName;
     }

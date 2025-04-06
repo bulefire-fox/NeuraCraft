@@ -1,7 +1,7 @@
 package com.bulefire.neuracraft.event;
 
 import com.bulefire.neuracraft.NeuraCraft;
-import com.bulefire.neuracraft.ai.yy.YY;
+import com.bulefire.neuracraft.ai.control.AIControl;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,7 +34,13 @@ public class ChatEventListener {
             throw new RuntimeException("Minecraft.getInstance().player is null");
         }
 
-        CompletableFuture.runAsync(() -> catchChat(name,message,null,event));
+        CompletableFuture.runAsync(() -> {
+            try {
+                catchChat(name,message,null,event);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @SubscribeEvent
@@ -50,18 +56,25 @@ public class ChatEventListener {
         }else{
             throw new RuntimeException("Minecraft.getInstance().player is null");
         }
-        CompletableFuture.runAsync(() -> catchChat(name,message,event,null));
+        CompletableFuture.runAsync(() -> {
+            try {
+                catchChat(name,message,event,null);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
-    private static void catchChat(String name, @NotNull String message, ServerChatEvent s, ClientChatEvent c){
+    private static void catchChat(String name, @NotNull String message, ServerChatEvent s, ClientChatEvent c) throws InterruptedException {
+        Thread.sleep(500);
         // to AI
         //List<String> key = List.of("银影","YY","yy","y","Y","AI","ai","Ai","aI","A","a","I","i");
-        List<String> key = List.of("AI");
+        List<String> key = List.of("AI","AICtl");
         // log.info(message);
-        if (key.stream().anyMatch(message::contains)){
+        if (message.startsWith("AI") || message.startsWith("AICtl")){
             log.info("catch player send chat to AI");
             try {
-                YY.onChat(name, message,s,c);
+                AIControl.onChat(name, message,s,c);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

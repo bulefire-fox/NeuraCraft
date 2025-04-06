@@ -1,11 +1,9 @@
 package com.bulefire.neuracraft.init;
 
 import com.bulefire.neuracraft.NeuraCraft;
-import com.bulefire.neuracraft.ai.yy.NetWork;
-import com.bulefire.neuracraft.ai.yy.Times;
+import com.bulefire.neuracraft.ai.control.AIControl;
+import com.bulefire.neuracraft.ai.control.Times;
 import com.bulefire.neuracraft.config.Config;
-import com.bulefire.neuracraft.config.yy.BaseInformation;
-import com.bulefire.neuracraft.config.yy.Variables;
 import com.bulefire.neuracraft.register.RegisterBlock;
 import com.bulefire.neuracraft.register.RegisterCreativeModeTab;
 import com.bulefire.neuracraft.register.RegisterItem;
@@ -21,6 +19,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import java.io.IOException;
 
 import static com.bulefire.neuracraft.NeuraCraft.MODID;
 
@@ -46,15 +46,14 @@ public class Init {
         // 将物品注册到创造模式标签
         // modEventBus.addListener(this::addCreative);
         registerConfig();
-        registerNetWork();
 
-        FileUtils.initFileAndDir();
+        try {
+            FileUtils.init();
+            AIControl.init();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
-
-    private static void registerNetWork(){
-        NetWork.registerMessage();
-    }
-
     private static void registerConfig(){
         // 注册我们的模组的ForgeConfigSpec，以便Forge可以为我们创建和加载配置文件
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC);

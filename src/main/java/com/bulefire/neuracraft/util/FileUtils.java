@@ -1,132 +1,76 @@
 package com.bulefire.neuracraft.util;
 
 import com.bulefire.neuracraft.NeuraCraft;
-import com.bulefire.neuracraft.ai.yy.ChatRoom;
-import com.bulefire.neuracraft.ai.yy.ChatRoomManger;
-import com.bulefire.neuracraft.ai.yy.save.ConfigFile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
 import com.mojang.logging.LogUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FileUtils {
-    private static final Logger log = LogUtils.getLogger();
+    private static final Logger logger = LogUtils.getLogger();
 
-    public static final String rootS = NeuraCraft.configPath+"/neuracraft/";
-    public static final Path root = Path.of(rootS);
+    public static final Path configPath = NeuraCraft.configPath.resolve("neuracraft");
+    public static final Path chatPath = configPath.resolve("chat");
+    public static final Path playerPath = configPath.resolve("player");
 
-    public static final String chatRoomS = rootS+"chatRoom/";
-    public static final Path chatRoom = Path.of(chatRoomS);
-
-    public static final String chatRomeFileS = chatRoomS+"chatRoom.json";
-    public static final Path chatRomeFile = Path.of(chatRomeFileS);
-
-    public static ConfigFile cf;
-
-    /**
-     * 初始化文件目录
-     */
-    public static void initFileAndDir(){
-        log.info("initFileAndDir");
-        if(!Files.exists(root)){
-            try {
-                Files.createDirectories(root);
-                Files.createDirectories(chatRoom);
-                Files.createFile(chatRomeFile);
-                initJsonFile();
-            } catch (Exception e) {
-                log.info(e.toString());
-                throw new RuntimeException(e);
-            }
+    public static void init() throws IOException{
+        if (!Files.exists(configPath)){
+            Files.createDirectory(configPath);
         }
-        cf = loadConfigFileFromJsonFile();
-    }
 
-    public static void loadChatRoomToManager(@NotNull ChatRoomManger cm){
-        log.info("start load room from file");
-        Map<String, ChatRoom> clients = cm.getClients();
-        for (ConfigFile.ChatRoomBean c : cf.getRoot()){
-            log.info("load room: {}",c.getName());
-            ChatRoom cr = ChatRoomConversion.beanToChatRoom(c);
-            clients.put(cr.getName(),cr);
+        if (!Files.exists(chatPath)){
+            Files.createDirectory(chatPath);
         }
-        log.info("already load room from file");
-    }
-
-    /**
-     * 初始化json文件
-     */
-    public static void initJsonFile() throws IOException {
-        log.info("init Json");
-        ConfigFile cf = new ConfigFile();
-        cf.setRoot(new ArrayList<>());
-        saveConfigFileToJsonFile(cf);
-    }
-
-    /**
-     * 添加聊天室到管理并落地为json文件
-     * @param cb chatRoomBean
-     * @throws FileNotFoundException FileNotFoundException
-     */
-    public static void addChatRoom(@NotNull ConfigFile.ChatRoomBean cb) throws FileNotFoundException {
-        log.info("start addChatRoom to root");
-        log.info("already addChatRoom to root");
-        if (cf != null) {
-            cf.getRoot().add(cb);
-            try {
-                saveConfigFileToJsonFile(cf);
-            } catch (IOException e) {
-                log.error(e.toString());
-                throw new RuntimeException(e);
-            }
-        }else{
-            log.error("cf is null");
-            try{
-                initJsonFile();
-            }catch (IOException e){
-                log.error(e.toString());
-                throw new RuntimeException(e);
-            }
+        if (!Files.exists(playerPath)){
+            Files.createDirectory(playerPath);
         }
     }
 
-    /**
-     * 保存配置文件到json文件
-     * @param cf ConfigFile
-     * @throws IOException IOException
-     */
-    public static void saveConfigFileToJsonFile(@NotNull ConfigFile cf) throws IOException {
-        log.info("try to save json to file");
-        Gson g = new GsonBuilder().setPrettyPrinting().create();
-        try (FileWriter writer = new FileWriter(chatRomeFileS)){
-            log.info("save ConfigFile to file");
-            g.toJson(cf, writer);
-        }catch (IOException e){
-            log.error(e.toString());
-            throw new RuntimeException(e);
+    public static void saveJsonToFile(@NotNull Object data, @NotNull Path filePath) throws IOException {
+        logger.info("file path: {}", filePath);
+        if (!Files.exists(filePath)){
+            logger.info("create file: {}", filePath);
+            Files.createFile(filePath);
+        }
+        Gson g = new GsonBuilder()
+                .disableInnerClassSerialization()
+                .create();
+        try (FileWriter writer = new FileWriter(filePath.toFile().getPath())){
+            logger.info("write to file: {}", filePath);
+            g.toJson(data, writer);
+        } catch (JsonIOException e) {
+            logger.error("JsonIOException: {}", e.getMessage());
         }
     }
 
-    /**
-     * 从json文件加载配置文件
-     * @return ConfigFile
-     */
-    public static ConfigFile loadConfigFileFromJsonFile(){
-        Gson g = new Gson();
-        ConfigFile cf;
-        try(FileReader reader = new FileReader(chatRomeFileS)){
-            cf = g.fromJson(reader, ConfigFile.class);
-        } catch (IOException e) {
-            log.error(e.toString());
-            throw new RuntimeException(e);
+    public static <T> @NotNull T loadJsonFromFile(@NotNull Path filePath, Class<T> clazz) throws IOException{
+        T t;
+        try (FileReader reader = new FileReader(filePath.toFile())){
+            t = new Gson().fromJson(reader, clazz);
         }
-        return cf;
+
+        if (!(t == null)){
+            return t;
+        }
+        throw new NullPointerException("load json from file failed");
+    }
+
+    public static List<Path> readAllFilePath(Path baseURL) throws IOException {
+        try (Stream<Path> paths = Files.list(baseURL)){
+            return paths
+                    .filter(Files::isRegularFile)
+                    .collect(Collectors.toList());
+        }
     }
 }
