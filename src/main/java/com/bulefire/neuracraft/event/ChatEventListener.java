@@ -69,9 +69,9 @@ public class ChatEventListener {
         Thread.sleep(500);
         // to AI
         //List<String> key = List.of("银影","YY","yy","y","Y","AI","ai","Ai","aI","A","a","I","i");
-        List<String> key = List.of("AI","AICtl");
+        List<String> key = List.of("AI");
         // log.info(message);
-        if (message.startsWith("AI") || message.startsWith("AICtl")){
+        if (message.startsWith("AI")){
             log.info("catch player send chat to AI");
             try {
                 AIControl.onChat(name, message,s,c);

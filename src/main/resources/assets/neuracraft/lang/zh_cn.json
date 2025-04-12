@@ -1,0 +1,25 @@
+{
+  "neuracraft.chat.hello": "你好! 欢迎来到 NeuraCraft 聊天室管理系统!",
+
+  "neuracraft.command.create.success": "已创建聊天室: %s",
+  "neuracraft.command.create.failure.alreadyExist": "聊天室 %s 已存在",
+  "neuracraft.command.create.failure.unknown": "创建失败",
+
+  "neuracraft.command.delete.success": "已经删除聊天室: %s",
+
+  "neuracraft.command.exit.success": "已退出 %s 聊天室",
+  "neuracraft.command.exit.notInChatRoom": "你不在这个聊天室中!",
+
+  "neuracraft.command.find.notInChatRoom": "你没有加入任何聊天室",
+  "neuracraft.command.find.success": "你在 %s 中",
+
+  "neuracraft.command.join.success": "你已经加入聊天室: %s",
+  "neuracraft.command.join.failure.notExist": "聊天室 %s 不存在",
+
+  "neuracraft.command.show.use": "如何使用: 看wiki(我懒得在写一遍了)",
+
+  "neuracraft.chat.error.tooFast": "频率太快啦,等一下再试吧",
+  "neuracraft.chat.error.nullMessage": "没有收到任何消息哦",
+  "neuracraft.chat.error.notInChatRoom": "你没有加入任何一个聊天室哦",
+  "neuracraft.chat.message.format.player": "<%s> %s"
+}

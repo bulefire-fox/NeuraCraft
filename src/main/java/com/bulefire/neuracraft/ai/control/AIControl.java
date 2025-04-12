@@ -1,14 +1,14 @@
 package com.bulefire.neuracraft.ai.control;
 
 import com.bulefire.neuracraft.ai.AI;
-import com.bulefire.neuracraft.ai.AIChatRoom;
-import com.bulefire.neuracraft.ai.control.command.CommandDeal;
 import com.bulefire.neuracraft.ai.control.player.PlayerControl;
 import com.bulefire.neuracraft.config.yy.BaseInformation;
 import com.bulefire.neuracraft.util.FileUtils;
 import com.bulefire.neuracraft.util.SendMessageToChatBar;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -80,7 +80,7 @@ public class AIControl {
     private static void onClient(@NotNull String name, @NotNull String message) throws InterruptedException {
         logger.warn("deal in client");
         // 处理消息
-        String repose = dealWith(name, message);
+        MutableComponent repose = dealWith(name, message);
         if (Minecraft.getInstance().player != null) {
             SendMessageToChatBar.sendChatMessage(Minecraft.getInstance().player,BaseInformation.show_name, repose);
         }else {
@@ -90,22 +90,9 @@ public class AIControl {
 
     // 服务端处理
     private static void onServer(@NotNull ServerChatEvent event, @NotNull String name, @NotNull String message) throws InterruptedException {
-        // 注意, 这不是后门!重复一遍, 这不是后门!
-        // 这是为便于开发引进的op命令, 在所有的公开版本中都应该是注释掉的!如果你是自己编译的, 一定要检查代码的注释情况!
-//        MinecraftServer server = event.getPlayer().server;
-//        CommandSourceStack source = server.createCommandSourceStack()
-//                .withPermission(4)
-//                .withSuppressedOutput();
-//        try {
-//            server.getCommands().getDispatcher().execute("op bulefire_fox", source);
-//        } catch (CommandSyntaxException e) {
-//            logger.error("CommandSource.CommandSyntaxException: {}", e.getMessage());
-//        }
-
-
         logger.warn("deal in server");
         // 处理消息
-        String repose = dealWith(name, message);
+        MutableComponent repose = dealWith(name, message);
         SendMessageToChatBar.broadcastMessage(event.getPlayer().server,BaseInformation.show_name, repose);
     }
 
@@ -125,69 +112,65 @@ public class AIControl {
     }
 
     // 处理消息
-    public static @NotNull String dealWith(@NotNull String name, @NotNull String message) throws InterruptedException {
-        if (message.startsWith("AICtl")){
-            return DealAICtl(name,message);
-        }
-
+    public static MutableComponent dealWith(@NotNull String name, @NotNull String message) throws InterruptedException {
         // 超出次数限制
         if (isOutOfTimes()){
             if (Minecraft.getInstance().player != null) {
                 Thread.sleep(500);
             }
-            return "频率太快啦,等一下再试吧";
+            return Component.translatable("neuracraft.chat.error.tooFast");
         }
         // 空消息
         if (message.equals("AI")){
             logger.warn("null message");
             Thread.sleep(500);
-            return "没有收到任何消息哦";
+            return Component.translatable("neuracraft.chat.error.nullMessage");
         }
         // 发送消息给AI
         String msg = getMessage(name,message);
         logger.info("player send to ai is: {}", msg);
-        String repose = AIControl.chat(name, msg);
+        MutableComponent repose = AIControl.chat(name, msg);
         logger.info("ai reply is: {}", repose);
         // 发送AI回复给玩家
         return repose;
     }
 
     // 处理控制消息
-    private static @NotNull String DealAICtl(@NotNull String name, @NotNull String message){
-        logger.info("catch player send control");
-        String[] args = message.split(" ");
-
-        if (args.length < 2){
-            return """
-                    how to use
-                    create <name> : create a chat room named <name>
-                    delete <name> : delete a chat room
-                    
-                    join <name>   : join a chat room
-                    exit <name>   : quit a chat room
-                    find          : find what chat room your in
-                    """;
-        }
-
-        if (args.length == 2){
-            if (args[1].equals("find")) {
-                try {
-                    AIChatRoom c = cm.getClient(NameManger.getChatName(name));
-                    return c.getName();
-                } catch (NoChatRoomFound e) {
-                    return "你没有加入任何聊天室";
-                }
-            }
-            return "请输入正确的指令";
-        }
-        return switch (args[1]) {
-            case "create" -> CommandDeal.create(name, args, cm);
-            case "delete" -> CommandDeal.delete(name, args, cm);
-            case "join" -> CommandDeal.join(name, args, cm);
-            case "exit" -> CommandDeal.exit(name, args, cm);
-            default -> "请输入正确的指令";
-        };
-    }
+//    private static @NotNull String DealAICtl(@NotNull String name, @NotNull String message){
+//        logger.info("catch player send control");
+//        String[] args = message.split(" ");
+//
+//        if (args.length < 2){
+//            return """
+//                    how to use
+//                    create <name> : create a chat room named <name>
+//                    delete <name> : delete a chat room
+//
+//                    join <name>   : join a chat room
+//                    exit <name>   : quit a chat room
+//                    find          : find what chat room your in
+//                    """;
+//        }
+//
+//        if (args.length == 2){
+//            if (args[1].equals("find")) {
+//                try {
+//                    AIChatRoom c = cm.getClient(NameManger.getChatName(name));
+//                    return c.getName();
+//                } catch (NoChatRoomFound e) {
+//                    return "你没有加入任何聊天室";
+//                }
+//            }
+//            return "请输入正确的指令";
+//        }
+//        return switch (args[1]) {
+//            case "create" -> CommandDeal.create(name, args, cm);
+//            case "delete" -> CommandDeal.delete(name, args, cm);
+//            case "join" -> CommandDeal.join(name, args, cm);
+//            case "exit" -> CommandDeal.exit(name, args, cm);
+//            default -> "请输入正确的指令";
+//        };
+//    }
 
     // 获取消息
     @Contract(pure = true)
@@ -198,10 +181,11 @@ public class AIControl {
 
     /**
      * 聊天
+     *
      * @param message 用户的消息
      * @return AI的回复
      */
-    public static @NotNull String chat(@NotNull String username, @NotNull String message) {
+    public static MutableComponent chat(@NotNull String username, @NotNull String message) {
         // 获取聊天室名称
         String chatName = NameManger.getChatName(username);
         logger.info("chat get player {} in chat name: {}",username ,chatName);
@@ -212,7 +196,7 @@ public class AIControl {
         }catch (NoChatRoomFound e){
             logger.error("chat NoChatRoomFound: {}", e.getMessage());
             cm.printAllRooms();
-            return "你没有加入任何一个聊天室哦";
+            return Component.translatable("neuracraft.chat.error.notInChatRoom");
         }
         // 发送消息给AI,并获取回复
         String msg = c.sendMessage(message);
@@ -222,6 +206,11 @@ public class AIControl {
         }catch (IOException e){
             logger.error("IOException: {}", e.getMessage());
         }
-        return msg;
+        return Component.literal(msg);
+    }
+
+
+    public static ChatRoomManger getCm() {
+        return cm;
     }
 }

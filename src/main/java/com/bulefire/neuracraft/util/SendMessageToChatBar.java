@@ -10,7 +10,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -30,7 +29,16 @@ public class SendMessageToChatBar {
     public static void sendChatMessage(@NotNull ServerPlayer player, @NotNull String name, @NotNull String message){
         log.info("server sendChatMessage called");
         // 构建消息
-        MutableComponent cm = Component.translatable("<%s> %s", name, message);
+        MutableComponent cm = Component.translatable("neuracraft.chat.message.format.player", name, message);
+        // 发送消息
+        player.sendSystemMessage(cm);
+    }
+
+    @OnlyIn(Dist.DEDICATED_SERVER)
+    public static void sendChatMessage(@NotNull ServerPlayer player, @NotNull String name, @NotNull MutableComponent message){
+        log.info("mu server sendChatMessage called");
+        // 构建消息
+        MutableComponent cm = Component.translatable("neuracraft.chat.message.format.player", name, message);
         // 发送消息
         player.sendSystemMessage(cm);
     }
@@ -38,9 +46,25 @@ public class SendMessageToChatBar {
     @OnlyIn(Dist.CLIENT)
     public static void sendChatMessage(@NotNull LocalPlayer player, @NotNull String name, @NotNull String message){
         // 构建消息
-        MutableComponent cm = Component.translatable("<%s> %s", name, message);
+        MutableComponent cm = Component.translatable("neuracraft.chat.message.format.player", name, message);
         // 发送消息
         player.sendSystemMessage(cm);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static void sendChatMessage(@NotNull LocalPlayer player, @NotNull String name, @NotNull MutableComponent message){
+        // 构建消息
+        MutableComponent cm = Component.translatable("neuracraft.chat.message.format.player", name, message);
+        // 发送消息
+        player.sendSystemMessage(cm);
+    }
+
+    @OnlyIn(Dist.DEDICATED_SERVER)
+    public static void broadcastMessage(@NotNull MinecraftServer server,@NotNull String name,@NotNull MutableComponent message){
+        log.info("mu server broadcastMessage called");
+        for(ServerPlayer player : server.getPlayerList().getPlayers()) {
+            SendMessageToChatBar.sendChatMessage(player,name,message);
+        }
     }
 
     @OnlyIn(Dist.DEDICATED_SERVER)

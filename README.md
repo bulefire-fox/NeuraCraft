@@ -12,14 +12,14 @@ You can now _**chat**_ with **AI players** in the game.
 We plan to make AI truly become a **_player entity and play with you_** in **v4.0**. 
 For any issues, please submit [issues](https://github.com/bulefire-dream/NeuraCraft/issues).
 You can also visit our [GitHub](https://github.com/bulefire-dream/NeuraCraft) homepage. <br>
-[start use](./resource/docs/config_file/en_us.md)
+[start use](resource/docs/API/CyberFurryAPI/en_us.md)
 
 
 这是一个mod在你的游戏中添加了**ai玩家**，你现在可以在游戏内与**ai玩家** _对话_，
 我们计划在 **v4.0** 到时候让ai真正变成一个 **_玩家实体_** 并和你一起 **_游戏_**，
 有任何问题请提交[issues](https://github.com/bulefire-dream/NeuraCraft/issues),
 你也可以浏览我们的[GitHub](https://github.com/bulefire-dream/NeuraCraft)主页 <br>
-[开始使用](./resource/docs/config_file/zh_cn.md)
+[开始使用](resource/docs/API/CyberFurryAPI/zh_cn.md)
 
 <h1></h1>
 

@@ -6,6 +6,7 @@ import com.bulefire.neuracraft.ai.control.player.PlayerControl;
 import com.bulefire.neuracraft.ai.control.player.PlayerMetaInfo;
 import com.bulefire.neuracraft.config.yy.BaseInformation;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,11 +27,11 @@ public class PlayerJoinEventListener {
 
         PlayerControl.put(name, new PlayerMetaInfo());
 
-        String message = AIControl.dealWith(name, "加入聊天");
-        if (!message.startsWith("Error, 请联系管理员")){
-            player.sendSystemMessage(Component.translatable("<%s> %s", BaseInformation.show_name, message));
+        MutableComponent message = AIControl.dealWith(name, "加入聊天");
+        if (!message.getString().startsWith("Error, 请联系管理员")){
+            player.sendSystemMessage(Component.translatable("neuracraft.chat.message.format.player", BaseInformation.show_name, message));
             return;
         }
-        player.sendSystemMessage(Component.translatable(message));
+        player.sendSystemMessage(message);
     }
 }

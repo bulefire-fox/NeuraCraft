@@ -1,0 +1,25 @@
+{
+  "neuracraft.chat.hello": "Hello! Welcome to NeuraCraft Chat Room Manager System!",
+
+  "neuracraft.command.create.success": "Chat room created: %s",
+  "neuracraft.command.create.failure.alreadyExist": "Chat room %s already exists",
+  "neuracraft.command.create.failure.unknown": "Creation failed",
+
+  "neuracraft.command.delete.success": "Successfully deleted chat room: %s",
+
+  "neuracraft.command.exit.success": "Exited chat room: %s",
+  "neuracraft.command.exit.notInChatRoom": "You are not in this chat room!",
+
+  "neuracraft.command.find.notInChatRoom": "You have not joined any chat room",
+  "neuracraft.command.find.success": "Current chat room: %s",
+
+  "neuracraft.command.join.success": "Joined chat room: %s",
+  "neuracraft.command.join.failure.notExist": "Chat room %s does not exist",
+
+  "neuracraft.command.show.use": "Usage: Please check the wiki (too lazy to rewrite this)",
+
+  "neuracraft.chat.error.tooFast": "Operation frequency too high. Please try again later",
+  "neuracraft.chat.error.nullMessage": "No message received",
+  "neuracraft.chat.error.notInChatRoom": "You have not joined any chat room",
+  "neuracraft.chat.message.format.player": "<%s> %s"
+}
