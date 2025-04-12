@@ -19,7 +19,7 @@ You can also visit our [GitHub](https://github.com/bulefire-dream/NeuraCraft) ho
 我们计划在 **v4.0** 到时候让ai真正变成一个 **_玩家实体_** 并和你一起 **_游戏_**，
 有任何问题请提交[issues](https://github.com/bulefire-dream/NeuraCraft/issues),
 你也可以浏览我们的[GitHub](https://github.com/bulefire-dream/NeuraCraft)主页 <br>
-[开始使用](resource/docs/API/CyberFurryAPI/zh_cn.md)
+[开始使用](resource/docs/start/zh_cn.md)
 
 <h1></h1>
 
