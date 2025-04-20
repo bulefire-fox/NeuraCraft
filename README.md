@@ -12,7 +12,7 @@ You can now _**chat**_ with **AI players** in the game.
 We plan to make AI truly become a **_player entity and play with you_** in **v4.0**. 
 For any issues, please submit [issues](https://github.com/bulefire-dream/NeuraCraft/issues).
 You can also visit our [GitHub](https://github.com/bulefire-dream/NeuraCraft) homepage. <br>
-[start use](resource/docs/API/CyberFurryAPI/en_us.md)
+[start use](resource/docs/start/en_us.md)
 
 
 这是一个mod在你的游戏中添加了**ai玩家**，你现在可以在游戏内与**ai玩家** _对话_，
@@ -24,7 +24,7 @@ You can also visit our [GitHub](https://github.com/bulefire-dream/NeuraCraft) ho
 <h1></h1>
 
 <h4 align="center"> Find out more about NeuraCraft on our <a href="https://www.curseforge.com/minecraft/mc-mods/neuracraft">Curseforge</a> or <a href="https://modrinth.com/mod/neuracraft">Modrinth</a> Page</h4>
-<h4 align="center"> Looking for the Fabric port? we are find a developer to provide the fabric version</h4>
-<h4 align="center"> if you can do this,please contact us by send email to <br>
+<h4 align="center"> Looking for the Fabric port? we are finding a developer to provide the fabric version</h4>
+<h4 align="center"> if you can do this,please contact us by sending an email to <br>
 support@bulefire.top</h4>
 

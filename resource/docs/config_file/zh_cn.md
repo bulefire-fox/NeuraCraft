@@ -47,4 +47,4 @@ NeuraCraft 的配置文件位于 `config/neuracraft-common.toml` 文件中。 <b
 配置文件的大致内容如上所示, 你可以根据你的需求进行修改。
 
 ---
-目前我们使用 CyberFurry API 请参阅 [开始使用 NeuraCraft for CyberFurry API](../zh_cn.md)
+目前我们使用 CyberFurry API 请参阅 [开始使用 NeuraCraft for CyberFurry API](../API/CyberFurryAPI/zh_cn.md)

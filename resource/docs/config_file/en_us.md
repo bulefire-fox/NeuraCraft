@@ -47,4 +47,4 @@ Its content is as follows:
 The configuration file content is roughly as shown above, and you can modify it according to your needs.
 
 ---
-We currently utilize the CyberFurry API. Please refer to [Get started with NeuraCraft for CyberFurry API](../en_us.md) for details.
+We currently utilize the CyberFurry API. Please refer to [Get started with NeuraCraft for CyberFurry API](../API/CyberFurryAPI/en_us.md) for details.

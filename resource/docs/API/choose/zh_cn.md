@@ -25,6 +25,6 @@
 不用爆金币
 ```
 [如何申请](../CyberFurryAPI/zh_cn.md)  
-[配置文件编写](../CyberFurryAPI/config_file/zh_cn.md)
+[配置文件编写](../../config_file/zh_cn.md)
 
 ---
