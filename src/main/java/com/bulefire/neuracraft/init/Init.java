@@ -19,12 +19,16 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 import static com.bulefire.neuracraft.NeuraCraft.MODID;
 
 public class Init {
+    private static final Logger log = LoggerFactory.getLogger(Init.class);
+
     public static void init(NeuraCraft n) {
         // 获取模组事件总线
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -82,7 +86,7 @@ public class Init {
 
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-
+            log.info("CLIENT SETUP");
         }
     }
 

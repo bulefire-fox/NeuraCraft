@@ -1,10 +1,11 @@
-package com.bulefire.neuracraft.command.chatroom;
+package com.bulefire.neuracraft.command.chatroom.control;
 
 import com.bulefire.neuracraft.ai.AIModels;
 import com.bulefire.neuracraft.ai.control.AIControl;
 import com.bulefire.neuracraft.ai.control.ChatRoomManger;
 import com.bulefire.neuracraft.ai.control.NoChatRoomFound;
 import com.bulefire.neuracraft.ai.control.player.PlayerControl;
+import com.bulefire.neuracraft.command.chatroom.SubCommandBase;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-public class Create extends SubCommandBase{
+public class Create extends SubCommandBase {
     private static final Logger logger = LogUtils.getLogger();
 
     @Override
@@ -37,17 +38,20 @@ public class Create extends SubCommandBase{
     public static @NotNull MutableComponent create(@NotNull String name, @NotNull String cname, @NotNull ChatRoomManger cm){
         logger.info("start create room");
         if(!cm.createClient(cname, AIModels.CyberFurry)){
-            return Component.translatable("neuracraft.command.create.failure.alreadyExist");
+            return Component.translatable("neuracraft.command.create.failure.alreadyExist", cname);
         }
 
         try {
             cm.getClient(cname).playerList.add(name);
+            cm.getClient(cname).adminList.add(name);
         } catch (NoChatRoomFound e) {
-            logger.error(" NoChatRoomFound: {}", e.getMessage());
+            logger.error("NoChatRoomFound: {}", e.getMessage());
             return Component.translatable("neuracraft.command.create.failure.unknown");
+        } catch (Exception e) {
+            logger.error("Exception: {}", e.getMessage());
         }
 
-
+        logger.debug("create room done");
         if (PlayerControl.get(name) == null){
             return Component.translatable("neuracraft.command.create.failure.unknown");
         }

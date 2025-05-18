@@ -48,16 +48,20 @@ public class ChatRoomManger {
         }
 
         if (model == AIModels.CyberFurry) {
+            logger.debug("创建成功");
             clients.put(chatName, new YYChatRoom(chatName));
             return true;
         }
-
         return false;
     }
 
     public void removeClient(@NotNull String chatName) {
         logger.info("remove client {}", chatName);
         clients.remove(chatName);
+    }
+
+    public List<String> getAllClients(){
+        return clients.keySet().stream().toList();
     }
 
     public void loadAllChatRoomFromFile(@NotNull List<Path> paths) throws IOException {

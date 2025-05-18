@@ -1,10 +1,11 @@
-package com.bulefire.neuracraft.command.chatroom;
+package com.bulefire.neuracraft.command.chatroom.self;
 
 import com.bulefire.neuracraft.ai.AIChatRoom;
 import com.bulefire.neuracraft.ai.control.AIControl;
 import com.bulefire.neuracraft.ai.control.ChatRoomManger;
 import com.bulefire.neuracraft.ai.control.NameManger;
 import com.bulefire.neuracraft.ai.control.NoChatRoomFound;
+import com.bulefire.neuracraft.command.chatroom.SubCommandBase;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class Find extends SubCommandBase{
+public class Find extends SubCommandBase {
     @Override
     public int run(@NotNull CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         String name = Objects.requireNonNull(context.getSource().getPlayer()).getName().getString();

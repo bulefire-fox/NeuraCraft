@@ -46,8 +46,8 @@ public class YYChatRoom extends AIChatRoom {
         this.chatId = chatId;
     }
 
-    public YYChatRoom(String name, List<String> playerList, String chatId){
-        super(name, playerList, AIModels.CyberFurry);
+    public YYChatRoom(String name, List<String> playerList, String chatId, List<String> adminList){
+        super(name, playerList, AIModels.CyberFurry, adminList);
         this.chatId = chatId;
     }
 
@@ -202,7 +202,7 @@ public class YYChatRoom extends AIChatRoom {
     public void save() throws IOException {
         log.info("try to save chat room to file");
         String filename = this.model+"-"+this.name+".json";
-        YYConfigFile configFile = new YYConfigFile(this.name, this.playerList, this.model,this.chatId);
+        YYConfigFile configFile = new YYConfigFile(this.name, this.playerList, this.model,this.adminList,this.chatId);
         try {
             FileUtils.saveJsonToFile(configFile, FileUtils.chatPath.resolve(filename));
         } catch (IOException e) {
@@ -223,6 +223,7 @@ public class YYChatRoom extends AIChatRoom {
         this.chatId = configFile.getChatId();
         this.playerList = configFile.getPlayerList();
         this.model = configFile.getModel();
+        this.adminList = configFile.getAdminList();
     }
 
     @Override

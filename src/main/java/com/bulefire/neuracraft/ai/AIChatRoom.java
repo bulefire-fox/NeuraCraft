@@ -17,19 +17,25 @@ public abstract class AIChatRoom implements AI {
      */
     public List<String> playerList;
     /**
+     * 管理员列表
+     */
+    public List<String> adminList;
+    /**
      * 模型
      */
     public AIModels model;
 
-    public AIChatRoom(@NotNull String name, @NotNull List<String> playerList, @NotNull AIModels model) {
+    public AIChatRoom(@NotNull String name, @NotNull List<String> playerList, @NotNull AIModels model, @NotNull List<String> adminList) {
         this.name = name;
         this.playerList = playerList;
         this.model = model;
+        this.adminList = adminList;
     }
 
     public AIChatRoom(@NotNull String name,@NotNull AIModels model) {
         this.name = name;
         playerList = new ArrayList<>();
+        adminList = new ArrayList<>();
         this.model = model;
     }
 
@@ -55,6 +61,14 @@ public abstract class AIChatRoom implements AI {
 
     public void setModel(AIModels model) {
         this.model = model;
+    }
+
+    public List<String> getAdminList() {
+        return adminList;
+    }
+
+    public void setAdminList(List<String> adminList) {
+        this.adminList = adminList;
     }
 
     @Override

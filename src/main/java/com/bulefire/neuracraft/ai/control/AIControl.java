@@ -196,7 +196,7 @@ public class AIControl {
         }catch (NoChatRoomFound e){
             logger.error("chat NoChatRoomFound: {}", e.getMessage());
             cm.printAllRooms();
-            return Component.translatable("neuracraft.chat.error.notInChatRoom");
+            return Component.translatable("neuracraft.chat.error.notInChatRoom").append(Component.translatable("neuracraft.chat.error.notInChatRoom.help"));
         }
         // 发送消息给AI,并获取回复
         String msg = c.sendMessage(message);

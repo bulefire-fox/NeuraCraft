@@ -6,6 +6,7 @@
   "neuracraft.command.create.failure.unknown": "Creation failed",
 
   "neuracraft.command.delete.success": "Successfully deleted chat room: %s",
+  "neuracraft.command.delete.notAdmin": "You are not an admin of chat room %s! Cannot delete this chat room.",
 
   "neuracraft.command.exit.success": "Exited chat room: %s",
   "neuracraft.command.exit.notInChatRoom": "You are not in this chat room!",
@@ -16,10 +17,27 @@
   "neuracraft.command.join.success": "Joined chat room: %s",
   "neuracraft.command.join.failure.notExist": "Chat room %s does not exist",
 
+  "neuracraft.command.invite.notFound": "",
+  "neuracraft.command.invite.success": "",
+  "neuracraft.command.invite.notAdmin": "",
+
+  "neuracraft.command.kick.notFound": "",
+  "neuracraft.command.kick.notInChatRoom": "",
+  "neuracraft.command.kick.success": "",
+
+  "neuracraft.command.list.chatroom": "",
+
   "neuracraft.command.show.use": "Usage: Please check the wiki (too lazy to rewrite this)",
 
   "neuracraft.chat.error.tooFast": "Operation frequency too high. Please try again later",
   "neuracraft.chat.error.nullMessage": "No message received",
   "neuracraft.chat.error.notInChatRoom": "You have not joined any chat room",
-  "neuracraft.chat.message.format.player": "<%s> %s"
+  "neuracraft.chat.error.notInChatRoom.help": "Use the /chatroom command to join or create a chat room.",
+
+  "neuracraft.chat.message.format.player": "<%s> %s",
+
+
+  "item.neuracraft.cyber_furry_logo": "Cyber Furry LOGO",
+
+  "tab.neuracraft.ai_logo": "AI LOGO"
 }
