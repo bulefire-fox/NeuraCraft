@@ -2,8 +2,7 @@
 ## 如何获取 token 和 appid
 此mod的```银影```模型由 [CyberFurry](https://chat.wingmark.cn/) 提供,你可以尝试在网页上先尝试与```银影```进行对话,
 如要获取模型的 token 和 appid 则需要像 [CyberFurry](https://chat.wingmark.cn/) 申请. <br>
-具体流程可以参考下面的叙述,如果你不像申请官方的api,也可以使用我们提供的转发api,具体参阅
-<button onclick="location.href='#forward_api';">使用我们提供的转发接口</button>
+具体流程可以参考下面的叙述.
 
 ### 1.注册账号
 访问[注册页面](https://chat.wingmark.cn/?page=register)填写信息并注册. 注意需要QQ号,没有的请自行寻找办法注册
@@ -57,13 +56,3 @@
 ![信息](../../../img/docs/infomation.png)
 
 将 ```AppID``` 和 ```bearer key``` 填入 ```neuracraft-common.toml``` 文件中即可正常使用
-
-<a id="forward_api"></a>
-## 使用我们提供的转发接口
-如果您想使用我们提供的转发接口,您目前只需要将配置文件中的 ```apiUrl``` 的值替换为 ```https://neuracraft.bulefire.top:39132/v1```
-```toml
-    #API URL
-    apiUrl = "https://neuracraft.bulefire.top:39132/v1"
-```
-其他选项不用变更.  
-需要注意的是我们的转发服务**目前**并不需要```token```和```appId```,但是我们计划在未来的某个版本加入独立的验证措施以区分用户.
