@@ -15,7 +15,7 @@ This isn't necessarily bad news - using `CyberFurry` offers several advantages:
 
 However, some limitations exist:
 
-- Complex API application process for `CyberFurry` series (*we provide proxy API access*)
+- Complex API application process for `CyberFurry` series 
 - Specialized for furry content with limited general-purpose capabilities
 - Potential limitations in English language support
 

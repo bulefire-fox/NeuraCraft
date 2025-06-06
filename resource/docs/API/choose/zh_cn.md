@@ -16,7 +16,7 @@
 
 但缺点也是不可避免的
 
-- `CyberFurry` 系列API申请繁琐 `针对这点我们有转发API开放使用`
+- `CyberFurry` 系列API申请繁琐
 - only for furry 导致其通用能力欠缺
 - 可能对英文的支持不够好
 
