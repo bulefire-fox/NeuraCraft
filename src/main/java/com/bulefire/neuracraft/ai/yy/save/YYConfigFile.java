@@ -12,8 +12,8 @@ public class YYConfigFile extends AIConfigFile {
         super();
     }
 
-    public YYConfigFile(String name, List<String> playerList, AIModels model, List<String> adminList, String chatId) {
-        super(name,playerList, model, adminList);
+    public YYConfigFile(String name, List<String> playerList, AIModels model, List<String> adminList, String disPlayName, String chatId) {
+        super(name,playerList, model, adminList,disPlayName);
         this.chatId = chatId;
     }
 

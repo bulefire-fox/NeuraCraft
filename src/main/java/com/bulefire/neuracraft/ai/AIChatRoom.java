@@ -25,18 +25,25 @@ public abstract class AIChatRoom implements AI {
      */
     public AIModels model;
 
-    public AIChatRoom(@NotNull String name, @NotNull List<String> playerList, @NotNull AIModels model, @NotNull List<String> adminList) {
+    /**
+     * 展示名
+     */
+    public String disPlayName;
+
+    public AIChatRoom(@NotNull String name, @NotNull List<String> playerList, @NotNull AIModels model, @NotNull List<String> adminList,@NotNull String disPlayName) {
         this.name = name;
         this.playerList = playerList;
         this.model = model;
         this.adminList = adminList;
+        this.disPlayName = disPlayName;
     }
 
-    public AIChatRoom(@NotNull String name,@NotNull AIModels model) {
+    public AIChatRoom(@NotNull String name,@NotNull AIModels model, @NotNull String disPlayName) {
         this.name = name;
         playerList = new ArrayList<>();
         adminList = new ArrayList<>();
         this.model = model;
+        this.disPlayName = disPlayName;
     }
 
     public String getName() {
@@ -69,6 +76,14 @@ public abstract class AIChatRoom implements AI {
 
     public void setAdminList(List<String> adminList) {
         this.adminList = adminList;
+    }
+
+    public String getDisPlayName() {
+        return disPlayName;
+    }
+
+    public void setDisPlayName(String disPlayName) {
+        this.disPlayName = disPlayName;
     }
 
     @Override

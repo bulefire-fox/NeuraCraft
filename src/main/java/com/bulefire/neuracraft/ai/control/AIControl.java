@@ -1,6 +1,7 @@
 package com.bulefire.neuracraft.ai.control;
 
 import com.bulefire.neuracraft.ai.AI;
+import com.bulefire.neuracraft.ai.AIChatRoom;
 import com.bulefire.neuracraft.ai.control.player.PlayerControl;
 import com.bulefire.neuracraft.config.yy.BaseInformation;
 import com.bulefire.neuracraft.util.FileUtils;
@@ -81,8 +82,12 @@ public class AIControl {
         logger.warn("deal in client");
         // 处理消息
         MutableComponent repose = dealWith(name, message);
+
+        String chatName = NameManger.getChatName(name);
+        AIChatRoom c = cm.getClient(chatName);
+
         if (Minecraft.getInstance().player != null) {
-            SendMessageToChatBar.sendChatMessage(Minecraft.getInstance().player,BaseInformation.show_name, repose);
+            SendMessageToChatBar.sendChatMessage(Minecraft.getInstance().player,c.disPlayName, repose);
         }else {
             throw new RuntimeException("Minecraft.getInstance().player is null");
         }

@@ -16,11 +16,11 @@ import java.nio.charset.StandardCharsets;
 public final class AIHTTPClient {
     private static final Logger log = LogUtils.getLogger();
 
-    public static @NotNull String POST(@NotNull String urls, @NotNull String body) throws Exception {
+    public static @NotNull String POST(@NotNull String urls, @NotNull String body, @NotNull String token) throws Exception {
         log.info("send to ai url: {}", urls);
         log.info("send to ai: {}", body);
 
-        var connection = getConnection(urls, body);
+        var connection = getConnection(urls, body, token);
 
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -41,13 +41,13 @@ public final class AIHTTPClient {
         }
     }
 
-    private static @NotNull HttpURLConnection getConnection(@NotNull String urls, @NotNull String body) throws IOException {
+    private static @NotNull HttpURLConnection getConnection(@NotNull String urls, @NotNull String body, @NotNull String token) throws IOException {
         URL url = new URL(urls);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
 
         connection.addRequestProperty("Content-Type", "application/json");
-        connection.addRequestProperty("Authorization", "Bearer " + BaseInformation.token);
+        connection.addRequestProperty("Authorization", "Bearer " + token);
 
         connection.setDoOutput(true);
 

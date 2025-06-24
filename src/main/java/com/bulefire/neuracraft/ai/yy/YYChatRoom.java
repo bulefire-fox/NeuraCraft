@@ -31,23 +31,23 @@ public class YYChatRoom extends AIChatRoom {
     private String error;
     private boolean toAdmin;
 
-    public YYChatRoom(String name){
-        super(name, AIModels.CyberFurry);
+    public YYChatRoom(String name, @NotNull String dn){
+        super(name, AIModels.CyberFurry,dn);
         // 生成聊天ID
         this.chatId = BaseInformation.appid + "-" +name + "-" +radomString();
     }
 
-    public YYChatRoom(String name, AIModels model){
-        super(name, model);
+    public YYChatRoom(@NotNull String name, @NotNull AIModels model, @NotNull String disPlayName){
+        super(name, model, disPlayName);
     }
 
-    public YYChatRoom(String name, String chatId){
-        super(name, AIModels.CyberFurry);
+    public YYChatRoom(String name, String chatId, @NotNull String dn){
+        super(name, AIModels.CyberFurry,dn);
         this.chatId = chatId;
     }
 
-    public YYChatRoom(String name, List<String> playerList, String chatId, List<String> adminList){
-        super(name, playerList, AIModels.CyberFurry, adminList);
+    public YYChatRoom(String name, List<String> playerList, String chatId, List<String> adminList, String dn){
+        super(name, playerList, AIModels.CyberFurry, adminList,dn);
         this.chatId = chatId;
     }
 
@@ -74,7 +74,7 @@ public class YYChatRoom extends AIChatRoom {
         String body = buildBody(message);
         // 发送请求
         try {
-            String response = AIHTTPClient.POST(BaseInformation.api_url+BaseInformation.api_interface, body);
+            String response = AIHTTPClient.POST(BaseInformation.api_url+BaseInformation.api_interface, body, BaseInformation.token);
             // 检查请求体
             if (!checkBody(response)){
                 if (toAdmin){
@@ -202,7 +202,7 @@ public class YYChatRoom extends AIChatRoom {
     public void save() throws IOException {
         log.info("try to save chat room to file");
         String filename = this.model+"-"+this.name+".json";
-        YYConfigFile configFile = new YYConfigFile(this.name, this.playerList, this.model,this.adminList,this.chatId);
+        YYConfigFile configFile = new YYConfigFile(this.name, this.playerList, this.model,this.adminList,this.disPlayName,this.chatId);
         try {
             FileUtils.saveJsonToFile(configFile, FileUtils.chatPath.resolve(filename));
         } catch (IOException e) {
@@ -224,6 +224,8 @@ public class YYChatRoom extends AIChatRoom {
         this.playerList = configFile.getPlayerList();
         this.model = configFile.getModel();
         this.adminList = configFile.getAdminList();
+        this.disPlayName = configFile.getDisPlayName();
+        log.info("chat room name: {}", this.name);
     }
 
     @Override

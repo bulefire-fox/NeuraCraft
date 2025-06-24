@@ -2,7 +2,10 @@ package com.bulefire.neuracraft.ai.control;
 
 import com.bulefire.neuracraft.ai.AIChatRoom;
 import com.bulefire.neuracraft.ai.AIModels;
+import com.bulefire.neuracraft.ai.openaiAPI.OPAChatRoom;
 import com.bulefire.neuracraft.ai.yy.YYChatRoom;
+import com.bulefire.neuracraft.config.opa.OPA;
+import com.bulefire.neuracraft.config.yy.BaseInformation;
 import com.mojang.logging.LogUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -49,7 +52,11 @@ public class ChatRoomManger {
 
         if (model == AIModels.CyberFurry) {
             logger.debug("创建成功");
-            clients.put(chatName, new YYChatRoom(chatName));
+            clients.put(chatName, new YYChatRoom(chatName, BaseInformation.show_name));
+            return true;
+        } else if (model == AIModels.OpenAI) {
+            logger.debug("创建成功");
+            clients.put(chatName, new OPAChatRoom(chatName, model, OPA.show_name, OPA.model));
             return true;
         }
         return false;
@@ -70,12 +77,23 @@ public class ChatRoomManger {
         for (Path path : paths){
             m = path.toFile().getName().split("-")[0];
             AIModels model = AIModels.getModel(m);
+            AIChatRoom client = null;
             if (model == null){
                 logger.error("model {} not found", m);
                 return;
+            } else if (model == AIModels.CyberFurry) {
+                client = new YYChatRoom(path.toFile().getName().split("-")[1],model,BaseInformation.show_name);
+                client.load(path);
+            } else if (model == AIModels.OpenAI) {
+                client = new OPAChatRoom(path.toFile().getName().split("-")[1], model, OPA.show_name, OPA.model);
+                client.load(path);
             }
-            AIChatRoom client = new YYChatRoom(path.toFile().getName().split("-")[1],model);
-            client.load(path);
+
+            if (client == null){
+                logger.error("load client failed {} ", path);
+                return;
+            }
+
             logger.info("load client {}", client.getName());
             this.clients.put(client.getName(), client);
         }

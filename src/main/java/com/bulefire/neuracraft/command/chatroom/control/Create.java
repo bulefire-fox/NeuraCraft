@@ -27,17 +27,18 @@ public class Create extends SubCommandBase {
     public int run(@NotNull CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         // 构建参数
         String chatRoomName = StringArgumentType.getString(context, "roomName");
+        AIModels model = AIModels.getModel(StringArgumentType.getString(context, "chatModel"));
         String playerName = Objects.requireNonNull(context.getSource().getPlayer()).getName().getString();
         // 执行命令
-        MutableComponent result = create(playerName, chatRoomName, AIControl.getCm());
+        MutableComponent result = create(playerName, chatRoomName, model, AIControl.getCm());
         feedback(context.getSource(), result);
         // 1
         return SINGLE_SUCCESS;
     }
 
-    public static @NotNull MutableComponent create(@NotNull String name, @NotNull String cname, @NotNull ChatRoomManger cm){
+    public static @NotNull MutableComponent create(@NotNull String name, @NotNull String cname, AIModels model, @NotNull ChatRoomManger cm){
         logger.info("start create room");
-        if(!cm.createClient(cname, AIModels.CyberFurry)){
+        if(!cm.createClient(cname, model)){
             return Component.translatable("neuracraft.command.create.failure.alreadyExist", cname);
         }
 

@@ -1,6 +1,7 @@
 package com.bulefire.neuracraft.config;
 
 import com.bulefire.neuracraft.NeuraCraft;
+import com.bulefire.neuracraft.config.opa.OPA;
 import com.bulefire.neuracraft.config.yy.BaseInformation;
 import com.bulefire.neuracraft.config.yy.Variables;
 import com.mojang.logging.LogUtils;
@@ -24,6 +25,7 @@ public class Config {
     public static final ForgeConfigSpec COMMON_SPEC;
 
     public static final BaseInformation BASE_INFORMATION;
+    public static final OPA OPA;
 
     @SubscribeEvent
     static void onLoad(final @NotNull ModConfigEvent event) {
@@ -35,6 +37,7 @@ public class Config {
 
     static {
         BASE_INFORMATION = new BaseInformation();
+        OPA = new OPA();
 
         COMMON_SPEC = BUILDER.build();
         MinecraftForge.EVENT_BUS.register(Config.class);
@@ -42,5 +45,6 @@ public class Config {
 
     public static void init() {
         BASE_INFORMATION.init();
+        OPA.init();
     }
 }

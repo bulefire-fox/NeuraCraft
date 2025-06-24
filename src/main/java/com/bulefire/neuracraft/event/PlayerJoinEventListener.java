@@ -1,7 +1,9 @@
 package com.bulefire.neuracraft.event;
 
 import com.bulefire.neuracraft.NeuraCraft;
+import com.bulefire.neuracraft.ai.AIChatRoom;
 import com.bulefire.neuracraft.ai.control.AIControl;
+import com.bulefire.neuracraft.ai.control.NoChatRoomFound;
 import com.bulefire.neuracraft.ai.control.player.PlayerControl;
 import com.bulefire.neuracraft.ai.control.player.PlayerMetaInfo;
 import com.bulefire.neuracraft.config.yy.BaseInformation;
@@ -14,6 +16,8 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Objects;
 
 @Mod.EventBusSubscriber(modid = NeuraCraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerJoinEventListener {
@@ -28,8 +32,15 @@ public class PlayerJoinEventListener {
         PlayerControl.put(name, new PlayerMetaInfo());
 
         MutableComponent message = AIControl.dealWith(name, "加入聊天");
+        String disPlayName;
+        try {
+            AIChatRoom c = AIControl.getCm().getClient(Objects.requireNonNull(PlayerControl.get(name)).getChatName());
+            disPlayName = c.disPlayName;
+        }catch (NoChatRoomFound e){
+            disPlayName = "SYSTEM";
+        }
         if (!message.getString().startsWith("Error, 请联系管理员")){
-            player.sendSystemMessage(Component.translatable("neuracraft.chat.message.format.player", BaseInformation.show_name, message));
+            player.sendSystemMessage(Component.translatable("neuracraft.chat.message.format.player", disPlayName, message));
             return;
         }
         player.sendSystemMessage(message);

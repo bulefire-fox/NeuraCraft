@@ -27,7 +27,9 @@ public class RegisterCommand {
                         .executes(new ChatRoomCommand())
                         .then(Commands.literal("create")
                                 .then(Commands.argument("roomName", StringArgumentType.word())
-                                        .executes(new Create())
+                                        .then(Commands.argument("chatModel", StringArgumentType.word())
+                                                .executes(new Create())
+                                        )
                                 )
                         )
 

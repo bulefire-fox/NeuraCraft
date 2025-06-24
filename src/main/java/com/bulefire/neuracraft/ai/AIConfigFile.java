@@ -19,16 +19,21 @@ public abstract class AIConfigFile {
      * 模型
      */
     private AIModels model;
+    /**
+     * 显示名
+     */
+    private String disPlayName;
 
     public AIConfigFile(){
 
     }
 
-    public AIConfigFile(String name, List<String> playerList, AIModels model, List<String> adminList){
+    public AIConfigFile(String name, List<String> playerList, AIModels model, List<String> adminList,String disPlayName){
         this.name = name;
         this.playerList = playerList;
         this.model = model;
         this.adminList = adminList;
+        this.disPlayName = disPlayName;
     }
 
     public String getName() {
@@ -61,5 +66,13 @@ public abstract class AIConfigFile {
 
     public void setAdminList(List<String> adminList) {
         this.adminList = adminList;
+    }
+
+    public String getDisPlayName() {
+        return disPlayName;
+    }
+
+    public void setDisPlayName(String disPlayName) {
+        this.disPlayName = disPlayName;
     }
 }
