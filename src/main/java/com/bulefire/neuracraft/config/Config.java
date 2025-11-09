@@ -3,7 +3,7 @@ package com.bulefire.neuracraft.config;
 import com.bulefire.neuracraft.NeuraCraft;
 import com.bulefire.neuracraft.config.opa.OPA;
 import com.bulefire.neuracraft.config.yy.BaseInformation;
-import com.bulefire.neuracraft.config.yy.Variables;
+import com.bulefire.neuracraft.util.FileUtils;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
@@ -12,6 +12,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+
+import java.io.IOException;
 
 // 一个示例 config 类。这不是必需的，但最好有一个来保持您的配置井井有条。
 // 演示如何使用 Forge 的配置 API
@@ -28,7 +30,7 @@ public class Config {
     public static final OPA OPA;
 
     @SubscribeEvent
-    static void onLoad(final @NotNull ModConfigEvent event) {
+    static void onLoad(final @NotNull ModConfigEvent event) throws IOException {
         if (event.getConfig().getSpec() == COMMON_SPEC){
             log.info("Loaded config file {}", event.getConfig().getFileName());
             init();
@@ -43,8 +45,9 @@ public class Config {
         MinecraftForge.EVENT_BUS.register(Config.class);
     }
 
-    public static void init() {
+    public static void init() throws IOException {
         BASE_INFORMATION.init();
         OPA.init();
+        FileUtils.init();
     }
 }

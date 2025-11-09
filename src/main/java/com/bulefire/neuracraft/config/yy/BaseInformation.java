@@ -33,6 +33,9 @@ public class BaseInformation {
     // times / min
     public static final ForgeConfigSpec.ConfigValue<Integer> TIMES;
 
+    // enable multi module
+    public static final ForgeConfigSpec.ConfigValue<Boolean> ENABLE_MULTI_MODULE;
+
     static{
         BUILDER = Config.BUILDER;
 
@@ -49,6 +52,8 @@ public class BaseInformation {
         SAVE_CHAT = BUILDER.comment("保存聊天").define("saveChat", true);
         TIMES = BUILDER.comment("次数 / min").define("times", 20);
 
+        ENABLE_MULTI_MODULE = BUILDER.comment("启用多模块").define("enableMultiModule", false);
+
         BUILDER.pop();
     }
 
@@ -60,23 +65,65 @@ public class BaseInformation {
     public static String api_interface;
     public static String token;
     public static String appid;
+    public static Variables variables;
     public static String model;
     public static String system_prompt;
     public static String show_name;
     public static boolean save_chat;
     public static int times;
+    public static boolean enable_multi_module;
 
     public void init(){
-        // log.info("初始化银影AI设置");
+        log.info("初始化银影AI设置");
         api_url = API_URL.get();
         api_interface = API_INTERFACE.get();
         token = TOKEN.get();
         appid = APPID.get();
         VARIABLES.init();
+        variables = VARIABLES;
         model = MODEL.get();
         system_prompt = SYSTEM_PROMPT.get();
         show_name = SHOW_NAME.get();
         save_chat = SAVE_CHAT.get();
         times = TIMES.get();
+        enable_multi_module = ENABLE_MULTI_MODULE.get();
+    }
+
+    public static class Variables {
+        private static final Logger log = LogUtils.getLogger();
+
+        public static final ForgeConfigSpec.Builder BUILDER;
+
+        // nickname
+        public static final ForgeConfigSpec.ConfigValue<String> NICKNAME;
+        // furry character
+        public static final ForgeConfigSpec.ConfigValue<String> FURRY_CHARACTER;
+        // prompt patch
+        public static final ForgeConfigSpec.ConfigValue<String> PROMPT_PATCH;
+
+        static {
+            BUILDER = BaseInformation.BUILDER;
+            BUILDER.push("Variables");
+
+            NICKNAME = BUILDER.comment("昵称").define("nickname", "没有哦");
+            FURRY_CHARACTER = BUILDER.comment("设定").define("furryCharacter", "没有哦");
+            PROMPT_PATCH = BUILDER.comment("微调提示词").define("promptPatch", "你在和一群人对话,每个人以 [id] 前缀区分,前缀只是用户的唯一标识符,你可以理解为用户id,你可以根据这个id来判断用户是否相同.前缀和用户的设定或者其他任何信息没有任何关系.");
+
+            BUILDER.pop();
+        }
+
+        public Variables() {
+
+        }
+
+        public static String nickname;
+        public static String furry_charter;
+        public static String prompt_patch;
+
+        public void init() {
+            nickname = NICKNAME.get();
+            furry_charter = FURRY_CHARACTER.get();
+            prompt_patch = PROMPT_PATCH.get();
+        }
     }
 }

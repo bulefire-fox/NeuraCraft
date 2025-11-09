@@ -1,15 +1,12 @@
 package com.bulefire.neuracraft.ai.control.player;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class PlayerMetaInfo {
     private String ChatName;
-
-    public String getChatName() {
-        return ChatName;
-    }
-
-    public void setChatName(String chatName) {
-        ChatName = chatName;
-    }
 
     public PlayerMetaInfo() {
     }

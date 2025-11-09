@@ -1,5 +1,7 @@
 package com.bulefire.neuracraft.ai;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -7,6 +9,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+@Setter
+@Getter
 public abstract class AIChatRoom implements AI {
     /**
      * 聊天室名称
@@ -43,46 +47,6 @@ public abstract class AIChatRoom implements AI {
         playerList = new ArrayList<>();
         adminList = new ArrayList<>();
         this.model = model;
-        this.disPlayName = disPlayName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<String> getPlayerList() {
-        return playerList;
-    }
-
-    public void setPlayerList(List<String> playerList) {
-        this.playerList = playerList;
-    }
-
-    public AIModels getModel() {
-        return model;
-    }
-
-    public void setModel(AIModels model) {
-        this.model = model;
-    }
-
-    public List<String> getAdminList() {
-        return adminList;
-    }
-
-    public void setAdminList(List<String> adminList) {
-        this.adminList = adminList;
-    }
-
-    public String getDisPlayName() {
-        return disPlayName;
-    }
-
-    public void setDisPlayName(String disPlayName) {
         this.disPlayName = disPlayName;
     }
 

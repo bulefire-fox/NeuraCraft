@@ -4,7 +4,6 @@ import com.bulefire.neuracraft.ai.AIChatRoom;
 import com.bulefire.neuracraft.ai.AIModels;
 import com.bulefire.neuracraft.ai.yy.save.YYConfigFile;
 import com.bulefire.neuracraft.config.yy.BaseInformation;
-import com.bulefire.neuracraft.config.yy.Variables;
 import com.bulefire.neuracraft.util.AIHTTPClient;
 import com.bulefire.neuracraft.util.FileUtils;
 import com.google.gson.Gson;
@@ -186,9 +185,9 @@ public class YYChatRoom extends AIChatRoom {
         body.setSystemPrompt(BaseInformation.system_prompt);
         body.setMessage(message);
         log.info("start build variables");
-        body.getVariables().setNickName(Variables.nickname);
-        body.getVariables().setFurryCharacter(Variables.furry_charter);
-        body.getVariables().setPromptPatch(Variables.prompt_patch);
+        body.getVariables().setNickName(BaseInformation.Variables.nickname);
+        body.getVariables().setFurryCharacter(BaseInformation.Variables.furry_charter);
+        body.getVariables().setPromptPatch(BaseInformation.Variables.prompt_patch);
 
         Gson gson = new Gson();
         // log.info(gson.toJson(body));

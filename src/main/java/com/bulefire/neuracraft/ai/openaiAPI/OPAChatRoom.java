@@ -63,6 +63,10 @@ public class OPAChatRoom extends AIChatRoom {
     }
 
     public String decoder(@NotNull String repose){
+        if (repose.startsWith("POST request failed")) {
+            log.error("Failed to get valid response from API: {}", repose);
+            return "API Error: " + repose;
+        }
         Gson g = new Gson();
         OPAResult result = g.fromJson(repose, OPAResult.class);
         OPAResult.ChoicesBean.Message m = result.getChoices().get(0).getMessage();

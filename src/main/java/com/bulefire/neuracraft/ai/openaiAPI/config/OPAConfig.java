@@ -3,9 +3,13 @@ package com.bulefire.neuracraft.ai.openaiAPI.config;
 import com.bulefire.neuracraft.ai.AIConfigFile;
 import com.bulefire.neuracraft.ai.AIModels;
 import com.bulefire.neuracraft.ai.openaiAPI.ChatHistory;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Setter
+@Getter
 public class OPAConfig extends AIConfigFile {
     private String chatModel;
     private ChatHistory chatHistory;
@@ -20,19 +24,4 @@ public class OPAConfig extends AIConfigFile {
         this.chatHistory = chatHistory;
     }
 
-    public String getChatModel() {
-        return chatModel;
-    }
-
-    public ChatHistory getChatHistory() {
-        return chatHistory;
-    }
-
-    public void setChatModel(String chatModel) {
-        this.chatModel = chatModel;
-    }
-
-    public void setChatHistory(ChatHistory chatHistory) {
-        this.chatHistory = chatHistory;
-    }
 }

@@ -1,6 +1,10 @@
 package com.bulefire.neuracraft.util;
 
 import com.bulefire.neuracraft.NeuraCraft;
+import com.bulefire.neuracraft.config.opa.OPA;
+import com.bulefire.neuracraft.config.opa.OPAEntity;
+import com.bulefire.neuracraft.config.yy.BaseInformation;
+import com.bulefire.neuracraft.config.yy.BaseInformationEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
@@ -23,18 +27,29 @@ public class FileUtils {
     public static final Path configPath = NeuraCraft.configPath.resolve("neuracraft");
     public static final Path chatPath = configPath.resolve("chat");
     public static final Path playerPath = configPath.resolve("player");
+    public static final Path modulePath = configPath.resolve("module");
 
     public static void init() throws IOException{
-        if (!Files.exists(configPath)){
+        logger.info("init file utils");
+        if (!Files.exists(configPath))
             Files.createDirectory(configPath);
-        }
 
-        if (!Files.exists(chatPath)){
+        if (!Files.exists(chatPath))
             Files.createDirectory(chatPath);
-        }
-        if (!Files.exists(playerPath)){
+
+        if (!Files.exists(playerPath))
             Files.createDirectory(playerPath);
-        }
+
+        if (!Files.exists(modulePath))
+            Files.createDirectory(modulePath);
+
+        logger.info("init multi module {} {}", BaseInformation.enable_multi_module, OPA.enable_multi_module);
+
+        if (BaseInformation.enable_multi_module)
+            saveJsonToFile(new BaseInformationEntity(), modulePath.resolve("CyberFurry.json"));
+
+        if (OPA.enable_multi_module)
+            saveJsonToFile(new OPAEntity(), modulePath.resolve("OPA.json"));
     }
 
     public static void saveJsonToFile(@NotNull Object data, @NotNull Path filePath) throws IOException {
