@@ -29,3 +29,4 @@ Thumbs.db
 /run-data/
 
 /src/test/local/
+.http
