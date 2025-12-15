@@ -188,6 +188,8 @@ repositories {
 }
 
 dependencies {
+    // implementation 'androidx.privacysandbox.tools:tools-core:1.0.0-alpha13'
+
     // Specify the version of Minecraft to use.
     // 指定要使用的Minecraft版本。
     // Any artifact can be supplied so long as it has a "userdev" classifier artifact and is a compatible patcher artifact.
@@ -235,6 +237,11 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    
+    // 添加ASM依赖
+    implementation 'org.ow2.asm:asm:9.9'
+    implementation 'org.ow2.asm:asm-commons:9.9'
+    implementation 'org.ow2.asm:asm-tree:9.9'
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -281,4 +288,11 @@ tasks.named('jar', Jar).configure {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
     options.encoding = 'UTF-8' // 使用UTF-8字符集进行Java编译
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
 }

@@ -1,41 +1,44 @@
 {
-  "neuracraft.chat.hello": "你好! 欢迎来到 NeuraCraft 聊天室管理系统!",
+  "neuracraft.chat.hello": "Hello! Welcome to NeuraCraft Chat Room Manager System!",
 
-  "neuracraft.command.create.success": "已创建聊天室: %s",
-  "neuracraft.command.create.failure.alreadyExist": "聊天室 %s 已存在",
-  "neuracraft.command.create.failure.unknown": "创建失败",
+  "neuracraft.command.create.success": "Chat room created: %s",
+  "neuracraft.command.create.failure.alreadyExist": "Chat room %s already exists",
+  "neuracraft.command.create.failure.unknown": "Creation failed",
+  "neuracraft.command.create.failure.unknownModel": "Unknow model name %s the alive models are \n %s",
 
-  "neuracraft.command.delete.success": "已经删除聊天室: %s",
-  "neuracraft.command.delete.notAdmin": "你不是聊天室 %s 的管理员! 不能删除该聊天室",
+  "neuracraft.command.delete.success": "Successfully deleted chat room: %s",
+  "neuracraft.command.delete.manyAgents": "There are %s rooms has the name %s, try to use uuid to delete.",
+  "neuracraft.command.delete.noAgent": "agent %s is not alive",
+  "neuracraft.command.delete.playerNotInAgent": "You are not in any agent",
+  "neuracraft.command.delete.notAdmin": "You are not an admin of chat room %s! Cannot delete this chat room.",
 
-  "neuracraft.command.exit.success": "已退出 %s 聊天室",
-  "neuracraft.command.exit.notInChatRoom": "你不在这个聊天室中!",
+  "neuracraft.command.exit.success": "Exited chat room: %s",
+  "neuracraft.command.exit.notInChatRoom": "You are not in this chat room!",
 
-  "neuracraft.command.find.notInChatRoom": "你没有加入任何聊天室",
-  "neuracraft.command.find.success": "你在 %s 中",
+  "neuracraft.command.find.notInChatRoom": "You have not joined any chat room",
+  "neuracraft.command.find.success": "Current chat room: %s",
 
-  "neuracraft.command.join.success": "你已经加入聊天室: %s",
-  "neuracraft.command.join.failure.notExist": "聊天室 %s 不存在",
+  "neuracraft.command.join.success": "Joined chat room: %s",
+  "neuracraft.command.join.failure.notExist": "Chat room %s does not exist",
 
-  "neuracraft.command.invite.notFound": "邀请的玩家 %s 不存在",
-  "neuracraft.command.invite.success" : "成功邀请玩家 %s 来到聊天室 %s",
-  "neuracraft.command.invite.notAdmin": "你不是 %s 聊天室的管理员",
+  "neuracraft.command.invite.notFound": "Invite player %s is not online",
+  "neuracraft.command.invite.success": "Succeed in invite player %s",
+  "neuracraft.command.invite.notAdmin": "You are not the admin of agent %s, can't invite player",
 
-  "neuracraft.command.kick.notFound": "踢出的玩家 %s 不存在",
-  "neuracraft.command.kick.notInChatRoom": "踢出的玩家 %s 不在聊天室 %s 中",
-  "neuracraft.command.kick.success": "成功从 %s 中踢出玩家 %s",
+  "neuracraft.command.kick.notFound": "Kick player %s is not online",
+  "neuracraft.command.kick.notInChatRoom": "Kick player %s is not in agent %s",
+  "neuracraft.command.kick.success": "Succeed kick player %s",
 
-  "neuracraft.command.list.chatroom": "目前在线的聊天室: \n %s",
+  "neuracraft.command.list.chatroom": "now alive chat room is \n %s",
 
-  "neuracraft.command.show.use": "如何使用: 看wiki(我懒得在写一遍了)",
+  "neuracraft.command.show.use": "Usage: Please check the wiki (too lazy to rewrite this)",
 
-  "neuracraft.chat.error.tooFast": "频率太快啦,等一下再试吧",
-  "neuracraft.chat.error.nullMessage": "没有收到任何消息哦",
-  "neuracraft.chat.error.notInChatRoom": "你没有加入任何一个聊天室哦",
-  "neuracraft.chat.error.notInChatRoom.help": "使用 /chatroom 指令尝试加入或创建一个聊天室",
+  "neuracraft.chat.error.tooFast": "Operation frequency too high. Please try again later",
+  "neuracraft.chat.error.nullMessage": "No message received",
+  "neuracraft.chat.error.notInChatRoom": "You have not joined any chat room",
+  "neuracraft.chat.error.notInChatRoom.help": "Use the /chatroom command to join or create a chat room.",
 
   "neuracraft.chat.message.format.player": "<%s> %s",
-
 
 
   "item.neuracraft.cyber_furry_logo": "Cyber Furry LOGO",
