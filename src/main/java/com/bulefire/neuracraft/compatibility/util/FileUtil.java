@@ -54,6 +54,7 @@ public class FileUtil {
         log.info("file path: {}", filePath);
         if (!Files.exists(filePath)){
             log.info("create file: {}", filePath);
+            filePath.toFile().getParentFile().mkdirs();
             Files.createFile(filePath);
         }
         Gson g = new GsonBuilder()

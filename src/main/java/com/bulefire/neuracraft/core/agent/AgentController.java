@@ -58,7 +58,7 @@ public class AgentController {
                 (msg)->{
                     // 将玩家加入管，注意到manager不会覆盖原有值,因此与从配置文件添加的玩家不冲突
                     playerManager.addPlayer(msg.player(), null);
-                    String message = msg.player().toFormatedString()+"join the game";
+                    String message = NCMainConfig.getPrefix()+msg.player().toFormatedString()+"join the game";
                     // 稍加处理即可
                     onMessage(
                             new ChatEventProcesser.ChatMessage(
@@ -73,7 +73,7 @@ public class AgentController {
         PlayerExitEventProcesser.registerFun(
                 (msg)->{
                     // 稍加处理即可
-                    String message = msg.player().toFormatedString()+"exit the game";
+                    String message = NCMainConfig.getPrefix()+msg.player().toFormatedString()+"exit the game";
                     onMessage(
                             new ChatEventProcesser.ChatMessage(
                                     message,
@@ -124,6 +124,7 @@ public class AgentController {
     // 消息入口
     public static void onMessage(@NotNull ChatEventProcesser.ChatMessage chatMessage) {
         if (!chatMessage.msg().startsWith(prefix)) return;
+        String msg = chatMessage.msg().substring(prefix.length());
         if (Objects.requireNonNull(chatMessage.env()) == ChatEventProcesser.ChatMessage.Env.CLIENT) {
             if (CUtil.hasMod.apply(NeuraCraft.MOD_ID)) {
                 // 服务端有模组,交给服务端处理
@@ -156,7 +157,7 @@ public class AgentController {
         // 虽然现在也不是很优雅 :D
         try {
             // 邪恶的作用域
-            remessage = agent.sendMessage(new AgentMessage(chatMessage.msg(), chatMessage.player()));
+            remessage = agent.sendMessage(new AgentMessage(msg, chatMessage.player()));
         } catch (AgentOutOfTime e) {
             // 提示即可
             CUtil.broadcastMessageToGroupPlayer(
@@ -256,7 +257,7 @@ public class AgentController {
     private static void saveAllAgentToFile(){
         for (Agent agent : agentManager.getAllAgents()) {
             agent.saveToFile(
-                    // path/to/config/agent/<modelName>/<uuid>.json
+                    // path/to/config/agent/<modelName>/<uuid>
                     FileUtil.agent_base_url.resolve(agent.getModelName()).resolve(agent.getUUID().toString())
             );
         }

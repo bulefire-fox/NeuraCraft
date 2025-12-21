@@ -2,16 +2,19 @@ package com.bulefire.neuracraft.core.insidemodel.deepseek;
 
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
 import com.bulefire.neuracraft.compatibility.util.CUtil;
+import com.bulefire.neuracraft.compatibility.util.FileUtil;
 import com.bulefire.neuracraft.core.AbsAgent;
 import com.bulefire.neuracraft.core.agent.AgentController;
 import com.bulefire.neuracraft.core.annotation.RegisterAgent;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +39,7 @@ public class DeepSeek extends AbsAgent {
     }
 
     public DeepSeek(){
-        super("DeepSeek1", UUID.randomUUID(), new ArrayList<>(), new ArrayList<>(), "DeepSeek", "DeepSeek", 100);
+        super("DeepSeek1", UUID.randomUUID(), new ArrayList<>(), new ArrayList<>(), DeepSeekConfig.getModelName(), DeepSeekConfig.getDisplayName(), DeepSeekConfig.getTimePerMin());
         chatHistory = new ChatHistory();
     }
 
@@ -52,9 +55,9 @@ public class DeepSeek extends AbsAgent {
                                     UUID.randomUUID(),
                                     new ArrayList<>(),
                                     new ArrayList<>(),
-                                    "deepseek-reasoner",
-                                    "DeepSeek"+ (new Random()).nextInt(),
-                                    100
+                                    DeepSeekConfig.getModelName(),
+                                    DeepSeekConfig.getDisplayName(),
+                                    DeepSeekConfig.getTimePerMin()
                             )
                     );
 
@@ -68,6 +71,7 @@ public class DeepSeek extends AbsAgent {
                     );
                 }
         );
+        DeepSeekConfig.init();
     }
 
     @Override
@@ -75,9 +79,9 @@ public class DeepSeek extends AbsAgent {
         try {
             return decoder(
                     CUtil.AiPOST(
-                            "https://api.deepseek.com/chat/completions",
+                            DeepSeekConfig.getUrl(),
                             buildBody(msg),
-                            "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                            DeepSeekConfig.getToken()
                     )
             );
         } catch (Exception e) {
@@ -107,12 +111,15 @@ public class DeepSeek extends AbsAgent {
     }
 
     @Override
+    @SneakyThrows
     public void saveToFile(@NotNull Path path) {
-
+        FileUtil.saveJsonToFile(this, Path.of(path + ".deepseek"));
     }
 
     @Override
+    @SneakyThrows
     public void loadFromFile(@NotNull Path path) {
-
+        var other = FileUtil.loadJsonFromFile(path, DeepSeek.class);
+        this.chatHistory = other.getChatHistory();
     }
 }
