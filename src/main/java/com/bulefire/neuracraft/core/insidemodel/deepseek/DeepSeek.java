@@ -77,7 +77,7 @@ public class DeepSeek extends AbsAgent {
                     CUtil.AiPOST(
                             "https://api.deepseek.com/chat/completions",
                             buildBody(msg),
-                            "sk-ca34e579939a4b1fb7ce1bd5647f4627"
+                            "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
                     )
             );
         } catch (Exception e) {
