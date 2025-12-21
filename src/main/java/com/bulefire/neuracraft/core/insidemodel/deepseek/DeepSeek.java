@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -17,8 +18,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-@Log4j2
 public class DeepSeek extends AbsAgent {
+    private static final Logger log = getLogger(DeepSeek.class);
+
     @Setter
     @Getter
     private ChatHistory chatHistory;

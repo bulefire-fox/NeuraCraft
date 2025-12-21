@@ -6,6 +6,9 @@ import com.bulefire.neuracraft.core.util.AgentOutOfTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @ToString
+@Log4j2
 public abstract class AbsAgent implements Agent{
     // 聊天室名称
     @Getter
@@ -115,5 +119,9 @@ public abstract class AbsAgent implements Agent{
         public boolean isOutOfTimes() {
             return times >= timesPerMin;
         }
+    }
+
+    protected static Logger getLogger(Class<?> klass) {
+        return LogManager.getLogger(klass);
     }
 }

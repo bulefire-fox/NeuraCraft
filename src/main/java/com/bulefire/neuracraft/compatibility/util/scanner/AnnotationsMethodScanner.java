@@ -44,7 +44,7 @@ public class AnnotationsMethodScanner {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                        var insideMethods = scannerClass(bytes, annotations);
+                        var insideMethods = scannerClass(bytes, annotations,null);
                         log.debug("insideMethods: {}", insideMethods);
                         methods.addAll(insideMethods);
                     });
@@ -54,7 +54,7 @@ public class AnnotationsMethodScanner {
         return methods;
     }
 
-    private static @NotNull Set<Method> scannerClass(final byte @NotNull [] bytes, @NotNull final Set<Class<? extends Annotation>> annotations){
+    public static @NotNull Set<Method> scannerClass(final byte @NotNull [] bytes, @NotNull final Set<Class<? extends Annotation>> annotations, ClassLoader classLoader){
         ClassReader reader = new ClassReader(bytes);
         Set<MethodInfo> methodDescriptor = new HashSet<>();
         Set<String> annClassDescriptor = new HashSet<>();
@@ -67,7 +67,12 @@ public class AnnotationsMethodScanner {
         for (MethodInfo methodInfo : methodDescriptor) {
             String className = methodInfo.className.replace('/', '.');
             try {
-                Class<?> clazz = Class.forName(className);
+                Class<?> clazz;
+                if (classLoader != null){
+                    clazz = classLoader.loadClass(className);
+                } else {
+                    clazz = Class.forName(className);
+                }
                 Type methodType = Type.getMethodType(methodInfo.descriptor());
 
                 // 解析参数类型

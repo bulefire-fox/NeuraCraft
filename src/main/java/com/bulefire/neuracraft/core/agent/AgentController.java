@@ -12,10 +12,13 @@ import com.bulefire.neuracraft.compatibility.util.FileUtil;
 import com.bulefire.neuracraft.compatibility.util.scanner.AnnotationsMethodScanner;
 import com.bulefire.neuracraft.core.Agent;
 import com.bulefire.neuracraft.core.agent.commnd.NCCommand;
+import com.bulefire.neuracraft.core.config.NCMainConfig;
+import com.bulefire.neuracraft.core.plugin.PluginLoader;
 import com.bulefire.neuracraft.core.util.AgentOutOfTime;
 import com.bulefire.neuracraft.core.agent.entity.AgentMessage;
 import com.bulefire.neuracraft.core.annotation.RegisterAgent;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -34,13 +37,19 @@ public class AgentController {
     private static final PlayerManager playerManager = new PlayerManager();
     private static final AgentGameCommand agentGameCommand = new AgentGameCommand();
 
-    private static final Set<Runnable> agentClassInitFunctions = new HashSet<>();
+    private static final List<Runnable> agentClassInitFunctions = new ArrayList<>();
+
+    @Setter
+    private static String prefix = NCMainConfig.getPrefix();
 
     public static void registerAgentClassInitFunction(Runnable fun){
+        log.debug("register agent class init function {}", fun);
         agentClassInitFunctions.add(fun);
     }
 
     public static void init() {
+        // 加载配置文件
+
         log.debug("register to chatEvent");
         // 监听聊天事件
         ChatEventProcesser.registerFun(AgentController::onMessage);
@@ -84,6 +93,9 @@ public class AgentController {
         // 注册我们自己的指令
         CommandRegister.registerCommand(NCCommand.getCommands());
 
+        // 扫描插件的注册
+        // 放在InitCore里了
+
         // 扫描我们自己的Agent类
         var methods = AnnotationsMethodScanner.scanPackageToMethod("com.bulefire.neuracraft.core", Set.of(RegisterAgent.class));
         log.info("MMM found methods {}",methods);
@@ -98,7 +110,9 @@ public class AgentController {
         }
 
         // 执行所有Agent类的初始化逻辑
+        log.debug("all functions {}",agentClassInitFunctions);
         for (Runnable fun : agentClassInitFunctions){
+            log.debug("Running agent class init function {}", fun);
             fun.run();
         }
         // 加载所有Agent,必须在Agent类加载完后加载,否则无法注入Function
@@ -109,6 +123,7 @@ public class AgentController {
     }
     // 消息入口
     public static void onMessage(@NotNull ChatEventProcesser.ChatMessage chatMessage) {
+        if (!chatMessage.msg().startsWith(prefix)) return;
         if (Objects.requireNonNull(chatMessage.env()) == ChatEventProcesser.ChatMessage.Env.CLIENT) {
             if (CUtil.hasMod.apply(NeuraCraft.MOD_ID)) {
                 // 服务端有模组,交给服务端处理
