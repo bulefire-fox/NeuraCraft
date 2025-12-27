@@ -57,6 +57,15 @@ public class AgentManager {
         return create;
     }
 
+    public Agent addAgent(@NotNull Agent agent) {
+        agents.put(agent.getUUID(), agent);
+        return agent;
+    }
+
+    public Agent removeAgent(@NotNull UUID uuid) {
+        return agents.remove(uuid);
+    }
+
     public Agent getAgent(UUID uuid) {
         return agents.get(uuid);
     }

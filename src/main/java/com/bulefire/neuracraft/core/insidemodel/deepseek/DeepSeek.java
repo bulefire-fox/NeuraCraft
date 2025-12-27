@@ -7,12 +7,11 @@ import com.bulefire.neuracraft.core.AbsAgent;
 import com.bulefire.neuracraft.core.agent.AgentController;
 import com.bulefire.neuracraft.core.annotation.RegisterAgent;
 import com.google.gson.Gson;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.SneakyThrows;
+import lombok.*;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +31,13 @@ public class DeepSeek extends AbsAgent {
         chatHistory.addBlock(
                 new ChatHistory.ChatBlock(
                         "system",
-                        "你是一个游戏内的助手，你在和很用户对话，每个用户使用 [username(uuid)] 区分，用户的加入和退出游戏都会通知你，你需要做出相应的欢迎和播报。用尽量简短的语言回复，不要使用emoji，可以使用颜文字，使用文本格式输出而不是markdown。")
+                            DeepSeekConfig.getPrompt())
         );
+    }
+
+    private DeepSeek(DeepSeekSerializationData data){
+        super(data);
+        chatHistory = data.chatHistory;
     }
 
     public DeepSeek(){
@@ -115,8 +119,23 @@ public class DeepSeek extends AbsAgent {
     }
 
     @Override
-    @SneakyThrows
     public void loadFromFile(@NotNull Path path) {
-        FileUtil.loadJsonFromFile(path, this);
+        // 我简直是甜菜
+        loadFileToManager(path, DeepSeekSerializationData.class, DeepSeek.class);
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    private static class DeepSeekSerializationData extends AbsAgent.AgentSerializationData {
+        public ChatHistory chatHistory;
+
+        public DeepSeekSerializationData(@NotNull DeepSeek agent) {
+            super(agent);
+            this.chatHistory = agent.chatHistory;
+        }
+        public DeepSeekSerializationData() {
+            super();
+            this.chatHistory = new ChatHistory();
+        }
     }
 }

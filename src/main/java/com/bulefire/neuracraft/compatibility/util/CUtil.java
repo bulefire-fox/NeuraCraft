@@ -69,6 +69,7 @@ public class CUtil {
     public static @NotNull String AiPOST(@NotNull String urls, @NotNull String body, @NotNull String token) throws Exception {
         log.info("send to ai url: {}", urls);
         log.info("send to ai: {}", body);
+        log.info("send to ai token: {}", token);
 
         var connection = getConnection(urls, body, token);
 

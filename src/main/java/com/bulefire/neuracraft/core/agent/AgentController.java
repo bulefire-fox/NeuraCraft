@@ -240,18 +240,25 @@ public class AgentController {
         List<Path> paths;
         try {
             // 获取所有文件
-            paths = FileUtil.readAllFilePath(FileUtil.agent_base_url);
+            paths = FileUtil.readAllFilePath(FileUtil.agent_base_url)
+                    .stream()
+                    .filter(path -> !path.startsWith(FileUtil.agent_config_url))
+                    .toList();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         for (Path path : paths) {
             if(path.toFile().isFile()){
+                log.debug("load agent from {}", path);
                 // 让Agent自己判断文件是否是自己的
                 String agentName = agentManager.getAgentByConfigFilePath(path);
                 if (agentName == null){
                     // 找不到模型
-                    throw new RuntimeException("can not find agentName model for " + path);
+                    log.warn("can not find agentName model for {}", path);
+                    continue;
                 }
+                log.debug("load agent name {}", agentName);
                 // 创建聊天室并加载
                 agentManager.creatAgent(agentName).loadFromFile(path);
             }

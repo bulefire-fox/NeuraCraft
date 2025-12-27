@@ -9,7 +9,7 @@ import java.nio.file.Path;
 
 
 public class DeepSeekConfig {
-    private static final Path configPath = FileUtil.agent_base_url.resolve("deepseek/deepseek.json");
+    private static final Path configPath = FileUtil.agent_config_url.resolve("deepseek.json");
 
     @Getter
     private static String modelName;
@@ -21,6 +21,8 @@ public class DeepSeekConfig {
     private static String url;
     @Getter
     private static String token;
+    @Getter
+    private static String prompt;
 
     @SneakyThrows
     public static void init(){
@@ -40,6 +42,7 @@ public class DeepSeekConfig {
         timePerMin = config.getTimePerMin();
         url = config.getUrl();
         token = config.getToken();
+        prompt = config.getPrompt();
     }
 
     @Getter
@@ -50,6 +53,7 @@ public class DeepSeekConfig {
         private int timePerMin;
         private String url;
         private String token;
+        private String prompt;
 
         public Config(){
             modelName = "deepseek-reasoner";
@@ -57,6 +61,7 @@ public class DeepSeekConfig {
             timePerMin = 60;
             url = "https://api.deepseek.com/chat/completions";
             token = "";
+            prompt = "你是一个游戏内的助手，你在和很用户对话，每个用户使用 [username(uuid)] 区分，用户的加入和退出游戏都会通知你，你需要做出相应的欢迎和播报。用尽量简短的语言回复，不要使用emoji，可以使用颜文字，使用文本格式输出而不是markdown。";
         }
     }
 }

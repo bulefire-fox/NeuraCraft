@@ -2,6 +2,7 @@ package com.bulefire.neuracraft.core.agent;
 
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
 import com.bulefire.neuracraft.core.Agent;
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+@Log4j2
 public class PlayerManager {
     private final Map<APlayer,UUID> players;
 
@@ -46,6 +48,7 @@ public class PlayerManager {
     public void loadPlayerFromAgentManager(@NotNull AgentManager agentManager) {
         for (var agent : agentManager.getAllAgents()){
             for (var player : agent.getPlayers()) {
+                log.info("Load player {} from agent {}", player.name(), agent.getName());
                 updatePlayer(player, agent.getUUID());
             }
         }

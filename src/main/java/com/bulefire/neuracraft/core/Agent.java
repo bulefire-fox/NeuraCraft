@@ -1,6 +1,7 @@
 package com.bulefire.neuracraft.core;
 
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
+import com.bulefire.neuracraft.core.agent.AgentController;
 import com.bulefire.neuracraft.core.agent.entity.AgentMessage;
 import com.bulefire.neuracraft.core.util.AgentOutOfTime;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +10,18 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * 表示一个 Agent 的接口
+ * 所有Agent都必须直接或间接的实现这个接口才能加入{@link AgentController}的管理
+ * @author bulefire_fox
+ * @since 1.0
+ * @see AgentController
+ * @see AgentMessage
+ * @see APlayer
+ * @see AbsAgent
+ * @see AgentOutOfTime
+ * @implNote 可以继承{@link AbsAgent}以获取默认骨干实现
+ */
 public interface Agent {
     /**
      * 发送消息的方法
@@ -32,7 +45,7 @@ public interface Agent {
 
     /**
      * 获取聊天室的唯一标识符UUID，面向程序，不能重复
-     * @return 聊天室的唯一标识符UUID
+     * @return 聊天室的唯一标识符 UUID
      */
     @NotNull UUID getUUID();
 
