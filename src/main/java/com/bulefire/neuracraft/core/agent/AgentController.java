@@ -120,6 +120,9 @@ public class AgentController {
         // 加载所有的指令
         //CommandRegister.registerCommands(agentGameCommand.getAllCommands());
         CommandRegister.registerCommands(agentGameCommand.getAllCommands());
+
+        // 加载玩家
+        playerManager.loadPlayerFromAgentManager(agentManager);
     }
     // 消息入口
     public static void onMessage(@NotNull ChatEventProcesser.ChatMessage chatMessage) {

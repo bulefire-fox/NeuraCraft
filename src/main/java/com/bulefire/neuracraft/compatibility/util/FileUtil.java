@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -78,6 +79,21 @@ public class FileUtil {
             return t;
         }
         throw new NullPointerException("load json from file failed");
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> void loadJsonFromFile(@NotNull Path filePath, @NotNull T clazz) throws IOException{
+        T other = (T) loadJsonFromFile(filePath, clazz.getClass());
+        Field [] fields = clazz.getClass().getDeclaredFields();
+        for (Field field : fields){
+            field.setAccessible(true);
+            try {
+                field.set(clazz, field.get(other));
+            } catch (IllegalAccessException e) {
+                 log.error("IllegalAccessException: {}", e.getMessage());
+                 throw new RuntimeException(e);
+            }
+        }
     }
 
     public static List<Path> readAllFilePath(Path baseURL) throws IOException {

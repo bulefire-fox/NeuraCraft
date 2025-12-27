@@ -10,11 +10,9 @@ import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +117,6 @@ public class DeepSeek extends AbsAgent {
     @Override
     @SneakyThrows
     public void loadFromFile(@NotNull Path path) {
-        var other = FileUtil.loadJsonFromFile(path, DeepSeek.class);
-        this.chatHistory = other.getChatHistory();
+        FileUtil.loadJsonFromFile(path, this);
     }
 }
