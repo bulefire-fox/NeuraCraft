@@ -1,6 +1,6 @@
 # 忽略IDE生成的文件
 /.idea/
-!.idea/icon.png
+!/.idea/icon.png
 /*.iml
 /target/
 /.xcodemap/
@@ -8,7 +8,7 @@
 # 忽略构建工具生成的文件
 /build/
 /out/
-/.gradle/
+.gradle/
 
 # 忽略日志和临时文件
 /logs/
