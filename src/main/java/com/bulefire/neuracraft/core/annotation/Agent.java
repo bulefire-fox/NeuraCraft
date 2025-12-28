@@ -22,11 +22,12 @@ import java.lang.annotation.*;
  * </pre>
  * 中实现初始化逻辑.
  * 注册方法请使用 {@link RegisterAgent}
+ *
  * @author bulefire_fox
- * @since 2.0
  * @version 1.0
  * @see com.bulefire.neuracraft.core.Agent
  * @see com.bulefire.neuracraft.core.annotation.RegisterAgent
+ * @since 2.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

@@ -12,7 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public record FullCommand(String literal, int permissionLevel, CommandArgument argument, AbsCommand executeCommand, List<FullCommand> subCommands, boolean isSubCommand) {
+public record FullCommand(String literal, int permissionLevel, CommandArgument argument, AbsCommand executeCommand,
+                          List<FullCommand> subCommands, boolean isSubCommand) {
     public static final int USE_FATHER_PERMISSION_LEVEL = -168535486;
 
     public static final CommandArgument EMPTY_ARGUMENT = new CommandArgument(new ArrayList<>());
@@ -46,11 +47,11 @@ public record FullCommand(String literal, int permissionLevel, CommandArgument a
     public abstract static class AbsCommand implements Command<CommandSourceStack> {
         protected static final Component PREFIX = Component.literal("§7[§bNeuraCraft§7]§r ");
 
-        protected void feedback(@NotNull CommandSourceStack source, @NotNull String message){
+        protected void feedback(@NotNull CommandSourceStack source, @NotNull String message) {
             source.sendSuccess(() -> PREFIX.copy().append(message), false);
         }
 
-        protected void feedback(@NotNull CommandSourceStack source, @NotNull Component message){
+        protected void feedback(@NotNull CommandSourceStack source, @NotNull Component message) {
             source.sendSuccess(() -> PREFIX.copy().append(message), false);
         }
     }

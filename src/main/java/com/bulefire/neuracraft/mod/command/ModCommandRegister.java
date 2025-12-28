@@ -14,6 +14,7 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = NeuraCraft.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModCommandRegister {
     public static List<LiteralArgumentBuilder<CommandSourceStack>> literalArgumentBuilder = null;
+
     @SubscribeEvent
     public static void registerCommands(@NotNull RegisterCommandsEvent event) {
         if (CommandRegister.getLiteralArgumentBuilders() == null)

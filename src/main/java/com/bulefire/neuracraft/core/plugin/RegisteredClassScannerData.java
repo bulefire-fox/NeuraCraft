@@ -20,19 +20,20 @@ public class RegisteredClassScannerData {
         this.classes = new ArrayList<>();
         this.methods = new ArrayList<>();
     }
-    public void addClass(Class<?> clazz){
+
+    public void addClass(Class<?> clazz) {
         this.classes.add(clazz);
     }
 
-    public void addClasses(List<Class<?>> classes){
+    public void addClasses(List<Class<?>> classes) {
         this.classes.addAll(classes);
     }
 
-    public void addMethod(Method method){
+    public void addMethod(Method method) {
         this.methods.add(method);
     }
 
-    public void addMethods(List<Method> methods){
+    public void addMethods(List<Method> methods) {
         this.methods.addAll(methods);
     }
 }

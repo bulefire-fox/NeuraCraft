@@ -25,7 +25,7 @@ public class DeepSeekConfig {
     private static String prompt;
 
     @SneakyThrows
-    public static void init(){
+    public static void init() {
         if (!configPath.toFile().exists()) {
             configPath.toFile().getParentFile().mkdirs();
             configPath.toFile().createNewFile();
@@ -35,7 +35,7 @@ public class DeepSeekConfig {
     }
 
     @SneakyThrows
-    public static void load(){
+    public static void load() {
         Config config = FileUtil.loadJsonFromFile(configPath, Config.class);
         modelName = config.getModelName();
         displayName = config.getDisplayName();
@@ -55,7 +55,7 @@ public class DeepSeekConfig {
         private String token;
         private String prompt;
 
-        public Config(){
+        public Config() {
             modelName = "deepseek-reasoner";
             displayName = "DeepSeek";
             timePerMin = 60;

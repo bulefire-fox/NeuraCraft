@@ -11,7 +11,6 @@ import lombok.*;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,29 +30,29 @@ public class DeepSeek extends AbsAgent {
         chatHistory.addBlock(
                 new ChatHistory.ChatBlock(
                         "system",
-                            DeepSeekConfig.getPrompt())
+                        DeepSeekConfig.getPrompt())
         );
     }
 
-    private DeepSeek(DeepSeekSerializationData data){
+    private DeepSeek(DeepSeekSerializationData data) {
         super(data);
         chatHistory = data.chatHistory;
     }
 
-    public DeepSeek(){
+    public DeepSeek() {
         super("DeepSeek1", UUID.randomUUID(), new ArrayList<>(), new ArrayList<>(), DeepSeekConfig.getModelName(), DeepSeekConfig.getDisplayName(), DeepSeekConfig.getTimePerMin());
         chatHistory = new ChatHistory();
     }
 
     @RegisterAgent
-    public static void init(){
+    public static void init() {
         log.info("DeepSeek static init");
         AgentController.registerAgentClassInitFunction(
                 () -> {
                     var agentManager = AgentController.getAgentManager();
                     agentManager.registerAgentMapping("DeepSeek",
                             () -> new DeepSeek(
-                                    "DeepSeek"+(new Random()).nextInt(),
+                                    "DeepSeek" + (new Random()).nextInt(),
                                     UUID.randomUUID(),
                                     new ArrayList<>(),
                                     new ArrayList<>(),
@@ -65,7 +64,7 @@ public class DeepSeek extends AbsAgent {
 
                     agentManager.registerAgentPathConsumer(
                             path -> {
-                                if (path.toString().endsWith(".deepseek")){
+                                if (path.toString().endsWith(".deepseek")) {
                                     return "DeepSeek";
                                 }
                                 return null;
@@ -91,16 +90,17 @@ public class DeepSeek extends AbsAgent {
         }
     }
 
-    private String buildBody(@NotNull String message){
+    private String buildBody(@NotNull String message) {
         log.info("start build body");
         Gson g = new Gson();
         chatHistory.addBlock(new ChatHistory.ChatBlock("user", message));
-        return g.toJson(new SendBody(this.getModelName(),chatHistory.histories));
+        return g.toJson(new SendBody(this.getModelName(), chatHistory.histories));
     }
 
-    record SendBody(String model, List<ChatHistory.ChatBlock> messages){}
+    record SendBody(String model, List<ChatHistory.ChatBlock> messages) {
+    }
 
-    public String decoder(@NotNull String repose){
+    public String decoder(@NotNull String repose) {
         if (repose.startsWith("POST request failed")) {
             log.error("Failed to get valid response from API: {}", repose);
             return "API Error: " + repose;
@@ -133,6 +133,7 @@ public class DeepSeek extends AbsAgent {
             super(agent);
             this.chatHistory = agent.chatHistory;
         }
+
         public DeepSeekSerializationData() {
             super();
             this.chatHistory = new ChatHistory();

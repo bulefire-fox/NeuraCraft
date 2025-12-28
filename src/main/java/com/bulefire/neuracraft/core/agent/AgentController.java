@@ -12,11 +12,10 @@ import com.bulefire.neuracraft.compatibility.util.FileUtil;
 import com.bulefire.neuracraft.compatibility.util.scanner.AnnotationsMethodScanner;
 import com.bulefire.neuracraft.core.Agent;
 import com.bulefire.neuracraft.core.agent.commnd.NCCommand;
-import com.bulefire.neuracraft.core.config.NCMainConfig;
-import com.bulefire.neuracraft.core.plugin.PluginLoader;
-import com.bulefire.neuracraft.core.util.AgentOutOfTime;
 import com.bulefire.neuracraft.core.agent.entity.AgentMessage;
 import com.bulefire.neuracraft.core.annotation.RegisterAgent;
+import com.bulefire.neuracraft.core.config.NCMainConfig;
+import com.bulefire.neuracraft.core.util.AgentOutOfTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -35,13 +34,13 @@ import java.util.*;
  *
  * @author bulefire_fox
  * @version 2.0
- * @since 2.0
  * @see Agent
  * @see AgentManager
  * @see PlayerManager
  * @see AgentGameCommand
  * @see ChatEventProcesser.ChatMessage
- * @see AgentController#registerAgentClassInitFunction(Runnable) 
+ * @see AgentController#registerAgentClassInitFunction(Runnable)
+ * @since 2.0
  */
 @Log4j2
 public class AgentController {
@@ -59,11 +58,12 @@ public class AgentController {
 
     /**
      * 注册一个 Agent 类初始化逻辑
+     *
      * @param fun 初始化逻辑, 包装为一个 {@link Runnable}
      * @see Runnable
      * @see AgentController#agentClassInitFunctions
      */
-    public static void registerAgentClassInitFunction(Runnable fun){
+    public static void registerAgentClassInitFunction(Runnable fun) {
         log.debug("register agent class init function {}", fun);
         agentClassInitFunctions.add(fun);
     }
@@ -76,10 +76,10 @@ public class AgentController {
         ChatEventProcesser.registerFun(AgentController::onMessage);
         // 监听玩家加入事件
         PlayerJoinEventProcesser.registerFun(
-                (msg)->{
+                (msg) -> {
                     // 将玩家加入管，注意到manager不会覆盖原有值,因此与从配置文件添加的玩家不冲突
                     playerManager.addPlayer(msg.player(), null);
-                    String message = NCMainConfig.getPrefix()+msg.player().toFormatedString()+"join the game";
+                    String message = NCMainConfig.getPrefix() + msg.player().toFormatedString() + "join the game";
                     // 稍加处理即可
                     onMessage(
                             new ChatEventProcesser.ChatMessage(
@@ -92,9 +92,9 @@ public class AgentController {
         );
         // 监听玩家退出事件
         PlayerExitEventProcesser.registerFun(
-                (msg)->{
+                (msg) -> {
                     // 稍加处理即可
-                    String message = NCMainConfig.getPrefix()+msg.player().toFormatedString()+"exit the game";
+                    String message = NCMainConfig.getPrefix() + msg.player().toFormatedString() + "exit the game";
                     onMessage(
                             new ChatEventProcesser.ChatMessage(
                                     message,
@@ -119,9 +119,9 @@ public class AgentController {
 
         // 扫描我们自己的Agent类
         var methods = AnnotationsMethodScanner.scanPackageToMethod("com.bulefire.neuracraft.core", Set.of(RegisterAgent.class));
-        log.info("MMM found methods {}",methods);
+        log.info("MMM found methods {}", methods);
 
-        for (Method method : methods){
+        for (Method method : methods) {
             try {
                 method.invoke(null);
             } catch (IllegalAccessException | InvocationTargetException e) {
@@ -131,8 +131,8 @@ public class AgentController {
         }
 
         // 执行所有Agent类的初始化逻辑
-        log.debug("all functions {}",agentClassInitFunctions);
-        for (Runnable fun : agentClassInitFunctions){
+        log.debug("all functions {}", agentClassInitFunctions);
+        for (Runnable fun : agentClassInitFunctions) {
             log.debug("Running agent class init function {}", fun);
             fun.run();
         }
@@ -145,6 +145,7 @@ public class AgentController {
         // 加载玩家
         playerManager.loadPlayerFromAgentManager(agentManager);
     }
+
     // 消息入口
     public static void onMessage(@NotNull ChatEventProcesser.ChatMessage chatMessage) {
         if (!chatMessage.msg().startsWith(prefix)) return;
@@ -257,7 +258,7 @@ public class AgentController {
 //        );
 //    }
 
-    private static void loadAllAgentFromFile(){
+    private static void loadAllAgentFromFile() {
         List<Path> paths;
         try {
             // 获取所有文件
@@ -270,11 +271,11 @@ public class AgentController {
             throw new RuntimeException(e);
         }
         for (Path path : paths) {
-            if(path.toFile().isFile()){
+            if (path.toFile().isFile()) {
                 log.debug("load agent from {}", path);
                 // 让Agent自己判断文件是否是自己的
                 String agentName = agentManager.getAgentByConfigFilePath(path);
-                if (agentName == null){
+                if (agentName == null) {
                     // 找不到模型
                     log.warn("can not find agentName model for {}", path);
                     continue;
@@ -285,7 +286,8 @@ public class AgentController {
             }
         }
     }
-    private static void saveAllAgentToFile(){
+
+    private static void saveAllAgentToFile() {
         for (Agent agent : agentManager.getAllAgents()) {
             agent.saveToFile(
                     // path/to/config/agent/<modelName>/<uuid>.<suffix>

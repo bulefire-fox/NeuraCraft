@@ -19,7 +19,7 @@ public class BaseConfig {
 
     @SubscribeEvent
     public static void onLoad(final @NotNull ModConfigEvent event) throws IOException {
-        if (event.getConfig().getSpec() == COMMON_SPEC){
+        if (event.getConfig().getSpec() == COMMON_SPEC) {
             // 加载mod配置文件
             log.info("load config file {}", event.getConfig().getFileName());
         }

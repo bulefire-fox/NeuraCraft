@@ -12,11 +12,11 @@ public class CommandRegister {
     @Getter
     private static final List<LiteralArgumentBuilder<CommandSourceStack>> literalArgumentBuilders = new ArrayList<>();
 
-    public static void registerCommand(@NotNull LiteralArgumentBuilder<CommandSourceStack> literalArgumentBuilder){
+    public static void registerCommand(@NotNull LiteralArgumentBuilder<CommandSourceStack> literalArgumentBuilder) {
         literalArgumentBuilders.add(literalArgumentBuilder);
     }
 
-    public static void registerCommands(@NotNull List<LiteralArgumentBuilder<CommandSourceStack>> literalArgumentBuilders){
+    public static void registerCommands(@NotNull List<LiteralArgumentBuilder<CommandSourceStack>> literalArgumentBuilders) {
         CommandRegister.literalArgumentBuilders.addAll(literalArgumentBuilders);
     }
 

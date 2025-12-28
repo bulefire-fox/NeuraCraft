@@ -31,7 +31,7 @@ public class Exit extends FullCommand.AbsCommand {
         }
         var agent = agentManager.getAgent(agentUUID);
         PlayerExitEventProcesser.onPlayerExit(new PlayerExitEventProcesser.ExitMessage(player, CUtil.getEnv(CUtil.getServer.get())));
-        playerManager.updatePlayer(player,null);
+        playerManager.updatePlayer(player, null);
         agent.removePlayer(player);
         agent.removeAdmin(player);
         feedback(commandContext.getSource(), Component.translatable("neuracraft.command.exit.success", agent.getName()));

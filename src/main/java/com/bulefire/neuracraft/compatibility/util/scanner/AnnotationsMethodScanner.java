@@ -29,12 +29,12 @@ public class AnnotationsMethodScanner {
     }
 
     public static @NotNull Set<Method> scanPackageToMethod(@NotNull final String packageName, @NotNull final Set<Class<? extends Annotation>> annotations) {
-        Path packagePath = currentBasePath.resolve(packageName.replace(".","/"));
+        Path packagePath = currentBasePath.resolve(packageName.replace(".", "/"));
         log.debug("currentBasePath: {}", currentBasePath);
         log.debug("package path: {}", packagePath);
         Set<Method> methods = new HashSet<>();
         try (var walk = Files.walk(packagePath)) {
-                    walk
+            walk
                     .filter(path -> Files.isRegularFile(path) && path.toString().endsWith(".class"))
                     .forEach(classPath -> {
                         log.debug("file path: {}", classPath);
@@ -44,7 +44,7 @@ public class AnnotationsMethodScanner {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                        var insideMethods = scannerClass(bytes, annotations,null);
+                        var insideMethods = scannerClass(bytes, annotations, null);
                         log.debug("insideMethods: {}", insideMethods);
                         methods.addAll(insideMethods);
                     });
@@ -54,21 +54,21 @@ public class AnnotationsMethodScanner {
         return methods;
     }
 
-    public static @NotNull Set<Method> scannerClass(final byte @NotNull [] bytes, @NotNull final Set<Class<? extends Annotation>> annotations, ClassLoader classLoader){
+    public static @NotNull Set<Method> scannerClass(final byte @NotNull [] bytes, @NotNull final Set<Class<? extends Annotation>> annotations, ClassLoader classLoader) {
         ClassReader reader = new ClassReader(bytes);
         Set<MethodInfo> methodDescriptor = new HashSet<>();
         Set<String> annClassDescriptor = new HashSet<>();
-        for (Class<? extends Annotation> ann : annotations){
+        for (Class<? extends Annotation> ann : annotations) {
             annClassDescriptor.add(Type.getDescriptor(ann));
         }
-        ClassVisitor classVisitor = new PrepareClassVisitor(null, methodDescriptor,annClassDescriptor);
+        ClassVisitor classVisitor = new PrepareClassVisitor(null, methodDescriptor, annClassDescriptor);
         Set<Method> methods = new HashSet<>();
         reader.accept(classVisitor, 2);
         for (MethodInfo methodInfo : methodDescriptor) {
             String className = methodInfo.className.replace('/', '.');
             try {
                 Class<?> clazz;
-                if (classLoader != null){
+                if (classLoader != null) {
                     clazz = classLoader.loadClass(className);
                 } else {
                     clazz = Class.forName(className);
@@ -134,19 +134,20 @@ public class AnnotationsMethodScanner {
         }
 
         @Override
-        public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions){
-            MethodVisitor mv = super.visitMethod(access,name,descriptor,signature,exceptions);
-            return new PrepareClassVisitor.PrePareMethodVisitor(mv, access, name, descriptor, methods,annotations, className);
+        public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
+            MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
+            return new PrepareClassVisitor.PrePareMethodVisitor(mv, access, name, descriptor, methods, annotations, className);
         }
 
-        private static class PrePareMethodVisitor extends MethodVisitor{
+        private static class PrePareMethodVisitor extends MethodVisitor {
             private final String name;
             private final String className;
             private final String methodDescriptor;
             private final Set<MethodInfo> methods;
             private final Set<String> annotations;
-            public PrePareMethodVisitor(MethodVisitor mv, int access, String name, String descriptor, Set<MethodInfo> methods, Set<String> annotations, String className){
-                super(Opcodes.ASM9,mv);
+
+            public PrePareMethodVisitor(MethodVisitor mv, int access, String name, String descriptor, Set<MethodInfo> methods, Set<String> annotations, String className) {
+                super(Opcodes.ASM9, mv);
                 this.name = name;
                 this.className = className;
                 this.methodDescriptor = descriptor;
@@ -156,7 +157,7 @@ public class AnnotationsMethodScanner {
 
             @Override
             public @Nullable AnnotationVisitor visitAnnotation(@NotNull String descriptor, boolean visible) {
-                if (annotations.contains(descriptor)){
+                if (annotations.contains(descriptor)) {
                     methods.add(
                             new MethodInfo(
                                     className,
@@ -165,15 +166,16 @@ public class AnnotationsMethodScanner {
                             )
                     );
                 }
-                return super.visitAnnotation(descriptor,visible);
+                return super.visitAnnotation(descriptor, visible);
             }
 
             @Override
-            public void visitEnd(){
+            public void visitEnd() {
                 super.visitEnd();
             }
         }
     }
 
-    public record MethodInfo(String className, String name, String descriptor) {}
+    public record MethodInfo(String className, String name, String descriptor) {
+    }
 }

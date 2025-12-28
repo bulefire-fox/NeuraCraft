@@ -9,7 +9,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -18,12 +17,12 @@ public class PluginFile {
     private final JarFile jarFile;
     private final Manifest manifest;
 
-    public PluginFile(@NotNull Path jarFilePath){
+    public PluginFile(@NotNull Path jarFilePath) {
         try {
             this.file = jarFilePath.toFile();
             this.jarFile = new JarFile(jarFilePath.toFile());
             this.manifest = jarFile.getManifest();
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -34,11 +33,11 @@ public class PluginFile {
         this.manifest = manifest;
     }
 
-    public Path getFilePath(){
+    public Path getFilePath() {
         return this.file.toPath();
     }
 
-    public List<String> getMainClass(){
+    public List<String> getMainClass() {
         try {
             try (FileSystem fs = FileSystems.newFileSystem(file.toPath(), (ClassLoader) null)) {
                 Path root = fs.getPath("/");

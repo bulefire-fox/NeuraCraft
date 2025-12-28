@@ -10,7 +10,6 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -27,14 +26,14 @@ public class PluginContainer {
     private final PluginFile pluginFile;
     private final PluginClassLoader classLoader;
     private final List<Class<?>> mainClasses;
-    private final Map<Class<? extends Annotation>,RegisteredClassScannerData> registeredData;
+    private final Map<Class<? extends Annotation>, RegisteredClassScannerData> registeredData;
 
     @SneakyThrows
     public PluginContainer(@NotNull PluginFile pluginFile) {
         this.pluginFile = pluginFile;
         this.classLoader = new PluginClassLoader(new URL[]{pluginFile.getFilePath().toUri().toURL()}, AgentController.class.getClassLoader());
         this.mainClasses = new ArrayList<>(1);
-        for (String className : pluginFile.getMainClass()){
+        for (String className : pluginFile.getMainClass()) {
             try {
                 this.mainClasses.add(classLoader.loadClass(className));
             } catch (ClassNotFoundException e) {
@@ -44,13 +43,13 @@ public class PluginContainer {
         this.registeredData = new HashMap<>();
     }
 
-    public void load(){
+    public void load() {
         instanceMainClasses();
         scanRegisteredClasses(PluginLoader.PLUGIN_ANNOTATIONS);
     }
 
-    public void instanceMainClasses(){
-        for (Class<?> clazz : mainClasses){
+    public void instanceMainClasses() {
+        for (Class<?> clazz : mainClasses) {
             try {
                 log.debug("Instance main class {}", clazz.getName());
                 clazz.getConstructor().newInstance();
@@ -60,20 +59,20 @@ public class PluginContainer {
         }
     }
 
-    public void scanRegisteredClasses(@NotNull List<Class<? extends Annotation>> annotations){
+    public void scanRegisteredClasses(@NotNull List<Class<? extends Annotation>> annotations) {
         for (Class<? extends Annotation> annotation : annotations) {
             Target target = annotation.getAnnotation(Target.class);
             if (target == null || target.value().length == 0) continue;
             ElementType[] elementTypes = target.value();
-            for (ElementType elementType : elementTypes){
-                switch (elementType){
+            for (ElementType elementType : elementTypes) {
+                switch (elementType) {
                     case TYPE -> {
                         List<Class<?>> classes;
                         try (FileSystem fs = FileSystems.newFileSystem(pluginFile.getFilePath(), (ClassLoader) null)) {
                             Path root = fs.getPath("/");
                             try (var files = Files.walk(root)) {
                                 classes = PluginAnnotationScanner.scanClassAnnotations(annotation,
-                                                        files.filter(Files::isRegularFile)
+                                                files.filter(Files::isRegularFile)
                                                         .filter(file -> file.getFileName().toString().endsWith(".class"))
                                                         .map(file -> Utils.readClassFromJar(fs, file))
                                                         .toList()
@@ -92,7 +91,7 @@ public class PluginContainer {
                         }
                         var data = new RegisteredClassScannerData(annotation);
                         data.addClasses(classes);
-                        registeredData.put(annotation,data);
+                        registeredData.put(annotation, data);
                     }
                     case METHOD -> {
                         List<Method> methods;
@@ -113,7 +112,7 @@ public class PluginContainer {
 
                         var data = new RegisteredClassScannerData(annotation);
                         data.addMethods(methods);
-                        registeredData.put(annotation,data);
+                        registeredData.put(annotation, data);
                     }
                     default -> log.warn("Annotation {} is not supported", annotation.getName());
                 }
@@ -121,7 +120,7 @@ public class PluginContainer {
         }
     }
 
-    public RegisteredClassScannerData getRegisteredData(@NotNull Class<? extends Annotation> annotation){
+    public RegisteredClassScannerData getRegisteredData(@NotNull Class<? extends Annotation> annotation) {
         return registeredData.get(annotation);
     }
 }

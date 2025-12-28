@@ -25,12 +25,12 @@ public class Find extends FullCommand.AbsCommand {
         var playerManager = AgentController.getPlayerManager();
         var agent = agentManager.getAgent(playerManager.getPlayerAgentUUID(player));
 
-        if (agent == null){
+        if (agent == null) {
             feedback(commandContext.getSource(), Component.translatable("neuracraft.command.find.notInChatRoom"));
             return 1;
         }
 
-        feedback(commandContext.getSource(), Component.translatable("neuracraft.command.find.success", agent.getName(),agent.getUUID()));
+        feedback(commandContext.getSource(), Component.translatable("neuracraft.command.find.success", agent.getName(), agent.getUUID()));
         log.info("player {} in Agent: {} UUID: {}", playerName, agent.getName(), agent.getUUID());
         return 1;
     }

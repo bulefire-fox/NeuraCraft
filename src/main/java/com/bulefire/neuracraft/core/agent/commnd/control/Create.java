@@ -34,7 +34,7 @@ public class Create extends FullCommand.AbsCommand {
         try {
             agent = agentManger.creatAgent(sModel);
         } catch (NoAgentFound e) {
-            feedback(commandContext.getSource(), Component.translatable("neuracraft.command.create.failure.unknownModel",sModel,agentManger.getAllAliveAgentKeys()));
+            feedback(commandContext.getSource(), Component.translatable("neuracraft.command.create.failure.unknownModel", sModel, agentManger.getAllAliveAgentKeys()));
             return 1;
         }
 
@@ -42,9 +42,9 @@ public class Create extends FullCommand.AbsCommand {
         APlayer player = new APlayer(playerName, playerUUID);
         agent.addPlayer(player);
         agent.addAdmin(player);
-        playerManager.updatePlayer(player,agent.getUUID());
+        playerManager.updatePlayer(player, agent.getUUID());
         agent.saveToFile(FileUtil.agent_base_url.resolve(agent.getModelName()).resolve(agent.getUUID().toString()));
-        feedback(commandContext.getSource(), Component.translatable("neuracraft.command.create.success", agent.getName(),agent.getUUID()));
+        feedback(commandContext.getSource(), Component.translatable("neuracraft.command.create.success", agent.getName(), agent.getUUID()));
         var server = CUtil.getServer.get();
         ChatEventProcesser.ChatMessage.Env env = CUtil.getEnv(server);
         PlayerJoinEventProcesser.onPlayerJoin(new PlayerJoinEventProcesser.JoinMessage(player, env));

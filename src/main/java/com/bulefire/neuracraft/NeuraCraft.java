@@ -14,7 +14,7 @@ public class NeuraCraft {
 
     public static final Path configPath = FMLPaths.CONFIGDIR.get();
 
-    public NeuraCraft(){
+    public NeuraCraft() {
         log.info("start init NC");
         // 初始化必须严格遵循NC->M->C->Core顺序
         // 初始化操作可以注入任意合理的部分

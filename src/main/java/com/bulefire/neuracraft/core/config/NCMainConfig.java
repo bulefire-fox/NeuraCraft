@@ -12,7 +12,8 @@ import java.nio.file.Path;
 public class NCMainConfig {
     public static final Path mainConfigPath = FileUtil.base_url.resolve("neuracraft.json");
     public static final File mainConfigFile = mainConfigPath.toFile();
-    public static void init(){
+
+    public static void init() {
         if (!mainConfigFile.exists()) {
             try {
                 mainConfigFile.createNewFile();
@@ -30,7 +31,7 @@ public class NCMainConfig {
     private static String prefix = "AI";
 
     @SneakyThrows
-    public static void load(){
+    public static void load() {
         NeuraCraft neuraCraft = FileUtil.loadJsonFromFile(mainConfigPath, NeuraCraft.class);
         prefix = neuraCraft.getPrefix();
     }

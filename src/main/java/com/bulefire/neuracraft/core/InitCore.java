@@ -7,7 +7,7 @@ import com.bulefire.neuracraft.core.plugin.PluginLoader;
 import java.io.IOException;
 
 public class InitCore {
-    public static void init(){
+    public static void init() {
         //
         // 加载第三方Agent插件
         try {

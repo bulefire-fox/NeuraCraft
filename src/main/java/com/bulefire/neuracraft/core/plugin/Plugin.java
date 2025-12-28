@@ -13,11 +13,12 @@ import java.lang.annotation.*;
  *     }
  * </pre>
  * 插件的初始化逻辑放在 {@code 空构造函数} 中。
+ *
  * @author bulefire_fox
- * @since 2.0
  * @version 1.0
  * @see com.bulefire.neuracraft.core.annotation.Agent
  * @see com.bulefire.neuracraft.core.annotation.RegisterAgent
+ * @since 2.0
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

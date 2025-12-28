@@ -1,7 +1,6 @@
 package com.bulefire.neuracraft.core.plugin;
 
 import com.bulefire.neuracraft.compatibility.util.FileUtil;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -25,7 +24,7 @@ public class PluginScanner {
 
     public static @NotNull @Unmodifiable List<Path> scanPlugins(Path scanpath) throws IOException {
         log.debug("Scanning plugins in {}", scanpath);
-        try (var files = Files.walk(scanpath)){
+        try (var files = Files.walk(scanpath)) {
             return files.filter(Files::isRegularFile)
                     .peek(file -> log.debug("Checking file {}", file.getFileName().toString()))
                     .filter(file -> file.getFileName().toString().endsWith(".jar"))

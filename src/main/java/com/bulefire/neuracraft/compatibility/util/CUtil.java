@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,53 +26,61 @@ import java.util.function.Supplier;
 
 @Log4j2
 public class CUtil {
-    public static Function<String,Boolean> hasMod;
+    public static Function<String, Boolean> hasMod;
     public static Supplier<MinecraftServer> getServer;
 
-    public static Supplier<Player> getPlayer = () -> {throw (InitFailedException)(new InitFailedException("CUtil.getPlayer not inject").initCause(new NullPointerException("CUtil.getPlayer is null")));};
+    public static Supplier<Player> getPlayer = () -> {
+        throw (InitFailedException) (new InitFailedException("CUtil.getPlayer not inject").initCause(new NullPointerException("CUtil.getPlayer is null")));
+    };
+
     @Contract(pure = true)
-    public static void broadcastMessageToCharBar(@NotNull SendMessage message){
-        switch (message.env()){
-            case CLIENT,SERVER -> {
+    public static void broadcastMessageToCharBar(@NotNull SendMessage message) {
+        switch (message.env()) {
+            case CLIENT, SERVER -> {
                 MinecraftServer server = getServer.get();
-                for(ServerPlayer player : server.getPlayerList().getPlayers()){
+                for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     player.sendSystemMessage(message.message());
                 }
             }
-            case SINGLE -> Objects.requireNonNullElse(Minecraft.getInstance().player,getPlayer.get()).sendSystemMessage(message.message());
+            case SINGLE ->
+                    Objects.requireNonNullElse(Minecraft.getInstance().player, getPlayer.get()).sendSystemMessage(message.message());
         }
     }
+
     @Contract(pure = true)
-    public static void broadcastMessageToGroupPlayer(@NotNull SendMessage message, @NotNull List<APlayer> playerGroup){
-        switch (message.env()){
+    public static void broadcastMessageToGroupPlayer(@NotNull SendMessage message, @NotNull List<APlayer> playerGroup) {
+        switch (message.env()) {
             case CLIENT, SERVER -> {
                 MinecraftServer server = getServer.get();
-                for(APlayer player : playerGroup){
+                for (APlayer player : playerGroup) {
                     Objects.requireNonNull(server.getPlayerList().getPlayer(player.uuid())).sendSystemMessage(message.message());
                 }
             }
-            case SINGLE -> Objects.requireNonNullElse(Minecraft.getInstance().player,getPlayer.get()).sendSystemMessage(message.message());
+            case SINGLE ->
+                    Objects.requireNonNullElse(Minecraft.getInstance().player, getPlayer.get()).sendSystemMessage(message.message());
         }
     }
+
     @Contract(pure = true)
-    public static void sendMessageToPlayer(@NotNull SendMessage message){
-        switch (message.env()){
+    public static void sendMessageToPlayer(@NotNull SendMessage message) {
+        switch (message.env()) {
             case CLIENT, SERVER -> {
                 MinecraftServer server = getServer.get();
                 Objects.requireNonNull(server.getPlayerList().getPlayer(message.player().uuid())).sendSystemMessage(message.message());
             }
-            case SINGLE -> Objects.requireNonNullElse(Minecraft.getInstance().player,getPlayer.get()).sendSystemMessage(message.message());
+            case SINGLE ->
+                    Objects.requireNonNullElse(Minecraft.getInstance().player, getPlayer.get()).sendSystemMessage(message.message());
         }
     }
 
     /**
      * 发送AI类的 POST 请求
-     * @param urls 请求地址
-     * @param body 请求体
+     *
+     * @param urls  请求地址
+     * @param body  请求体
      * @param token 密钥, 不要 {@code Bearer} 前缀
      * @return 响应
      * @throws Exception 异常
-     * @since 1.0
      * @author bulefire_fox
      * @apiNote 默认请求头为:
      * <pre>
@@ -82,6 +89,7 @@ public class CUtil {
      *          Authorization: Bearer <token>
      *     }
      * </pre>
+     * @since 1.0
      */
     public static @NotNull String AiPOST(@NotNull String urls, @NotNull String body, @NotNull String token) throws Exception {
         log.info("send to ai url: {}", urls);
@@ -105,7 +113,7 @@ public class CUtil {
 
             return response.toString();
         } else {
-            return "POST request failed with response code: " + responseCode+","+connection.getResponseMessage();
+            return "POST request failed with response code: " + responseCode + "," + connection.getResponseMessage();
         }
     }
 

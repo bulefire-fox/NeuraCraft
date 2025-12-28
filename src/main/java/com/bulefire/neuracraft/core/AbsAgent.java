@@ -25,18 +25,19 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * {@link Agent}的骨干实现，可以继承此类并进一步实现 <b>抽象方法</b> 和 <b>protected方法</b>
+ *
  * @author bulefire_fox
- * @since 2.0
+ * @implNote 建议仔细阅读源码&文档并合理使用默认实现和 <b>protected</b> 辅助方法， <b>protected</b> 方法建议重写为 <b>private</b>
  * @see Agent
  * @see AgentSerializationData
  * @see APlayer
  * @see AgentMessage
  * @see Timer
- * @implNote 建议仔细阅读源码&文档并合理使用默认实现和 <b>protected</b> 辅助方法， <b>protected</b> 方法建议重写为 <b>private</b>
+ * @since 2.0
  */
 @ToString
 @Log4j2
-public abstract class AbsAgent implements Agent{
+public abstract class AbsAgent implements Agent {
     // 聊天室名称
     @Getter
     @Setter
@@ -68,13 +69,14 @@ public abstract class AbsAgent implements Agent{
      * 创建一个抽象地聊天室
      * persistentAdmins 由admins生成 <br/>
      * <pre>{@code this.persistentAdmins = admins.stream().map(APlayer::name).toList();}</pre>
-     * @param name 聊天室名称
-     * @param uuid 聊天室 uuid
-     * @param players 玩家列表
-     * @param admins 管理员列表
-     * @param modelName 模型名称
+     *
+     * @param name        聊天室名称
+     * @param uuid        聊天室 uuid
+     * @param players     玩家列表
+     * @param admins      管理员列表
+     * @param modelName   模型名称
      * @param disPlayName 显示名称
-     * @param timePerMin 每分钟消息次数
+     * @param timePerMin  每分钟消息次数
      * @since 1.0
      */
     public AbsAgent(String name, UUID uuid, List<APlayer> players, @NotNull List<APlayer> admins, String modelName, String disPlayName, int timePerMin) {
@@ -91,13 +93,14 @@ public abstract class AbsAgent implements Agent{
 
     /**
      * 创建一个抽象地聊天室,为抽象类的序列化辅助方法提供支持。<br>
-     *
+     * <p>
      * 由于采用final封装, 导致{@link Gson}无法反序列化到此类, 为此提供辅助方法
      * {@link AbsAgent#loadFileToManager(Path, Class, Class)}
      * 为子类提供序列化支持. 此构造函数为{@link AbsAgent#loadFileToManager(Path, Class, Class)}提供支持,
      * 由反序列化的数据创建。<br>
-     *
+     * <p>
      * 此构造器只能由子类或辅助方法调用，避免破坏封装
+     *
      * @param data 聊天室的序列化数据
      * @see AbsAgent#loadFileToManager(Path, Class, Class)
      * @see AgentSerializationData
@@ -132,6 +135,7 @@ public abstract class AbsAgent implements Agent{
 
     /**
      * 判断玩家是否为管理员
+     *
      * @param player 玩家
      * @return 是否是管理员
      * @apiNote 此方法在玩家不在 {@code admins} 列表时会去 {@code persistentAdmins} 中寻找是否存在指定玩家名
@@ -146,6 +150,7 @@ public abstract class AbsAgent implements Agent{
 
     /**
      * 移除管理员
+     *
      * @param player 管理员
      * @apiNote 此方法不会移除 {@code persistentAdmins} 中的管理员
      */
@@ -156,6 +161,7 @@ public abstract class AbsAgent implements Agent{
 
     /**
      * 发送消息, 默认进行频率限制
+     *
      * @param msg 传入的消息
      * @return 返回的消息
      * @throws AgentOutOfTime 当发送频率太快时抛出
@@ -165,7 +171,7 @@ public abstract class AbsAgent implements Agent{
      */
     @Override
     public @NotNull String sendMessage(@NotNull AgentMessage msg) throws AgentOutOfTime {
-        if (timer.isOutOfTimes()){
+        if (timer.isOutOfTimes()) {
             throw new AgentOutOfTime("out of times", timePerMin);
         }
         //String message = msg.toFormatedMessage();
@@ -174,6 +180,7 @@ public abstract class AbsAgent implements Agent{
 
     /**
      * 由子类实现的具体消息方法, 为 {@link AbsAgent#sendMessage(AgentMessage)} 提供支持
+     *
      * @param msg 格式化消息
      * @return 返回消息
      * @implSpec 此方法必须返回原始消息，格式化由框架处理, 传入的 {@code msg} 为格式化后的扁平消息，无需再次格式化.
@@ -191,6 +198,7 @@ public abstract class AbsAgent implements Agent{
      * 获取日志记录器, 建议使用此方法获取日志记录器， 并接入 {@code modloader} 的日志管理 <br>
      * 使用方法:
      * <pre>{@code private static final Logger log = getLogger(DeepSeek.class);}</pre>
+     *
      * @param klass 类
      * @return 日志记录器
      * @apiNote 默认返回 {@link Logger} 的实例,接入 {@code modloader} 的日志管理.
@@ -203,6 +211,7 @@ public abstract class AbsAgent implements Agent{
     /**
      * 计时器，用于限制发送频率.<br>
      * 为 {@link AbsAgent#sendMessage(AgentMessage)} 提供支持
+     *
      * @see AbsAgent#sendMessage(AgentMessage)
      */
     protected static class Timer {
@@ -232,16 +241,17 @@ public abstract class AbsAgent implements Agent{
     /**
      * 为子类的 {@link AbsAgent#loadFromFile(Path)} 方法提供支持<br>
      * 用于加载文件到新的 {@code Agent} 并替换 {@link AgentManager} 中的实例
-     * @param path 配置文件路径
-     * @param classOfData {@code 数据类} 的 {@link Class} 对象
+     *
+     * @param path         配置文件路径
+     * @param classOfData  {@code 数据类} 的 {@link Class} 对象
      * @param classOfAgent {@code Agent} 的 {@link Class} 对象
-     * @param <D> 数据类类型
-     * @param <A> Agent 类型
-     * @since 2.0
+     * @param <D>          数据类类型
+     * @param <A>          Agent 类型
+     * @apiNote 此方法会将新的 {@code Agent} 对象放入{@link AgentManager} 中,并删除旧的 {@code Agent} 对象
      * @see AgentManager
      * @see AgentSerializationData
      * @see AbsAgent#loadFromFile(Path)
-     * @apiNote 此方法会将新的 {@code Agent} 对象放入{@link AgentManager} 中,并删除旧的 {@code Agent} 对象
+     * @since 2.0
      */
     @SneakyThrows
     protected <D extends AgentSerializationData, A extends Agent> void loadFileToManager(@NotNull Path path, @NotNull Class<D> classOfData, @NotNull Class<A> classOfAgent) {
@@ -260,8 +270,9 @@ public abstract class AbsAgent implements Agent{
     /**
      * 数据类，为反序列化提供支持 <br>
      * 子类数据类需要继承此类
-     * @since 2.0
+     *
      * @see AbsAgent#loadFileToManager(Path, Class, Class)
+     * @since 2.0
      */
     @Data
     protected static class AgentSerializationData {
@@ -295,7 +306,7 @@ public abstract class AbsAgent implements Agent{
 
         public AgentSerializationData() {
             this.name = "";
-            this.uuid = new UUID(0,0);
+            this.uuid = new UUID(0, 0);
             this.players = new ArrayList<>(0);
             this.admins = new ArrayList<>(0);
             this.persistentAdmins = new ArrayList<>(0);

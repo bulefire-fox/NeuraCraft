@@ -15,24 +15,24 @@ import java.util.*;
 public class PluginAnnotationScanner {
     public static boolean hasAnnotationWithoutThrows(Path klass, Class<? extends Annotation> annotation) {
         try {
-            return hasAnnotation(klass,annotation);
+            return hasAnnotation(klass, annotation);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static boolean hasAnnotationWithoutThrows(byte[] klass, Class<? extends Annotation> annotation) {
-        return hasAnnotation(klass,annotation);
+        return hasAnnotation(klass, annotation);
     }
 
     public static boolean hasAnnotation(Path klass, Class<? extends Annotation> annotation) throws IOException {
-        return hasAnnotation(Files.readAllBytes(klass),annotation);
+        return hasAnnotation(Files.readAllBytes(klass), annotation);
     }
 
-    public static boolean hasAnnotation(byte[] klass, Class<? extends Annotation> annotation){
+    public static boolean hasAnnotation(byte[] klass, Class<? extends Annotation> annotation) {
         ClassReader reader = new ClassReader(klass);
         Set<String> annotations = new HashSet<>();
-        reader.accept(new PluginAnnotationsClassVisitor(null,annotations), 2);
+        reader.accept(new PluginAnnotationsClassVisitor(null, annotations), 2);
         return annotations.contains(Type.getDescriptor(annotation));
     }
 
@@ -52,7 +52,7 @@ public class PluginAnnotationScanner {
     }
 
     @SneakyThrows
-    public static @NotNull List<String> getMainClassByPath(@NotNull List<Path> classes){
+    public static @NotNull List<String> getMainClassByPath(@NotNull List<Path> classes) {
         return getMainClass(classes.stream().map(PluginAnnotationScanner::readAllBytes).toList());
     }
 
@@ -60,7 +60,7 @@ public class PluginAnnotationScanner {
         List<String> result = new ArrayList<>();
         for (byte[] klass : classes) {
             ClassReader reader = new ClassReader(klass);
-            reader.accept(new PluginMainClassVisitor(null,result), 2);
+            reader.accept(new PluginMainClassVisitor(null, result), 2);
         }
         return result;
     }
@@ -89,21 +89,22 @@ public class PluginAnnotationScanner {
 
     @SneakyThrows
     public static @NotNull List<String> scanClassAnnotations(@NotNull Class<? extends Annotation> annotation, @NotNull Path jarPath) {
-        try (var walk = Files.walk(jarPath)){
+        try (var walk = Files.walk(jarPath)) {
             return scanClassAnnotationsByPath(annotation, walk.toList());
         }
     }
+
     @SneakyThrows
     public static @NotNull List<String> scanClassAnnotationsByPath(@NotNull Class<? extends Annotation> annotation, @NotNull List<Path> classes) {
-        return scanClassAnnotations(annotation,classes.stream().map(PluginAnnotationScanner::readAllBytes).toList());
+        return scanClassAnnotations(annotation, classes.stream().map(PluginAnnotationScanner::readAllBytes).toList());
     }
 
     @SneakyThrows
     public static @NotNull List<String> scanClassAnnotations(@NotNull Class<? extends Annotation> annotation, @NotNull List<byte[]> classes) {
         List<String> result = new ArrayList<>();
-        for (byte[] klass : classes){
+        for (byte[] klass : classes) {
             ClassReader reader = new ClassReader(klass);
-            reader.accept(new PluginClassAnnotationVisitor(null,result,annotation), 2);
+            reader.accept(new PluginClassAnnotationVisitor(null, result, annotation), 2);
         }
         return result;
     }
@@ -134,20 +135,20 @@ public class PluginAnnotationScanner {
 
     @SneakyThrows
     public static @NotNull List<Method> scanClassMethodsAnnotations(@NotNull Class<? extends Annotation> annotation, @NotNull Path jarPath, ClassLoader classLoader) {
-        try (var walk = Files.walk(jarPath)){
-            return scanClassMethodsAnnotationsByPath(annotation, walk.toList(),classLoader);
+        try (var walk = Files.walk(jarPath)) {
+            return scanClassMethodsAnnotationsByPath(annotation, walk.toList(), classLoader);
         }
     }
 
     @SneakyThrows
     public static @NotNull List<Method> scanClassMethodsAnnotationsByPath(@NotNull Class<? extends Annotation> annotation, @NotNull List<Path> classes, ClassLoader classLoader) {
-        return scanClassMethodsAnnotations(annotation,classes.stream().map(PluginAnnotationScanner::readAllBytes).toList(),classLoader);
+        return scanClassMethodsAnnotations(annotation, classes.stream().map(PluginAnnotationScanner::readAllBytes).toList(), classLoader);
     }
 
     @SneakyThrows
     public static @NotNull List<Method> scanClassMethodsAnnotations(@NotNull Class<? extends Annotation> annotation, @NotNull List<byte[]> classes, ClassLoader classLoader) {
         List<Method> result = new ArrayList<>();
-        for (byte[] klass : classes){
+        for (byte[] klass : classes) {
             result.addAll(AnnotationsMethodScanner.scannerClass(klass, Collections.singleton(annotation), classLoader));
         }
         return result;

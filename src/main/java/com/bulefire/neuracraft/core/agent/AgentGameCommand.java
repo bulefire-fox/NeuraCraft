@@ -9,10 +9,11 @@ import java.util.List;
 
 /**
  * 命令管理
- * @since 2.0
- * @version 1.0
+ *
  * @author bulefire_fox
+ * @version 1.0
  * @see AgentController
+ * @since 2.0
  */
 public class AgentGameCommand {
 
@@ -30,7 +31,7 @@ public class AgentGameCommand {
         commands.remove(command);
     }
 
-    public List<LiteralArgumentBuilder<CommandSourceStack>> getAllCommands(){
+    public List<LiteralArgumentBuilder<CommandSourceStack>> getAllCommands() {
         return new ArrayList<>(commands);
     }
 

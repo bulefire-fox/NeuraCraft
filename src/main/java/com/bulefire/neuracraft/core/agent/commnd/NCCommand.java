@@ -12,7 +12,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 public class NCCommand {
-    public static LiteralArgumentBuilder<CommandSourceStack> getCommands(){
+    public static LiteralArgumentBuilder<CommandSourceStack> getCommands() {
         return Commands.literal("agent")
                 .requires(source -> source.hasPermission(2))
                 .executes(new ChatRoomCommand())

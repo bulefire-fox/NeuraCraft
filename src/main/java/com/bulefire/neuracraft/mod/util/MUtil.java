@@ -6,9 +6,10 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class MUtil {
     static {
-        CUtil.hasMod = (modid)-> ModList.get().isLoaded(modid);
+        CUtil.hasMod = (modid) -> ModList.get().isLoaded(modid);
         CUtil.getServer = ServerLifecycleHooks::getCurrentServer;
     }
 
-    public static void init(){}
+    public static void init() {
+    }
 }

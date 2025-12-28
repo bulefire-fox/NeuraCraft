@@ -40,7 +40,7 @@ public class PluginLoader {
 
         // invoke methods
         for (PluginContainer plugin : this.plugins) {
-            for (Class<? extends Annotation> annotation : PLUGIN_ANNOTATIONS){
+            for (Class<? extends Annotation> annotation : PLUGIN_ANNOTATIONS) {
                 if (annotation.equals(Agent.class)) {
                     plugin.getRegisteredData(annotation).getClasses().forEach(clazz -> {
                         try {

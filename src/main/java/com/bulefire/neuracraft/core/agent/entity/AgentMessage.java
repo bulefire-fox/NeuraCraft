@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record AgentMessage(String msg, APlayer player) {
     @Contract(pure = true)
-    public @NotNull String toFormatedMessage(){
-           return player().toFormatedString()+' '+msg;
+    public @NotNull String toFormatedMessage() {
+        return player().toFormatedString() + ' ' + msg;
     }
 }

@@ -2,7 +2,6 @@ package com.bulefire.neuracraft.core.agent.commnd.self;
 
 import com.bulefire.neuracraft.compatibility.command.FullCommand;
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
-import com.bulefire.neuracraft.compatibility.function.process.ChatEventProcesser;
 import com.bulefire.neuracraft.compatibility.function.process.PlayerJoinEventProcesser;
 import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.core.Agent;
@@ -33,25 +32,25 @@ public class Join extends FullCommand.AbsCommand {
         String agentUUID;
         try {
             agentName = StringArgumentType.getString(commandContext, "roomName");
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             agentName = null;
         }
         try {
             agentUUID = StringArgumentType.getString(commandContext, "roomUUID");
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             agentUUID = null;
         }
 
-        if (agentName != null && agentUUID == null){
+        if (agentName != null && agentUUID == null) {
             var agents = agentManager.getAgentByName(agentName);
-            if (agents.size() != 1){
-                feedback(commandContext.getSource(), Component.translatable("neuracraft.command.join.failure.manyAgents",agents.size(),agentName));
+            if (agents.size() != 1) {
+                feedback(commandContext.getSource(), Component.translatable("neuracraft.command.join.failure.manyAgents", agents.size(), agentName));
                 return 1;
             }
             agent = agents.get(0);
-        }else if (agentName == null && agentUUID != null){
+        } else if (agentName == null && agentUUID != null) {
             agent = agentManager.getAgent(UUID.fromString(agentUUID));
-            if (agent == null){
+            if (agent == null) {
                 feedback(commandContext.getSource(), Component.translatable("neuracraft.command.join.failure.notExist", agentUUID));
                 return 1;
             }
@@ -63,7 +62,7 @@ public class Join extends FullCommand.AbsCommand {
         playerManager.updatePlayer(player, agent.getUUID());
 
         feedback(commandContext.getSource(), Component.translatable("neuracraft.command.join.success", agent.getName()));
-        PlayerJoinEventProcesser.onPlayerJoin(new PlayerJoinEventProcesser.JoinMessage(player,CUtil.getEnv(CUtil.getServer.get())));
+        PlayerJoinEventProcesser.onPlayerJoin(new PlayerJoinEventProcesser.JoinMessage(player, CUtil.getEnv(CUtil.getServer.get())));
         log.info("player {} join agent: {}, UUID: {}", playerName, agent.getName(), agent.getUUID());
         return 1;
     }

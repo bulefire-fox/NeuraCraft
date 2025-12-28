@@ -8,21 +8,22 @@ import java.lang.annotation.*;
  * <pre>
  *     {@code
  *          @RegisterAgent
-*          public static void anyName(){
+ *          public static void anyName(){
  *              // do something there...
  *          }
  *     }
  * </pre>
  * 注册类请使用 {@link com.bulefire.neuracraft.core.annotation.Agent}
+ *
  * @author bulefire_fox
- * @since 2.0
  * @version 1.0
  * @see com.bulefire.neuracraft.core.Agent
  * @see com.bulefire.neuracraft.core.annotation.Agent
+ * @since 2.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Documented
 public @interface RegisterAgent {
-    
+
 }

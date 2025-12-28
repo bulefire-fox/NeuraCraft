@@ -3,7 +3,6 @@ package com.bulefire.neuracraft.mod.event.listener;
 import com.bulefire.neuracraft.NeuraCraft;
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
 import com.bulefire.neuracraft.compatibility.function.process.ChatEventProcesser;
-import com.mojang.logging.LogUtils;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,7 +12,6 @@ import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -23,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 public class ChatEventListener {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public static void onChat(@NotNull ClientChatEvent event){
+    public static void onChat(@NotNull ClientChatEvent event) {
         log.info("client catch player send chat");
         // 获取消息文本
         String message = event.getMessage();
@@ -33,7 +31,7 @@ public class ChatEventListener {
         if (Minecraft.getInstance().player != null) {
             name = Minecraft.getInstance().player.getName().getString();
             uuid = Minecraft.getInstance().player.getUUID();
-        }else{
+        } else {
             throw new RuntimeException("Minecraft.getInstance().player is null");
         }
 
@@ -41,14 +39,14 @@ public class ChatEventListener {
         CompletableFuture.runAsync(() -> ChatEventProcesser.onChat(
                 new ChatEventProcesser.ChatMessage(
                         message,
-                        new APlayer(name,uuid),
+                        new APlayer(name, uuid),
                         Minecraft.getInstance().isSingleplayer() ? ChatEventProcesser.ChatMessage.Env.SINGLE : ChatEventProcesser.ChatMessage.Env.CLIENT)
         ));
     }
 
     @SubscribeEvent
     @OnlyIn(Dist.DEDICATED_SERVER)
-    public static void onServerChat(@NotNull ServerChatEvent event){
+    public static void onServerChat(@NotNull ServerChatEvent event) {
         log.info("server catch player send chat");
         // 获取消息文本
         String message = event.getMessage().getString();
@@ -57,13 +55,13 @@ public class ChatEventListener {
         UUID uuid = event.getPlayer().getUUID();
         if (event.getPlayer() != null) {
             name = event.getPlayer().getName().getString();
-        }else{
+        } else {
             throw new RuntimeException("Minecraft.getInstance().player is null");
         }
         CompletableFuture.runAsync(() -> ChatEventProcesser.onChat(
                 new ChatEventProcesser.ChatMessage(
                         message,
-                        new APlayer(name,uuid),
+                        new APlayer(name, uuid),
                         ChatEventProcesser.ChatMessage.Env.SERVER)
         ));
     }

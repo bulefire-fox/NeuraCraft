@@ -14,24 +14,26 @@ public class ChatHistory {
     public ChatHistory() {
         this.histories = new ArrayList<>(16);
     }
+
     public ChatHistory(@NotNull List<ChatBlock> histories) {
         this.histories = histories;
     }
 
-    public void addBlock(@NotNull ChatBlock b){
+    public void addBlock(@NotNull ChatBlock b) {
         this.histories.add(b);
     }
 
-    public record ChatBlock(String role, String content) { }
+    public record ChatBlock(String role, String content) {
+    }
 
     @Override
-    public String toString(){
+    public String toString() {
         log.info("Converting to String");
         StringBuilder sb = new StringBuilder();
-        for (ChatBlock b : histories){
+        for (ChatBlock b : histories) {
             sb.append("{\"role\":\"").append(b.role).append("\",\"content\":\"").append(b.content).append("\"},");
         }
-        String result = "["+sb.substring(0,sb.length()-1)+"]";
+        String result = "[" + sb.substring(0, sb.length() - 1) + "]";
         log.info("Converted to String: {}", result);
         return result;
     }
