@@ -1,6 +1,7 @@
 package com.bulefire.neuracraft.core;
 
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
+import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.compatibility.util.FileUtil;
 import com.bulefire.neuracraft.core.agent.AgentController;
 import com.bulefire.neuracraft.core.agent.AgentManager;
@@ -60,6 +61,7 @@ public abstract class AbsAgent implements Agent{
     // 每分钟消息次数
     private final int timePerMin;
     // 计时器
+    // 此字段不会被序列化
     private final transient Timer timer;
 
     /**
@@ -175,7 +177,9 @@ public abstract class AbsAgent implements Agent{
      * @param msg 格式化消息
      * @return 返回消息
      * @implSpec 此方法必须返回原始消息，格式化由框架处理, 传入的 {@code msg} 为格式化后的扁平消息，无需再次格式化.
+     * @implNote 可以使用{@link CUtil#AiPOST(String, String, String)} 将消息发送至ai平台
      * @see AbsAgent#sendMessage(AgentMessage)
+     * @see CUtil#AiPOST(String, String, String)
      */
     protected abstract @NotNull String message(@NotNull String msg);
 

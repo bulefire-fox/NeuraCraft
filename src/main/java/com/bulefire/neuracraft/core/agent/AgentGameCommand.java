@@ -7,6 +7,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 命令管理
+ * @since 2.0
+ * @version 1.0
+ * @author bulefire_fox
+ * @see AgentController
+ */
 public class AgentGameCommand {
 
     public List<LiteralArgumentBuilder<CommandSourceStack>> commands;

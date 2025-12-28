@@ -29,12 +29,27 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.*;
 
+/**
+ * AgentController
+ * 用于管理和调度所有的 {@link Agent} 实例, 与玩家进行交互, 监听事件并处理.
+ *
+ * @author bulefire_fox
+ * @version 2.0
+ * @since 2.0
+ * @see Agent
+ * @see AgentManager
+ * @see PlayerManager
+ * @see AgentGameCommand
+ * @see ChatEventProcesser.ChatMessage
+ * @see AgentController#registerAgentClassInitFunction(Runnable) 
+ */
 @Log4j2
 public class AgentController {
     @Getter
     private static final AgentManager agentManager = new AgentManager();
     @Getter
     private static final PlayerManager playerManager = new PlayerManager();
+    @Getter
     private static final AgentGameCommand agentGameCommand = new AgentGameCommand();
 
     private static final List<Runnable> agentClassInitFunctions = new ArrayList<>();
@@ -42,6 +57,12 @@ public class AgentController {
     @Setter
     private static String prefix = NCMainConfig.getPrefix();
 
+    /**
+     * 注册一个 Agent 类初始化逻辑
+     * @param fun 初始化逻辑, 包装为一个 {@link Runnable}
+     * @see Runnable
+     * @see AgentController#agentClassInitFunctions
+     */
     public static void registerAgentClassInitFunction(Runnable fun){
         log.debug("register agent class init function {}", fun);
         agentClassInitFunctions.add(fun);
@@ -267,7 +288,7 @@ public class AgentController {
     private static void saveAllAgentToFile(){
         for (Agent agent : agentManager.getAllAgents()) {
             agent.saveToFile(
-                    // path/to/config/agent/<modelName>/<uuid>
+                    // path/to/config/agent/<modelName>/<uuid>.<suffix>
                     FileUtil.agent_base_url.resolve(agent.getModelName()).resolve(agent.getUUID().toString())
             );
         }

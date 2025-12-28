@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -58,6 +59,17 @@ public class FileUtil {
         log.debug("init file util done");
     }
 
+    /**
+     *  序列化对象到json文件, 如果文件路径不存在则创建
+     * @param data 要保存的对象, 可以是任意类型. 字段可以为 {@code final}
+     * @param filePath 文件路径, 当前文件系统的路径
+     * @throws IOException IOException
+     * @apiNote 不序列化内部类, {@code static} 和 {@code transient} 字段, 使用 {@code Gson}
+     * @since 1.0
+     * @author bulefire_fox
+     * @see Gson
+     * @see GsonBuilder#disableInnerClassSerialization()
+     */
     public static void saveJsonToFile(@NotNull Object data, @NotNull Path filePath) throws IOException {
         log.info("file path: {}", filePath);
         if (!Files.exists(filePath)){
@@ -76,6 +88,19 @@ public class FileUtil {
         }
     }
 
+    /**
+     *  从 {@code json} 文件中反序列化对象, 返回一个新的 {@link T} 类型的对象.
+     * @param filePath {@code json} 文件的路径
+     * @param clazz 反序列化的对象类型, 及 {@link Class } 对象
+     * @return 一个新的 {@link T} 类型的对象
+     * @param <T> 反序列化的对象类型
+     * @throws IOException IOException
+     * @throws NullPointerException NullPointerException
+     * @since 1.0
+     * @author bulefire_fox
+     * @see Gson
+     * @apiNote 使用 {@code Gson} 反序列化, 无法处理 {@code final} {@code static} {@code transient} 字段
+     */
     public static <T> @NotNull T loadJsonFromFile(@NotNull Path filePath, Class<T> clazz) throws IOException{
         T t;
         try (FileReader reader = new FileReader(filePath.toFile())){
@@ -88,6 +113,18 @@ public class FileUtil {
         throw new NullPointerException("load json from file failed");
     }
 
+    /**
+     * 从 {@code json} 文件中反序列化对象, 直接修改传入的 {@link T} 对象
+     * @param filePath {@code json} 文件的路径
+     * @param clazz 反序列化时需要直接修改的 {@link T} 对象
+     * @throws IOException IOException
+     * @throws NullPointerException NullPointerException
+     * @since 2.0
+     * @author bulefire_fox
+     * @see Gson
+     * @see FileUtil#shouldProcess(Field)
+     * @apiNote 使用 {@code Gson} 反序列化, 无法处理 {@code final} {@code static} {@code transient} 字段
+     */
     @SuppressWarnings("unchecked")
     public static <T> void loadJsonFromFile(@NotNull Path filePath, @NotNull T clazz) throws IOException{
         T other = (T) loadJsonFromFile(filePath, clazz.getClass());
@@ -112,6 +149,25 @@ public class FileUtil {
                 && !Modifier.isTransient(modifiers);
     }
 
+    /**
+     * 读取指定目录下的所有存在的文件的路径 <br>
+     * 等价于 ( 省略try-with-resource语句 ) :
+     * <pre>
+     *     {@code
+     *        Files.walk(baseURL)
+     *           .filter(Files::isRegularFile)
+     *           .toList();
+     *     }
+     * </pre>
+     * @param baseURL 指定的文件根目录
+     * @return 所有文件路径组成的 {@link List}
+     * @throws IOException IOException
+     * @since 1.0
+     * @author bulefire_fox
+     * @see Files#walk(Path, FileVisitOption...)
+     * @apiNote 使用 {@link Files#walk(Path, FileVisitOption...)} 实现, 推荐直接使用 {@link Files#walk(Path, FileVisitOption...)}
+     * 而不是此方法以获取深入的定制化 {@link Stream}
+     */
     public static @NotNull @Unmodifiable List<Path> readAllFilePath(Path baseURL) throws IOException {
         try (Stream<Path> paths = Files.walk(baseURL)){
             return paths
