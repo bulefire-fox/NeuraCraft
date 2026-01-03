@@ -1,5 +1,6 @@
 package com.bulefire.neuracraft.core.plugin;
 
+import com.bulefire.neuracraft.compatibility.util.FileUtil;
 import com.bulefire.neuracraft.core.annotation.Agent;
 import com.bulefire.neuracraft.core.annotation.RegisterAgent;
 import lombok.SneakyThrows;
@@ -8,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +31,18 @@ public class PluginLoader {
 
     @SneakyThrows
     public void loadPluginsAndInvokeMethods() throws IOException {
+        load(FileUtil.plugin_url);
+    }
+
+    @SneakyThrows
+    public void loadSubModsAndInvokeMethods() throws IOException {
+        load(FileUtil.mod_url);
+    }
+
+    private void load(Path path) throws IOException {
         log.info("Loading plugins");
         // load plugins
-        this.plugins.addAll(PluginScanner.scanPlugins().stream()
+        this.plugins.addAll(PluginScanner.scanPlugins(path).stream()
                 .map(PluginFile::new)
                 .distinct()
                 .map(PluginContainer::new)

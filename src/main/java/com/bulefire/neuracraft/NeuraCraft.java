@@ -13,6 +13,7 @@ public class NeuraCraft {
     public static final String MOD_ID = "neuracraft";
 
     public static final Path configPath = FMLPaths.CONFIGDIR.get();
+    public static final Path modsPath = FMLPaths.MODSDIR.get();;
 
     public NeuraCraft() {
         log.info("start init NC");

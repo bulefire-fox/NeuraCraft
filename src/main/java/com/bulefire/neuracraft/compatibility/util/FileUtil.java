@@ -44,6 +44,11 @@ public class FileUtil {
      */
     public static final Path plugin_url = base_url.resolve("plugin");
 
+    /**
+     * 模组目录
+     */
+     public static final Path mod_url = NeuraCraft.modsPath;
+
     public static void init() {
         // 创建不存在的目录
         if (!base_url.toFile().exists())
