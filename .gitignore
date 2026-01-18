@@ -10,6 +10,7 @@
 /out/
 .gradle/
 /.gradle
+.gradle/*
 
 # 忽略日志和临时文件
 /logs/
