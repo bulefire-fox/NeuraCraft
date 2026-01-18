@@ -8,9 +8,7 @@
 # 忽略构建工具生成的文件
 /build/
 /out/
-.gradle/
-/.gradle
-.gradle/*
+/.gradle/
 
 # 忽略日志和临时文件
 /logs/
@@ -33,3 +31,4 @@ Thumbs.db
 
 /src/test/local/
 .http
+
