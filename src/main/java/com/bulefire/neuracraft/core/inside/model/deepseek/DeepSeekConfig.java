@@ -1,4 +1,4 @@
-package com.bulefire.neuracraft.core.insidemodel.deepseek;
+package com.bulefire.neuracraft.core.inside.model.deepseek;
 
 import com.bulefire.neuracraft.compatibility.util.FileUtil;
 import lombok.Getter;

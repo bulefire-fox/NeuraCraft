@@ -83,6 +83,7 @@ public class FileUtil {
         }
         Gson g = new GsonBuilder()
                 .disableInnerClassSerialization()
+                .setPrettyPrinting()
                 .create();
         try (FileWriter writer = new FileWriter(filePath.toFile().getPath())) {
             log.info("write to file: {}", filePath);

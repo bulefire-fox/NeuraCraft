@@ -28,12 +28,12 @@ public class Delete extends FullCommand.AbsCommand {
         UUID agentUUID;
         Agent agent;
         try {
-            agentName = StringArgumentType.getString(commandContext, "roomName");
+            agentName = StringArgumentType.getString(commandContext, "agentName");
         } catch (IllegalArgumentException e) {
             agentName = null;
         }
         try {
-            agentUUID = UUID.fromString(StringArgumentType.getString(commandContext, "roomUUID"));
+            agentUUID = UUID.fromString(StringArgumentType.getString(commandContext, "agentUUID"));
         } catch (IllegalArgumentException e) {
             agentUUID = null;
         }

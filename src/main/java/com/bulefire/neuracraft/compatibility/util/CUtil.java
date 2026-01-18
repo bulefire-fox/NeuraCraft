@@ -91,29 +91,40 @@ public class CUtil {
      * </pre>
      * @since 1.0
      */
-    public static @NotNull String AiPOST(@NotNull String urls, @NotNull String body, @NotNull String token) throws Exception {
-        log.info("send to ai url: {}", urls);
-        log.info("send to ai: {}", body);
-        log.info("send to ai token: {}", token);
-
+    public static @NotNull Response AiPOST(@NotNull String urls, @NotNull String body, @NotNull String token) throws IOException {
         var connection = getConnection(urls, body, token);
 
+        log.info("POST request sent to: {}",urls);
+        log.info("token: {}", token);
+        log.info("body: {}", body);
+
         int responseCode = connection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
 
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
+        BufferedReader in = new BufferedReader(new InputStreamReader(responseCode == 200 ? connection.getInputStream() : connection.getErrorStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
 
-            log.info("Response from AI: {}", response);
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        var result = new Response(response.toString(), connection.getResponseMessage(), responseCode);
+        log.info("Response: {}",result);
+        return result;
+    }
 
-            return response.toString();
-        } else {
-            return "POST request failed with response code: " + responseCode + "," + connection.getResponseMessage();
+    public record Response(String response, String responseMessage, int status) {
+        @Override
+        public @NotNull String toString() {
+            return "Response{" +
+                    "response='" + response + '\'' +
+                    ", responseMessage='" + responseMessage + '\'' +
+                    ", status=" + status +
+                    '}';
+        }
+
+        public @NotNull String getFormatted(){
+            return "POST request failed with response code: %s, %s msg:/ %s".formatted(status,responseMessage,response);
         }
     }
 

@@ -31,12 +31,12 @@ public class Join extends FullCommand.AbsCommand {
         String agentName;
         String agentUUID;
         try {
-            agentName = StringArgumentType.getString(commandContext, "roomName");
+            agentName = StringArgumentType.getString(commandContext, "agentName");
         } catch (IllegalArgumentException e) {
             agentName = null;
         }
         try {
-            agentUUID = StringArgumentType.getString(commandContext, "roomUUID");
+            agentUUID = StringArgumentType.getString(commandContext, "agentUUID");
         } catch (IllegalArgumentException e) {
             agentUUID = null;
         }

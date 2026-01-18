@@ -23,7 +23,7 @@ import java.util.UUID;
 public class Create extends FullCommand.AbsCommand {
     @Override
     public int run(CommandContext<CommandSourceStack> commandContext) throws CommandSyntaxException {
-        String agentName = StringArgumentType.getString(commandContext, "roomName");
+        String agentName = StringArgumentType.getString(commandContext, "agentName");
         String sModel = StringArgumentType.getString(commandContext, "chatModel");
         String playerName = Objects.requireNonNull(commandContext.getSource().getPlayer()).getName().getString();
         UUID playerUUID = commandContext.getSource().getPlayer().getUUID();

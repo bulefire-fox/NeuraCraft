@@ -17,14 +17,14 @@
 同时他还是一个 ```全新的``` ```minecraft``` ```AI``` 框架/库，
 他允许你轻松的创建自己的 ```Agent``` 并自定义逻辑而不需要任何高深的Java技巧和模组开发技能, 也无需直面 ```modloader ```。
 
-更多关于框架的介绍请参阅 [NC框架简介]()
+更多关于框架的介绍请参阅 [NC框架简介](./resource/docs/NeuraCraftFrameworkDocs/NC框架简介.md)
 
 要使用此模组你只需要将其[下载](https://github.com/bulrfire/NeuraCraft/releases/latest)并安装至 ```mods``` 文件夹即可。我们内置了少数模型供你开箱即用例如:
 - DeepSeek
 - 银影
 - 任何使用 ```OpenAI``` 接口的模型
 
-如何使用内置模型请参阅[内置模型配置指南]()。
+如何使用内置模型请参阅[内置模型配置指南](./resource/docs/use/内置模型配置指南.md)。
 
 如果想要更多的模型可以尝试自己开发或者使用其他开发者开发的 ```插件``` 
 

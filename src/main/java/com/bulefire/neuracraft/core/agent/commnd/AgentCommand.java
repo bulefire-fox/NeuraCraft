@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-public class ChatRoomCommand extends FullCommand.AbsCommand {
+public class AgentCommand extends FullCommand.AbsCommand {
     private static final Logger logger = LogUtils.getLogger();
 
     @Override

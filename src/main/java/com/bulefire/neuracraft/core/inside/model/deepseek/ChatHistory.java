@@ -1,4 +1,4 @@
-package com.bulefire.neuracraft.core.insidemodel.deepseek;
+package com.bulefire.neuracraft.core.inside.model.deepseek;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

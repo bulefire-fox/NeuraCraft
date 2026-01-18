@@ -15,6 +15,9 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +55,7 @@ public abstract class AbsAgent implements Agent {
     private final List<APlayer> admins;
     // 持久化管理员
     @Getter
-    private final List<String> persistentAdmins;
+    private final List<UUID> persistentAdmins;
     // 模型名称
     @Getter
     private final String modelName;
@@ -84,28 +87,14 @@ public abstract class AbsAgent implements Agent {
         this.uuid = uuid;
         this.players = players;
         this.admins = admins;
-        this.persistentAdmins = admins.stream().map(APlayer::name).toList();
+        this.persistentAdmins = new ArrayList<>(admins.stream().map(APlayer::uuid).toList());
         this.modelName = modelName;
         this.disPlayName = disPlayName;
         this.timePerMin = timePerMin;
         this.timer = new Timer(timePerMin);
     }
 
-    /**
-     * 创建一个抽象地聊天室,为抽象类的序列化辅助方法提供支持。<br>
-     * <p>
-     * 由于采用final封装, 导致{@link Gson}无法反序列化到此类, 为此提供辅助方法
-     * {@link AbsAgent#loadFileToManager(Path, Class, Class)}
-     * 为子类提供序列化支持. 此构造函数为{@link AbsAgent#loadFileToManager(Path, Class, Class)}提供支持,
-     * 由反序列化的数据创建。<br>
-     * <p>
-     * 此构造器只能由子类或辅助方法调用，避免破坏封装
-     *
-     * @param data 聊天室的序列化数据
-     * @see AbsAgent#loadFileToManager(Path, Class, Class)
-     * @see AgentSerializationData
-     * @since 2.0
-     */
+
     protected AbsAgent(@NotNull AgentSerializationData data) {
         this.name = data.name;
         this.uuid = data.uuid;
@@ -131,6 +120,7 @@ public abstract class AbsAgent implements Agent {
     @Override
     public void addAdmin(@NotNull APlayer player) {
         this.admins.add(player);
+        this.persistentAdmins.add(player.uuid());
     }
 
     /**
@@ -145,7 +135,7 @@ public abstract class AbsAgent implements Agent {
      */
     @Override
     public boolean hasAdmin(@NotNull APlayer player) {
-        return this.admins.contains(player) || this.persistentAdmins.contains(player.name());
+        return this.admins.contains(player) || this.persistentAdmins.contains(player.uuid());
     }
 
     /**
@@ -259,7 +249,9 @@ public abstract class AbsAgent implements Agent {
         D data = FileUtil.loadJsonFromFile(path, classOfData);
         // 报错怎么办?
         // 完蛋
-        A agent = classOfAgent.getConstructor(classOfData).newInstance(data);
+        Constructor<A> constructor = classOfAgent.getDeclaredConstructor(classOfData);
+        constructor.setAccessible(true);
+        A agent = constructor.newInstance(data);
         // 固定 NPC
         var agentManager = AgentController.getAgentManager();
         // 替换
@@ -284,7 +276,7 @@ public abstract class AbsAgent implements Agent {
         public List<APlayer> players;
         // 管理员列表
         public List<APlayer> admins;
-        public List<String> persistentAdmins;
+        public List<UUID> persistentAdmins;
         // 模型名称
         public String modelName;
         // 显示名称

@@ -1,6 +1,7 @@
 package com.bulefire.neuracraft.core.agent.commnd;
 
 import com.bulefire.neuracraft.core.agent.commnd.admin.ListAgents;
+import com.bulefire.neuracraft.core.agent.commnd.admin.ReloadAgentConfig;
 import com.bulefire.neuracraft.core.agent.commnd.control.Create;
 import com.bulefire.neuracraft.core.agent.commnd.control.Delete;
 import com.bulefire.neuracraft.core.agent.commnd.self.Exit;
@@ -15,9 +16,9 @@ public class NCCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> getCommands() {
         return Commands.literal("agent")
                 .requires(source -> source.hasPermission(2))
-                .executes(new ChatRoomCommand())
+                .executes(new AgentCommand())
                 .then(Commands.literal("create")
-                        .then(Commands.argument("roomName", StringArgumentType.word())
+                        .then(Commands.argument("agentName", StringArgumentType.word())
                                 .then(Commands.argument("chatModel", StringArgumentType.word())
                                         .executes(new Create())
                                 )
@@ -26,19 +27,19 @@ public class NCCommand {
 
                 .then(Commands.literal("delete")
                         .executes(new Delete())
-                        .then(Commands.argument("roomName", StringArgumentType.word())
+                        .then(Commands.argument("agentName", StringArgumentType.word())
                                 .executes(new Delete())
                         )
-                        .then(Commands.argument("roomUUID", StringArgumentType.string())
+                        .then(Commands.argument("agentUUID", StringArgumentType.string())
                                 .executes(new Delete())
                         )
                 )
 
                 .then(Commands.literal("join")
-                        .then(Commands.argument("roomName", StringArgumentType.word())
+                        .then(Commands.argument("agentName", StringArgumentType.word())
                                 .executes(new Join())
                         )
-                        .then(Commands.argument("roomUUID", StringArgumentType.string())
+                        .then(Commands.argument("agentUUID", StringArgumentType.string())
                                 .executes(new Join())
                         )
                 )
@@ -69,6 +70,16 @@ public class NCCommand {
 //
                 .then(Commands.literal("list")
                         .executes(new ListAgents())
+                )
+                
+                .then(Commands.literal("reload")
+                        .executes(new ReloadAgentConfig())
+                        .then(Commands.argument("agentName", StringArgumentType.word())
+                                .executes(new ReloadAgentConfig())
+                        )
+                        .then(Commands.argument("agentUUID", StringArgumentType.string())
+                                .executes(new ReloadAgentConfig())
+                        )
                 );
     }
 }

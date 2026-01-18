@@ -1,4 +1,4 @@
-package com.bulefire.neuracraft.core.insidemodel.deepseek;
+package com.bulefire.neuracraft.core.inside.model.deepseek;
 
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
 import com.bulefire.neuracraft.compatibility.util.CUtil;
@@ -9,6 +9,7 @@ import com.bulefire.neuracraft.core.annotation.RegisterAgent;
 import com.google.gson.Gson;
 import lombok.*;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -20,9 +21,7 @@ import java.util.UUID;
 public class DeepSeek extends AbsAgent {
     private static final Logger log = getLogger(DeepSeek.class);
 
-    @Setter
-    @Getter
-    private ChatHistory chatHistory;
+    private final ChatHistory chatHistory;
 
     public DeepSeek(String name, UUID uuid, List<APlayer> players, List<APlayer> admins, String modelName, String disPlayName, int timePerMin) {
         super(name, uuid, players, admins, modelName, disPlayName, timePerMin);
@@ -44,23 +43,27 @@ public class DeepSeek extends AbsAgent {
         chatHistory = new ChatHistory();
     }
 
+    @Contract(" -> new")
+    private static @NotNull DeepSeek newInstance(){
+        return new DeepSeek(
+                "DeepSeek" + (new Random()).nextInt(),
+                UUID.randomUUID(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                DeepSeekConfig.getModelName(),
+                DeepSeekConfig.getDisplayName(),
+                DeepSeekConfig.getTimePerMin()
+        );
+    }
+
     @RegisterAgent
     public static void init() {
         log.info("DeepSeek static init");
+        DeepSeekConfig.init();
         AgentController.registerAgentClassInitFunction(
                 () -> {
                     var agentManager = AgentController.getAgentManager();
-                    agentManager.registerAgentMapping("DeepSeek",
-                            () -> new DeepSeek(
-                                    "DeepSeek" + (new Random()).nextInt(),
-                                    UUID.randomUUID(),
-                                    new ArrayList<>(),
-                                    new ArrayList<>(),
-                                    DeepSeekConfig.getModelName(),
-                                    DeepSeekConfig.getDisplayName(),
-                                    DeepSeekConfig.getTimePerMin()
-                            )
-                    );
+                    agentManager.registerAgentMapping("DeepSeek", DeepSeek::newInstance);
 
                     agentManager.registerAgentPathConsumer(
                             path -> {
@@ -72,19 +75,20 @@ public class DeepSeek extends AbsAgent {
                     );
                 }
         );
-        DeepSeekConfig.init();
     }
 
     @Override
     protected @NotNull String message(@NotNull String msg) {
         try {
-            return decoder(
-                    CUtil.AiPOST(
-                            DeepSeekConfig.getUrl(),
-                            buildBody(msg),
-                            DeepSeekConfig.getToken()
-                    )
+            CUtil.Response response = CUtil.AiPOST(
+                    DeepSeekConfig.getUrl(),
+                    buildBody(msg),
+                    DeepSeekConfig.getToken()
             );
+            if (response.status() != 200){
+                return "API error with %s %s".formatted(response.status(), response.responseMessage());
+            }
+            return decoder(response.response());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -101,10 +105,6 @@ public class DeepSeek extends AbsAgent {
     }
 
     public String decoder(@NotNull String repose) {
-        if (repose.startsWith("POST request failed")) {
-            log.error("Failed to get valid response from API: {}", repose);
-            return "API Error: " + repose;
-        }
         Gson g = new Gson();
         OPAResult result = g.fromJson(repose, OPAResult.class);
         OPAResult.ChoicesBean.Message m = result.getChoices().get(0).getMessage();
@@ -122,6 +122,11 @@ public class DeepSeek extends AbsAgent {
     public void loadFromFile(@NotNull Path path) {
         // 我简直是甜菜
         loadFileToManager(path, DeepSeekSerializationData.class, DeepSeek.class);
+    }
+
+    @Override
+    public void reloadConfig() {
+        DeepSeekConfig.init();
     }
 
     @Data
