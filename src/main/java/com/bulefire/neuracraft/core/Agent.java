@@ -4,6 +4,7 @@ import com.bulefire.neuracraft.compatibility.entity.APlayer;
 import com.bulefire.neuracraft.core.agent.AgentController;
 import com.bulefire.neuracraft.core.agent.entity.AgentMessage;
 import com.bulefire.neuracraft.core.util.AgentOutOfTime;
+import com.bulefire.neuracraft.core.util.UnSupportFormattedMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -31,7 +32,7 @@ public interface Agent {
      * @return 返回的消息
      * @throws AgentOutOfTime 当发送频率太快时抛出
      */
-    @NotNull String sendMessage(@NotNull AgentMessage message) throws AgentOutOfTime;
+    @NotNull String sendMessage(@NotNull AgentMessage message) throws AgentOutOfTime, UnSupportFormattedMessage;
 
     /**
      * 设置聊天室的名称，面向用户，可以重复

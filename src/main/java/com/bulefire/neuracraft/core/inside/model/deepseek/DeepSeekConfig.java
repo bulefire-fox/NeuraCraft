@@ -26,7 +26,7 @@ public class DeepSeekConfig {
 
     @SneakyThrows
     public static void init() {
-        if (!configPath.toFile().exists()) {
+        if (! configPath.toFile().exists()) {
             configPath.toFile().getParentFile().mkdirs();
             configPath.toFile().createNewFile();
             FileUtil.saveJsonToFile(new Config(), configPath);

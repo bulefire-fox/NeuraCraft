@@ -5,7 +5,7 @@ public class AgentOutOfTime extends RuntimeException {
 
     public AgentOutOfTime(String message) {
         super(message);
-        this.timePerMin = -1;
+        this.timePerMin = - 1;
     }
 
     public AgentOutOfTime(String message, final int timePerMin) {

@@ -82,7 +82,8 @@ public class PluginAnnotationScanner {
 
         @Override
         public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
-            if (descriptor.equals(Type.getDescriptor(Plugin.class))) result.add(className);
+            if (descriptor.equals(Type.getDescriptor(Plugin.class)))
+                result.add(className);
             return super.visitAnnotation(descriptor, visible);
         }
     }
@@ -128,7 +129,8 @@ public class PluginAnnotationScanner {
 
         @Override
         public AnnotationVisitor visitAnnotation(@NotNull String descriptor, boolean visible) {
-            if (descriptor.equals(Type.getDescriptor(this.annotation))) result.add(className);
+            if (descriptor.equals(Type.getDescriptor(this.annotation)))
+                result.add(className);
             return super.visitAnnotation(descriptor, visible);
         }
     }

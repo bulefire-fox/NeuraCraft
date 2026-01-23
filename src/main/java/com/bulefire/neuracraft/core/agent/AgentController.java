@@ -16,6 +16,7 @@ import com.bulefire.neuracraft.core.agent.entity.AgentMessage;
 import com.bulefire.neuracraft.core.annotation.RegisterAgent;
 import com.bulefire.neuracraft.core.config.NCMainConfig;
 import com.bulefire.neuracraft.core.util.AgentOutOfTime;
+import com.bulefire.neuracraft.core.util.UnSupportFormattedMessage;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -27,6 +28,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * AgentController
@@ -44,6 +47,12 @@ import java.util.*;
  */
 @Log4j2
 public class AgentController {
+    private static final Pattern JOIN_MSG_P = Pattern.compile("^[a-zA-Z0-9_]+\\\\s+join\\\\s+the\\\\s+game\\\\.\\\\.$");
+    private static final Pattern LEAVE_MSG_P = Pattern.compile("^[a-zA-Z0-9_]+\\\\s+left\\\\s+the\\\\s+game\\\\.\\\\.$");
+
+    public static final Function<String, Boolean> JOIN_MSG_FORMATE = (s) -> JOIN_MSG_P.matcher(s).matches();
+    public static final Function<String, Boolean> LEAVE_MSG_FORMATE = (s) -> LEAVE_MSG_P.matcher(s).matches();
+
     @Getter
     private static final AgentManager agentManager = new AgentManager();
     @Getter
@@ -79,7 +88,7 @@ public class AgentController {
                 (msg) -> {
                     // 将玩家加入管，注意到manager不会覆盖原有值,因此与从配置文件添加的玩家不冲突
                     playerManager.addPlayer(msg.player(), null);
-                    String message = NCMainConfig.getPrefix() + msg.player().toFormatedString() + "join the game";
+                    String message = NCMainConfig.getPrefix() + msg.player().toFormatedString() + "join the game..";
                     // 稍加处理即可
                     onMessage(
                             new ChatEventProcesser.ChatMessage(
@@ -94,7 +103,7 @@ public class AgentController {
         PlayerExitEventProcesser.registerFun(
                 (msg) -> {
                     // 稍加处理即可
-                    String message = NCMainConfig.getPrefix() + msg.player().toFormatedString() + "exit the game";
+                    String message = NCMainConfig.getPrefix() + msg.player().toFormatedString() + "exit the game..";
                     onMessage(
                             new ChatEventProcesser.ChatMessage(
                                     message,
@@ -112,7 +121,8 @@ public class AgentController {
         );
 
         // 注册我们自己的指令
-        CommandRegister.registerCommand(NCCommand.getCommands());
+        //CommandRegister.registerCommand(NCCommand.getCommands());
+        NCCommand.buildCommands();
 
         // 扫描插件的注册
         // 放在InitCore里了
@@ -148,7 +158,8 @@ public class AgentController {
 
     // 消息入口
     public static void onMessage(@NotNull ChatEventProcesser.ChatMessage chatMessage) {
-        if (!chatMessage.msg().startsWith(prefix)) return;
+        if (! chatMessage.msg().startsWith(prefix))
+            return;
         String msg = chatMessage.msg().substring(prefix.length());
         if (Objects.requireNonNull(chatMessage.env()) == ChatEventProcesser.ChatMessage.Env.CLIENT) {
             if (CUtil.hasMod.apply(NeuraCraft.MOD_ID)) {
@@ -169,7 +180,8 @@ public class AgentController {
                     new SendMessage(
                             Component.translatable("neuracraft.command.find.notInChatRoom"),
                             chatMessage.env(),
-                            chatMessage.player())
+                            chatMessage.player()
+                    )
             );
             return;
         }
@@ -189,7 +201,18 @@ public class AgentController {
                     new SendMessage(
                             Component.translatable("neuracraft.chat.error.tooFast"),
                             chatMessage.env(),
-                            chatMessage.player()),
+                            chatMessage.player()
+                    ),
+                    agent.getPlayers()
+            );
+            return;
+        } catch (UnSupportFormattedMessage e) {
+            CUtil.broadcastMessageToGroupPlayer(
+                    new SendMessage(
+                            Component.translatable("neuracraft.chat.warn.unsupport.message.type", agent.getName(), e.getMessageType().name()),
+                            chatMessage.env(),
+                            chatMessage.player()
+                    ),
                     agent.getPlayers()
             );
             return;
@@ -207,65 +230,20 @@ public class AgentController {
                 new SendMessage(
                         Component.translatable("neuracraft.chat.message.format.player", agent.getDisPlayName(), remessage),
                         chatMessage.env(),
-                        chatMessage.player()),
+                        chatMessage.player()
+                ),
                 agent.getPlayers()
         );
     }
-
-//    private static void registerCommands(){
-//        agentGameCommand.registerCommand(
-//                new FullCommand(
-//                        "chatroom",
-//                        2,
-//                        FullCommand.ARGUMENT_IS_SUBCOMMAND,
-//                        FullCommand.EMPTY_EXECUTE_COMMAND,
-//                        List.of(
-//                                new FullCommand(
-//                                        "create",
-//                                        FullCommand.USE_FATHER_PERMISSION_LEVEL,
-//                                        new FullCommand.CommandArgument()
-//                                                .addArgument(StringArgumentType.string(), "roomName")
-//                                                .addArgument(StringArgumentType.string(), "modelName"),
-//
-//                                        context -> {
-//                                            String roomName = StringArgumentType.getString(context, "roomName");
-//                                            String modelName = StringArgumentType.getString(context, "modelName");
-//                                            Agent agent;
-//                                            try {
-//                                                agent = agentManager.creatAgent(modelName);
-//                                            } catch (NoAgentFound e){
-//                                                throw new CommandSyntaxException(
-//                                                        new SimpleCommandExceptionType(Component.literal(e.toString())),
-//                                                        Component.literal(e.getMessage()));
-//                                            }
-//                                            agent.setName(roomName);
-//                                            APlayer player = new APlayer(Objects.requireNonNull(context.getSource().getPlayer()).getName().getString(), context.getSource().getPlayer().getUUID());
-//                                            agent.addPlayer(player);
-//                                            agent.addAdmin(player);
-//                                            playerManager.addPlayer(player,agent.getUUID());
-//                                            agent.saveToFile(FileUtil.agent_base_url.resolve(agent.getModelName()).resolve(agent.getUUID().toString()));
-//                                            var server = CUtil.getServer.get();
-//                                            ChatEventProcesser.ChatMessage.Env env = CUtil.getEnv(server);
-//                                            PlayerJoinEventProcesser.onPlayerJoin(new PlayerJoinEventProcesser.JoinMessage(player, env));
-//                                            return 1;
-//                                        },
-//                                        List.of(FullCommand.EMPTY_SUBCOMMAND),
-//                                        true
-//                                )
-//                        ),
-//                        false
-//                )
-//        );
-//    }
 
     private static void loadAllAgentFromFile() {
         List<Path> paths;
         try {
             // 获取所有文件
             paths = FileUtil.readAllFilePath(FileUtil.agent_base_url)
-                    .stream()
-                    .filter(path -> !path.startsWith(FileUtil.agent_config_url))
-                    .toList();
+                            .stream()
+                            .filter(path -> ! path.startsWith(FileUtil.agent_config_url))
+                            .toList();
 
         } catch (IOException e) {
             throw new RuntimeException(e);

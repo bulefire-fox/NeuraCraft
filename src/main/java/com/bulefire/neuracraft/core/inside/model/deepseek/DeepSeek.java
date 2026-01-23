@@ -7,7 +7,9 @@ import com.bulefire.neuracraft.core.AbsAgent;
 import com.bulefire.neuracraft.core.agent.AgentController;
 import com.bulefire.neuracraft.core.annotation.RegisterAgent;
 import com.google.gson.Gson;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.SneakyThrows;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +31,8 @@ public class DeepSeek extends AbsAgent {
         chatHistory.addBlock(
                 new ChatHistory.ChatBlock(
                         "system",
-                        DeepSeekConfig.getPrompt())
+                        DeepSeekConfig.getPrompt()
+                )
         );
     }
 
@@ -44,7 +47,7 @@ public class DeepSeek extends AbsAgent {
     }
 
     @Contract(" -> new")
-    private static @NotNull DeepSeek newInstance(){
+    private static @NotNull DeepSeek newInstance() {
         return new DeepSeek(
                 "DeepSeek" + (new Random()).nextInt(),
                 UUID.randomUUID(),
@@ -85,7 +88,7 @@ public class DeepSeek extends AbsAgent {
                     buildBody(msg),
                     DeepSeekConfig.getToken()
             );
-            if (response.status() != 200){
+            if (response.status() != 200) {
                 return "API error with %s %s".formatted(response.status(), response.responseMessage());
             }
             return decoder(response.response());

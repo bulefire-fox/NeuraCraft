@@ -7,7 +7,7 @@ import com.bulefire.neuracraft.core.agent.AgentController;
 import com.bulefire.neuracraft.core.agent.AgentManager;
 import com.bulefire.neuracraft.core.agent.entity.AgentMessage;
 import com.bulefire.neuracraft.core.util.AgentOutOfTime;
-import com.google.gson.Gson;
+import com.bulefire.neuracraft.core.util.UnSupportFormattedMessage;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
@@ -16,8 +16,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,7 +127,7 @@ public abstract class AbsAgent implements Agent {
      * @param player 玩家
      * @return 是否是管理员
      * @apiNote 此方法在玩家不在 {@code admins} 列表时会去 {@code persistentAdmins} 中寻找是否存在指定玩家名
-     * 如果存在则返回 {@code true}
+     *         如果存在则返回 {@code true}
      * @see AbsAgent#admins
      * @see AbsAgent#persistentAdmins
      */
@@ -156,11 +154,11 @@ public abstract class AbsAgent implements Agent {
      * @return 返回的消息
      * @throws AgentOutOfTime 当发送频率太快时抛出
      * @apiNote 此方法会调用抽象方法 {@link AbsAgent#message(String)}, 将传入的消息转为格式化后的消息并返回<br>
-     * {@link AbsAgent#message(String)}由子类实现
+     *         {@link AbsAgent#message(String)}由子类实现
      * @see AbsAgent#message(String)
      */
     @Override
-    public @NotNull String sendMessage(@NotNull AgentMessage msg) throws AgentOutOfTime {
+    public @NotNull String sendMessage(@NotNull AgentMessage msg) throws AgentOutOfTime, UnSupportFormattedMessage {
         if (timer.isOutOfTimes()) {
             throw new AgentOutOfTime("out of times", timePerMin);
         }
@@ -178,7 +176,7 @@ public abstract class AbsAgent implements Agent {
      * @see AbsAgent#sendMessage(AgentMessage)
      * @see CUtil#AiPOST(String, String, String)
      */
-    protected abstract @NotNull String message(@NotNull String msg);
+    protected abstract @NotNull String message(@NotNull String msg) throws UnSupportFormattedMessage;
 
     public @NotNull UUID getUUID() {
         return uuid;
@@ -304,7 +302,7 @@ public abstract class AbsAgent implements Agent {
             this.persistentAdmins = new ArrayList<>(0);
             this.modelName = "";
             this.disPlayName = "";
-            this.timePerMin = -1;
+            this.timePerMin = - 1;
         }
     }
 }

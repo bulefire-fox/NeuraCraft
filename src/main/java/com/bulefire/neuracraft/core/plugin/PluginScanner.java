@@ -26,12 +26,12 @@ public class PluginScanner {
         log.debug("Scanning plugins in {}", scanpath);
         try (var files = Files.walk(scanpath)) {
             return files.filter(Files::isRegularFile)
-                    .peek(file -> log.debug("Checking file {}", file.getFileName().toString()))
-                    .filter(file -> file.getFileName().toString().endsWith(".jar"))
-                    .peek(file -> log.debug("Found maybe plugin file {}", file))
-                    .filter(PluginScanner::isPlugin)
-                    .peek(file -> log.debug("Found plugin file {}", file))
-                    .toList();
+                        .peek(file -> log.debug("Checking file {}", file.getFileName().toString()))
+                        .filter(file -> file.getFileName().toString().endsWith(".jar"))
+                        .peek(file -> log.debug("Found maybe plugin file {}", file))
+                        .filter(PluginScanner::isPlugin)
+                        .peek(file -> log.debug("Found plugin file {}", file))
+                        .toList();
         }
     }
 
@@ -42,12 +42,12 @@ public class PluginScanner {
                 Path root = fs.getPath("/");
                 try (var files = Files.walk(root)) {
                     long count = files.filter(Files::isRegularFile)
-                            .peek(file -> log.debug("Checking class file {}", file))
-                            .filter(file -> file.getFileName().toString().endsWith(".class"))
-                            .peek(file -> log.debug("Found class file {}", file))
-                            .filter(f -> PluginAnnotationScanner.hasAnnotationWithoutThrows(Utils.readClassFromJar(fs, f), Plugin.class))
-                            .peek(file -> log.debug("Found plugin class file {}", file))
-                            .count();
+                                      .peek(file -> log.debug("Checking class file {}", file))
+                                      .filter(file -> file.getFileName().toString().endsWith(".class"))
+                                      .peek(file -> log.debug("Found class file {}", file))
+                                      .filter(f -> PluginAnnotationScanner.hasAnnotationWithoutThrows(Utils.readClassFromJar(fs, f), Plugin.class))
+                                      .peek(file -> log.debug("Found plugin class file {}", file))
+                                      .count();
                     log.debug("Found {} plugin class files in {}", count, path);
                     return path.getFileName().toString().endsWith(".jar") && count > 0;
                 }

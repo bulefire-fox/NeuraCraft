@@ -296,6 +296,22 @@ tasks.withType(JavaCompile).configureEach {
     //options.encoding = 'UTF-8' // 使用UTF-8字符集进行Java编译
 }
 
+javadoc {
+    options {
+        // 启用Java 8+的新标签支持
+        tags = [
+                'apiNote:a:API Note:',
+                'implSpec:a:Implementation Requirements:',
+                'implNote:a:Implementation Note:'
+        ]
+        encoding = 'UTF-8'
+        charSet = 'UTF-8'
+        docEncoding = 'UTF-8'
+        failOnError = false
+        addStringOption('Xdoclint:none', '-quiet')
+    }
+}
+
 idea {
     module {
         downloadJavadoc = true

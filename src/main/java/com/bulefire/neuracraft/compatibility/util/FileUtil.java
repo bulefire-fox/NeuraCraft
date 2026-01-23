@@ -47,17 +47,17 @@ public class FileUtil {
     /**
      * 模组目录
      */
-     public static final Path mod_url = NeuraCraft.modsPath;
+    public static final Path mod_url = NeuraCraft.modsPath;
 
     public static void init() {
         // 创建不存在的目录
-        if (!base_url.toFile().exists())
+        if (! base_url.toFile().exists())
             base_url.toFile().mkdirs();
-        if (!agent_base_url.toFile().exists())
+        if (! agent_base_url.toFile().exists())
             agent_base_url.toFile().mkdirs();
-        if (!player_url.toFile().exists())
+        if (! player_url.toFile().exists())
             player_url.toFile().mkdirs();
-        if (!plugin_url.toFile().exists())
+        if (! plugin_url.toFile().exists())
             plugin_url.toFile().mkdirs();
         log.debug("init file util done");
     }
@@ -76,7 +76,7 @@ public class FileUtil {
      */
     public static void saveJsonToFile(@NotNull Object data, @NotNull Path filePath) throws IOException {
         log.info("file path: {}", filePath);
-        if (!Files.exists(filePath)) {
+        if (! Files.exists(filePath)) {
             log.info("create file: {}", filePath);
             filePath.toFile().getParentFile().mkdirs();
             Files.createFile(filePath);
@@ -113,7 +113,7 @@ public class FileUtil {
             t = new GsonBuilder().setPrettyPrinting().create().fromJson(reader, clazz);
         }
 
-        if (!(t == null)) {
+        if (! (t == null)) {
             return t;
         }
         throw new NullPointerException("load json from file failed");
@@ -137,7 +137,8 @@ public class FileUtil {
         T other = (T) loadJsonFromFile(filePath, clazz.getClass());
         Field[] fields = clazz.getClass().getDeclaredFields();
         for (Field field : fields) {
-            if (!shouldProcess(field)) continue;
+            if (! shouldProcess(field))
+                continue;
             field.setAccessible(true);
             try {
                 log.debug("load {}'s field {} from {} value {}", clazz, field.getName(), other, field.get(other));
@@ -151,9 +152,9 @@ public class FileUtil {
 
     private static boolean shouldProcess(@NotNull Field field) {
         int modifiers = field.getModifiers();
-        return !Modifier.isStatic(modifiers)
-                && !Modifier.isFinal(modifiers)
-                && !Modifier.isTransient(modifiers);
+        return ! Modifier.isStatic(modifiers)
+                && ! Modifier.isFinal(modifiers)
+                && ! Modifier.isTransient(modifiers);
     }
 
     /**
@@ -172,7 +173,7 @@ public class FileUtil {
      * @throws IOException IOException
      * @author bulefire_fox
      * @apiNote 使用 {@link Files#walk(Path, FileVisitOption...)} 实现, 推荐直接使用 {@link Files#walk(Path, FileVisitOption...)}
-     * 而不是此方法以获取深入的定制化 {@link Stream}
+     *         而不是此方法以获取深入的定制化 {@link Stream}
      * @see Files#walk(Path, FileVisitOption...)
      * @since 1.0
      */

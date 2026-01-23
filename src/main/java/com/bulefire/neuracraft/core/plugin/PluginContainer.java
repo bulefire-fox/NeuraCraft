@@ -62,7 +62,8 @@ public class PluginContainer {
     public void scanRegisteredClasses(@NotNull List<Class<? extends Annotation>> annotations) {
         for (Class<? extends Annotation> annotation : annotations) {
             Target target = annotation.getAnnotation(Target.class);
-            if (target == null || target.value().length == 0) continue;
+            if (target == null || target.value().length == 0)
+                continue;
             ElementType[] elementTypes = target.value();
             for (ElementType elementType : elementTypes) {
                 switch (elementType) {
@@ -71,20 +72,21 @@ public class PluginContainer {
                         try (FileSystem fs = FileSystems.newFileSystem(pluginFile.getFilePath(), (ClassLoader) null)) {
                             Path root = fs.getPath("/");
                             try (var files = Files.walk(root)) {
-                                classes = PluginAnnotationScanner.scanClassAnnotations(annotation,
-                                                files.filter(Files::isRegularFile)
-                                                        .filter(file -> file.getFileName().toString().endsWith(".class"))
-                                                        .map(file -> Utils.readClassFromJar(fs, file))
-                                                        .toList()
-                                        ).stream()
-                                        .map(className -> className.replace('/', '.'))
-                                        .map(className -> {
-                                            try {
-                                                return classLoader.loadClass(className);
-                                            } catch (ClassNotFoundException e) {
-                                                throw new RuntimeException(e);
-                                            }
-                                        }).collect(Collectors.toUnmodifiableList());
+                                classes = PluginAnnotationScanner.scanClassAnnotations(
+                                                                         annotation,
+                                                                         files.filter(Files::isRegularFile)
+                                                                              .filter(file -> file.getFileName().toString().endsWith(".class"))
+                                                                              .map(file -> Utils.readClassFromJar(fs, file))
+                                                                              .toList()
+                                                                 ).stream()
+                                                                 .map(className -> className.replace('/', '.'))
+                                                                 .map(className -> {
+                                                                     try {
+                                                                         return classLoader.loadClass(className);
+                                                                     } catch (ClassNotFoundException e) {
+                                                                         throw new RuntimeException(e);
+                                                                     }
+                                                                 }).collect(Collectors.toUnmodifiableList());
                             }
                         } catch (IOException e) {
                             throw new RuntimeException(e);
@@ -98,11 +100,12 @@ public class PluginContainer {
                         try (FileSystem fs = FileSystems.newFileSystem(pluginFile.getFilePath(), (ClassLoader) null)) {
                             Path root = fs.getPath("/");
                             try (var files = Files.walk(root)) {
-                                methods = PluginAnnotationScanner.scanClassMethodsAnnotations(annotation,
+                                methods = PluginAnnotationScanner.scanClassMethodsAnnotations(
+                                        annotation,
                                         files.filter(Files::isRegularFile)
-                                                .filter(file -> file.getFileName().toString().endsWith(".class"))
-                                                .map(file -> Utils.readClassFromJar(fs, file))
-                                                .toList(),
+                                             .filter(file -> file.getFileName().toString().endsWith(".class"))
+                                             .map(file -> Utils.readClassFromJar(fs, file))
+                                             .toList(),
                                         classLoader
                                 );
                             }

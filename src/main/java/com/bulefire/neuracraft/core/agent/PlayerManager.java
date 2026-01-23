@@ -58,7 +58,7 @@ public class PlayerManager {
      * @see #addPlayer(APlayer, UUID)
      */
     public void updatePlayer(APlayer player, UUID uuid) {
-        if (!players.containsKey(player)) {
+        if (! players.containsKey(player)) {
             addPlayer(player, uuid);
             return;
         }

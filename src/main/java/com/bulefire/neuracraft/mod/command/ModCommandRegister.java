@@ -19,7 +19,8 @@ public class ModCommandRegister {
     public static void registerCommands(@NotNull RegisterCommandsEvent event) {
         if (CommandRegister.getLiteralArgumentBuilders() == null)
             return;
-        else literalArgumentBuilder = CommandRegister.getLiteralArgumentBuilders();
+        else
+            literalArgumentBuilder = CommandRegister.getLiteralArgumentBuilders();
         for (LiteralArgumentBuilder<CommandSourceStack> builder : literalArgumentBuilder) {
             event.getDispatcher().register(builder);
         }

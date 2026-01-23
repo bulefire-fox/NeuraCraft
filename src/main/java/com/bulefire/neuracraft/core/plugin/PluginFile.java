@@ -44,9 +44,9 @@ public class PluginFile {
                 try (var files = Files.walk(root)) {
                     return PluginAnnotationScanner.getMainClass(
                             files.filter(Files::isRegularFile)
-                                    .filter(file -> file.getFileName().toString().endsWith(".class"))
-                                    .map(file -> Utils.readClassFromJar(fs, file))
-                                    .toList()
+                                 .filter(file -> file.getFileName().toString().endsWith(".class"))
+                                 .map(file -> Utils.readClassFromJar(fs, file))
+                                 .toList()
                     ).stream().map(className -> className.replace('/', '.')).toList();
                 }
             }

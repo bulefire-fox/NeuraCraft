@@ -1,10 +1,7 @@
 package com.bulefire.neuracraft.core.agent.commnd.admin;
 
 import com.bulefire.neuracraft.compatibility.command.FullCommand;
-import com.bulefire.neuracraft.compatibility.entity.APlayer;
-import com.bulefire.neuracraft.core.Agent;
 import com.bulefire.neuracraft.core.agent.AgentController;
-import com.bulefire.neuracraft.core.agent.AgentManager;
 import com.bulefire.neuracraft.core.util.NoAgentFound;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -13,7 +10,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class ReloadAgentConfig extends FullCommand.AbsCommand {
@@ -43,7 +39,7 @@ public class ReloadAgentConfig extends FullCommand.AbsCommand {
             // use uuid
             try {
                 agentManager.reloadAgentConfig(agentUUID);
-            } catch (NoAgentFound e){
+            } catch (NoAgentFound e) {
                 feedback(commandContext.getSource(), Component.translatable("neuracraft.command.delete.noAgent", agentUUID));
             }
         } else if (agentName == null && agentUUID == null) {

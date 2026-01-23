@@ -14,7 +14,7 @@ public class ModLoadEventProcesser {
         messageFun.add(fun);
     }
 
-    public static void onLoadComplete(){
+    public static void onLoadComplete() {
         for (Runnable fun : messageFun) {
             fun.run();
         }

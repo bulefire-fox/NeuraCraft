@@ -43,11 +43,11 @@ public class PluginLoader {
         log.info("Loading plugins");
         // load plugins
         this.plugins.addAll(PluginScanner.scanPlugins(path).stream()
-                .map(PluginFile::new)
-                .distinct()
-                .map(PluginContainer::new)
-                .peek(PluginContainer::load)
-                .toList());
+                                         .map(PluginFile::new)
+                                         .distinct()
+                                         .map(PluginContainer::new)
+                                         .peek(PluginContainer::load)
+                                         .toList());
 
         // invoke methods
         for (PluginContainer plugin : this.plugins) {

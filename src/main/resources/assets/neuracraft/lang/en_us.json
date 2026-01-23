@@ -1,48 +1,35 @@
 {
   "neuracraft.chat.hello": "Hello! Welcome to NeuraCraft Agent Manager System!",
-
   "neuracraft.command.create.success": "Agent created: %s, UUID: %s",
   "neuracraft.command.create.failure.alreadyExist": "Agent %s already exists",
   "neuracraft.command.create.failure.unknown": "Creation failed",
   "neuracraft.command.create.failure.unknownModel": "Unknow model name %s the alive models are \n %s",
-
   "neuracraft.command.delete.success": "Successfully deleted Agent: %s, UUID: %s",
   "neuracraft.command.delete.manyAgents": "There are %s rooms has the name %s, try to use uuid to delete.",
   "neuracraft.command.delete.noAgent": "agent %s is not alive",
   "neuracraft.command.delete.playerNotInAgent": "You are not in any agent",
   "neuracraft.command.delete.notAdmin": "You are not an admin of Agent %s! Cannot delete this Agent.",
-
   "neuracraft.command.exit.success": "Exited Agent: %s",
   "neuracraft.command.exit.notInChatRoom": "You are not in any Agent!",
-
   "neuracraft.command.find.notInChatRoom": "You have not joined any Agent",
   "neuracraft.command.find.success": "Current Agent: %s , UUID: %s",
-
   "neuracraft.command.join.success": "Joined Agent: %s",
   "neuracraft.command.join.failure.notExist": "Agent %s does not exist",
   "neuracraft.command.join.failure.manyAgents": "there are %s agents have the name %s, try to use UUID",
-
   "neuracraft.command.invite.notFound": "Invite player %s is not online",
   "neuracraft.command.invite.success": "Succeed in invite player %s",
   "neuracraft.command.invite.notAdmin": "You are not the admin of agent %s, can't invite player",
-
   "neuracraft.command.kick.notFound": "Kick player %s is not online",
   "neuracraft.command.kick.notInChatRoom": "Kick player %s is not in agent %s",
   "neuracraft.command.kick.success": "Succeed kick player %s",
-
   "neuracraft.command.list.chatroom": "now alive Agent is \n %s",
-
   "neuracraft.command.show.use": "Usage: Please check the wiki (too lazy to rewrite this)",
-
+  "neuracraft.chat.warn.unsupport.message.type": "the agent %s is unsupported the message type %s",
   "neuracraft.chat.error.tooFast": "Operation frequency too high. Please try again later",
   "neuracraft.chat.error.nullMessage": "No message received",
   "neuracraft.chat.error.notInChatRoom": "You have not joined any Agent",
   "neuracraft.chat.error.notInChatRoom.help": "Use the /agent command to join or create a Agent.",
-
   "neuracraft.chat.message.format.player": "<%s> %s",
-
-
   "item.neuracraft.cyber_furry_logo": "Cyber Furry LOGO",
-
   "tab.neuracraft.ai_logo": "AI LOGO"
 }

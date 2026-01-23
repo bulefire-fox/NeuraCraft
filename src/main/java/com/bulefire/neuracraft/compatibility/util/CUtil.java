@@ -83,18 +83,18 @@ public class CUtil {
      * @throws Exception 异常
      * @author bulefire_fox
      * @apiNote 默认请求头为:
-     * <pre>
-     *     {@code
-     *          Content-Type: application/json
-     *          Authorization: Bearer <token>
-     *     }
-     * </pre>
+     *         <pre>
+     *                     {@code
+     *                          Content-Type: application/json
+     *                          Authorization: Bearer <token>
+     *                     }
+     *                 </pre>
      * @since 1.0
      */
     public static @NotNull Response AiPOST(@NotNull String urls, @NotNull String body, @NotNull String token) throws IOException {
         var connection = getConnection(urls, body, token);
 
-        log.info("POST request sent to: {}",urls);
+        log.info("POST request sent to: {}", urls);
         log.info("token: {}", token);
         log.info("body: {}", body);
 
@@ -109,7 +109,7 @@ public class CUtil {
         }
         in.close();
         var result = new Response(response.toString(), connection.getResponseMessage(), responseCode);
-        log.info("Response: {}",result);
+        log.info("Response: {}", result);
         return result;
     }
 
@@ -123,8 +123,8 @@ public class CUtil {
                     '}';
         }
 
-        public @NotNull String getFormatted(){
-            return "POST request failed with response code: %s, %s msg:/ %s".formatted(status,responseMessage,response);
+        public @NotNull String getFormatted() {
+            return "POST request failed with response code: %s, %s msg:/ %s".formatted(status, responseMessage, response);
         }
     }
 

@@ -14,7 +14,7 @@ public class NCMainConfig {
     public static final File mainConfigFile = mainConfigPath.toFile();
 
     public static void init() {
-        if (!mainConfigFile.exists()) {
+        if (! mainConfigFile.exists()) {
             try {
                 mainConfigFile.createNewFile();
                 var neuraCraft = new NeuraCraft();

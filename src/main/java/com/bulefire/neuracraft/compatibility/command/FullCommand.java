@@ -14,7 +14,7 @@ import java.util.List;
 
 public record FullCommand(String literal, int permissionLevel, CommandArgument argument, AbsCommand executeCommand,
                           List<FullCommand> subCommands, boolean isSubCommand) {
-    public static final int USE_FATHER_PERMISSION_LEVEL = -168535486;
+    public static final int USE_FATHER_PERMISSION_LEVEL = - 168535486;
 
     public static final CommandArgument EMPTY_ARGUMENT = new CommandArgument(new ArrayList<>());
     public static final CommandArgument ARGUMENT_IS_SUBCOMMAND = new CommandArgument(new ArrayList<>());
@@ -26,7 +26,7 @@ public record FullCommand(String literal, int permissionLevel, CommandArgument a
         }
     };
 
-    public static final FullCommand EMPTY_SUBCOMMAND = new FullCommand(null, -1, EMPTY_ARGUMENT, EMPTY_EXECUTE_COMMAND, null, false);
+    public static final FullCommand EMPTY_SUBCOMMAND = new FullCommand(null, - 1, EMPTY_ARGUMENT, EMPTY_EXECUTE_COMMAND, null, false);
 
     public FullCommand(String literal, int permissionLevel, CommandArgument argument, CommandRunnable<CommandContext<CommandSourceStack>, Integer> executeCommand, List<FullCommand> subCommands, boolean isSubCommand) {
         this(

@@ -61,7 +61,7 @@ public class Delete extends FullCommand.AbsCommand {
         }
 
         agentUUID = agent.getUUID();
-        if (!agent.getAdmins().contains(player) && agent.hasAdmin(player) && !commandContext.getSource().hasPermission(4)) {
+        if (! agent.getAdmins().contains(player) && agent.hasAdmin(player) && ! commandContext.getSource().hasPermission(4)) {
             feedback(commandContext.getSource(), Component.translatable("neuracraft.command.delete.notAdmin", agent.getName()));
             return 1;
         }

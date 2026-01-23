@@ -40,7 +40,8 @@ public class ChatEventListener {
                 new ChatEventProcesser.ChatMessage(
                         message,
                         new APlayer(name, uuid),
-                        Minecraft.getInstance().isSingleplayer() ? ChatEventProcesser.ChatMessage.Env.SINGLE : ChatEventProcesser.ChatMessage.Env.CLIENT)
+                        Minecraft.getInstance().isSingleplayer() ? ChatEventProcesser.ChatMessage.Env.SINGLE : ChatEventProcesser.ChatMessage.Env.CLIENT
+                )
         ));
     }
 
@@ -62,7 +63,8 @@ public class ChatEventListener {
                 new ChatEventProcesser.ChatMessage(
                         message,
                         new APlayer(name, uuid),
-                        ChatEventProcesser.ChatMessage.Env.SERVER)
+                        ChatEventProcesser.ChatMessage.Env.SERVER
+                )
         ));
     }
 }

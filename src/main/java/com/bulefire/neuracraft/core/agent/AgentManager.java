@@ -158,19 +158,21 @@ public class AgentManager {
      * 如果有多个符合指定 {@linkplain Agent#getName() name} 的 {@link Agent}, 则全部重新加载
      *
      * @param name {@link Agent} 的 {@linkplain Agent#getName() name}
-     *
      * @see AgentManager#getAgentByName(String)
      * @see Agent#reloadConfig()
      * @see AgentManager#agents
      */
     public void reloadAgentConfig(@NotNull String name) {
         List<Agent> agent = this.getAgentByName(name);
-        if (agent != null) agent.forEach(Agent::reloadConfig);
-        else throw new NoAgentFound("can not find agent for " + name);
+        if (agent != null)
+            agent.forEach(Agent::reloadConfig);
+        else
+            throw new NoAgentFound("can not find agent for " + name);
     }
 
     /**
      * 重新加载一个 {@link Agent} 的配置文件, 通过 {@link UUID}
+     *
      * @param uuid {@link Agent} 的 UUID
      * @see AgentManager#getAgent(UUID)
      * @see Agent#reloadConfig()
@@ -178,12 +180,15 @@ public class AgentManager {
      */
     public void reloadAgentConfig(@NotNull UUID uuid) {
         Agent agent = this.getAgent(uuid);
-        if (agent != null) agent.reloadConfig();
-        else throw new NoAgentFound("can not find agent for " + uuid);
+        if (agent != null)
+            agent.reloadConfig();
+        else
+            throw new NoAgentFound("can not find agent for " + uuid);
     }
 
     /**
      * 重新加载所有 {@link Agent} 的配置文件
+     *
      * @see Agent#reloadConfig()
      * @see AgentManager#agents
      */
