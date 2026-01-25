@@ -133,6 +133,7 @@ minecraft {
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             // 以逗号分隔的命名空间列表，用于加载游戏测试。空=所有命名空间。
             property 'forge.enabledGameTestNamespaces', mod_id
+
         }
 
         server {

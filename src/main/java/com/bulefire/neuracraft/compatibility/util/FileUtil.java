@@ -4,6 +4,7 @@ import com.bulefire.neuracraft.NeuraCraft;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -183,5 +184,10 @@ public class FileUtil {
                     .filter(Files::isRegularFile)
                     .toList();
         }
+    }
+
+    @SneakyThrows
+    public static boolean deleteFile(@NotNull Path filePath) {
+        return Files.deleteIfExists(filePath);
     }
 }

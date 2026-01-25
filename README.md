@@ -27,7 +27,7 @@ To use this mod, simply [download](https://github.com/bulrfire/NeuraCraft/releas
 - 银影 (Silhouette)
 - Any model using the ```OpenAI``` API
 
-For how to use the built-in models, please see the [Built-in Model Configuration Guide](./resource/docs/use/内置模型配置指南.md) (Note: Link text remains as is).
+For how to use the built-in models, please see the [Built-in Model Configuration Guide](./resource/docs/use/Built-inModelConfigurationGuide.md).
 
 If you want more models, you can try developing your own or use ```plugins``` developed by other developers.
 
@@ -47,13 +47,13 @@ Additional Updates (Not included in main versions):
 
 For more detailed information about future plans, please refer to [How NeuraCraft & Minecraft Evolve in the AI Era]() (Not yet written).
 
-Currently, we only provide the ```1.20.1``` version. If you need the ```mod``` for other versions, you can [contact us](), and we will try to provide you with beta versions for other editions.
+Currently, we only provide the ```1.20.1``` version. If you need the ```mod``` for other versions, you can [contact us](mailto:nc@bulefire.top), and we will try to provide you with beta versions for other editions.
 Thanks to the excellent architectural design, this process usually takes no more than __40 minutes to 1.5 hours__ (excluding plugins).
 
 If you are interested in contributing to this project, you can use GitHub to submit PRs, or directly [contact us](mailto:nc@bulefire.top) to express your interest. We are very happy to accept your contributions.
 We also need documentation writers. If you are interested in writing documentation, please [contact us](mailto:nc@bulefire.top).
 
-For information on how to start contributing, please see [How to Contribute to NeuraCraft]().
+For information on how to start contributing, please see [How to Contribute to NeuraCraft]() (At present, you can directly [contact](mailto:nc@bulefire.top).).
 
 <h4 align="center">Find out more about NeuraCraft on our <a href="https://www.curseforge.com/minecraft/mc-mods/neuracraft">Curseforge</a> or <a href="https://modrinth.com/mod/neuracraft">Modrinth</a> Page</h4>
 

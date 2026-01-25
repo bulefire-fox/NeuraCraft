@@ -221,7 +221,7 @@ public class AgentController {
         // 在成功之后保存聊天室,防止崩溃导致的数据丢失
         agent.saveToFile(
                 // path/to/config/agent/<modelName>/<uuid>.json
-                FileUtil.agent_base_url.resolve(agent.getModelName()).resolve(agent.getUUID().toString())
+                getAgentPath(agent)
         );
 
         // 返回格式化消息
@@ -234,6 +234,10 @@ public class AgentController {
                 ),
                 agent.getPlayers()
         );
+    }
+
+    public static @NotNull Path getAgentPath(@NotNull Agent agent){
+        return FileUtil.agent_base_url.resolve(agent.getModelName()).resolve(agent.getUUID().toString());
     }
 
     private static void loadAllAgentFromFile() {
@@ -269,7 +273,7 @@ public class AgentController {
         for (Agent agent : agentManager.getAllAgents()) {
             agent.saveToFile(
                     // path/to/config/agent/<modelName>/<uuid>.<suffix>
-                    FileUtil.agent_base_url.resolve(agent.getModelName()).resolve(agent.getUUID().toString())
+                    getAgentPath(agent)
             );
         }
     }

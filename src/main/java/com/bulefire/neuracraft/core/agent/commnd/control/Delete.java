@@ -2,6 +2,7 @@ package com.bulefire.neuracraft.core.agent.commnd.control;
 
 import com.bulefire.neuracraft.compatibility.command.FullCommand;
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
+import com.bulefire.neuracraft.compatibility.util.FileUtil;
 import com.bulefire.neuracraft.core.Agent;
 import com.bulefire.neuracraft.core.agent.AgentController;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -67,6 +68,8 @@ public class Delete extends FullCommand.AbsCommand {
         }
         agent.getPlayers().forEach(player1 -> playerManager.updatePlayer(player1, null));
         agentManager.removeAgentMapping(agentUUID);
+
+        FileUtil.deleteFile(AgentController.getAgentPath(agent));
 
         feedback(commandContext.getSource(), Component.translatable("neuracraft.command.delete.success", agentName, agentUUID));
         log.info("player {} delete Agent: {} , UUID: {}", playerName, agentName, agentUUID);
