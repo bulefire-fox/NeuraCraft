@@ -100,8 +100,6 @@ minecraft {
         // applies to all the run configs below
         // 适用于下面的所有运行配置
         configureEach {
-            workingDirectory project.file('run')
-
             // Recommended logging data for a userdev environment
             // 推荐的用户开发环境日志数据
             // The markers can be added/remove as needed separated by commas.
@@ -130,6 +128,7 @@ minecraft {
         }
 
         client {
+            workingDirectory project.file('run-client')
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             // 以逗号分隔的命名空间列表，用于加载游戏测试。空=所有命名空间。
             property 'forge.enabledGameTestNamespaces', mod_id
@@ -137,8 +136,9 @@ minecraft {
         }
 
         server {
+            workingDirectory project.file('run-server')
             property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
+            //args '--nogui'
         }
 
         // This run config launches GameTestServer and runs all registered gametests, then exits.
@@ -148,6 +148,7 @@ minecraft {
         // The gametest system is also enabled by default for other run configs under the /test command.
         // 游戏测试系统也默认在其他运行配置下通过/test命令启用。
         gameTestServer {
+            workingDirectory project.file('run-gametest')
             property 'forge.enabledGameTestNamespaces', mod_id
         }
 

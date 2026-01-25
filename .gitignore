@@ -27,6 +27,9 @@
 Thumbs.db
 
 /run/
+/run-client/
+/run-server/
+/run-gametest/
 /run-data/
 
 /src/test/local/
