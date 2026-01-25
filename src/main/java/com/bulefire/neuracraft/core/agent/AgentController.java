@@ -236,7 +236,7 @@ public class AgentController {
         );
     }
 
-    public static @NotNull Path getAgentPath(@NotNull Agent agent){
+    public static @NotNull Path getAgentPath(@NotNull Agent agent) {
         return FileUtil.agent_base_url.resolve(agent.getModelName()).resolve(agent.getUUID().toString());
     }
 

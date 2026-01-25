@@ -80,15 +80,15 @@ public class CUtil {
      * @param body  请求体
      * @param token 密钥, 不要 {@code Bearer} 前缀
      * @return 响应
-     * @throws Exception 异常
+     * @throws IOException 异常
      * @author bulefire_fox
      * @apiNote 默认请求头为:
      *         <pre>
-     *                     {@code
-     *                          Content-Type: application/json
-     *                          Authorization: Bearer <token>
-     *                     }
-     *                 </pre>
+     *                             {@code
+     *                                  Content-Type: application/json
+     *                                  Authorization: Bearer <token>
+     *                             }
+     *                         </pre>
      * @since 1.0
      */
     public static @NotNull Response AiPOST(@NotNull String urls, @NotNull String body, @NotNull String token) throws IOException {

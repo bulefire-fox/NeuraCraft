@@ -16,7 +16,7 @@ import net.minecraft.commands.Commands;
 public class NCCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> getCommands() {
         return AgentController.getAgentGameCommand().getBaseCommand()
-                              .requires(source -> source.hasPermission(2))
+                              .requires(source -> source.hasPermission(0))
                               .executes(new AgentCommand())
                               .then(Commands.literal("create")
                                             .then(Commands.argument("agentName", StringArgumentType.word())
@@ -73,10 +73,12 @@ public class NCCommand {
                               //                )
                               //
                               .then(Commands.literal("list")
+                                            .requires(source -> source.hasPermission(2))
                                             .executes(new ListAgents())
                               )
 
                               .then(Commands.literal("reload")
+                                            .requires(source -> source.hasPermission(2))
                                             .executes(new ReloadAgentConfig())
                                             .then(Commands.argument("agentName", StringArgumentType.word())
                                                           .executes(new ReloadAgentConfig())
