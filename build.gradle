@@ -4,11 +4,15 @@ plugins {
     id 'idea'
 }
 
-version = project.mod_version
+version = ""//project.mod_version
 group = project.maven_group
 
 base {
-    archivesName = project.archives_base_name
+    archivesName = "${mod_name}-${mod_version}-${minecraft_version}-fabric"
+}
+
+jar {
+    archiveVersion.set("")
 }
 
 loom {
