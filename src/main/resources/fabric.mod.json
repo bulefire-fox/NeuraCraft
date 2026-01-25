@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "neuracraft",
+  "version": "${version}",
+  "name": "NeuraCraft",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "Apache-2.0",
+  "icon": "assets/neuracraft/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "com.bulefire.neuracraft.client.NeuracraftDataGenerator"
+    ],
+    "client": [
+      "com.bulefire.neuracraft.client.NeuracraftClient"
+    ],
+    "main": [
+      "com.bulefire.neuracraft.Neuracraft"
+    ]
+  },
+  "mixins": [
+    "neuracraft.mixins.json",
+    {
+      "config": "neuracraft.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
