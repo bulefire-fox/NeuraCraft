@@ -27,6 +27,6 @@ public class NeuraCraft {
     }
     
     public static void afterInit(){
-    
+        InitM.afterInit();
     }
 }
