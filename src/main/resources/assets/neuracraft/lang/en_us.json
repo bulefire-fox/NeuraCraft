@@ -1,5 +1,6 @@
 {
   "neuracraft.chat.hello": "Hello! Welcome to NeuraCraft Agent Manager System!",
+  "neuracraft.command.hover.copy_to_clipboard": "click to copy to clipboard",
   "neuracraft.command.create.success": "Agent created: %s, UUID: %s",
   "neuracraft.command.create.failure.alreadyExist": "Agent %s already exists",
   "neuracraft.command.create.failure.unknown": "Creation failed",
@@ -23,13 +24,13 @@
   "neuracraft.command.kick.notInChatRoom": "Kick player %s is not in agent %s",
   "neuracraft.command.kick.success": "Succeed kick player %s",
   "neuracraft.command.list.chatroom": "now alive Agent is \n %s",
+  "neuracraft.command.list.chatroom.single": "name: %s, UUID: %s, %s\n",
+  "neuracraft.command.list.chatroom.hover.join": "click to join the agent use /agent join %s",
   "neuracraft.command.show.use": "Usage: Please check the wiki (too lazy to rewrite this)",
   "neuracraft.chat.warn.unsupport.message.type": "the agent %s is unsupported the message type %s",
   "neuracraft.chat.error.tooFast": "Operation frequency too high. Please try again later",
   "neuracraft.chat.error.nullMessage": "No message received",
   "neuracraft.chat.error.notInChatRoom": "You have not joined any Agent",
   "neuracraft.chat.error.notInChatRoom.help": "Use the /agent command to join or create a Agent.",
-  "neuracraft.chat.message.format.player": "<%s> %s",
-  "item.neuracraft.cyber_furry_logo": "Cyber Furry LOGO",
-  "tab.neuracraft.ai_logo": "AI LOGO"
+  "neuracraft.chat.message.format.player": "<%s> %s"
 }

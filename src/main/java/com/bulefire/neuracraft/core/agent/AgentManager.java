@@ -1,6 +1,5 @@
 package com.bulefire.neuracraft.core.agent;
 
-import com.bulefire.neuracraft.core.Agent;
 import com.bulefire.neuracraft.core.util.NoAgentFound;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;

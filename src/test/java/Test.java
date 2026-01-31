@@ -1,22 +1,21 @@
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
+import com.bulefire.neuracraft.core.mcp.entity.AgentInput;
+import com.google.gson.Gson;
 
 public class Test {
     public static void main(String[] args) {
-        List<String> key = List.of("银影", "YY", "yy", "y", "Y", "AI", "ai", "Ai", "aI", "A", "a", "I", "i", "ssss");
-        for (String s : key) {
-            System.out.print(s + " is  ");
-            test(s);
-        }
-    }
-
-    private static void test(@NotNull String message) {
-        List<String> key = List.of("银影", "YY", "yy", "y", "Y", "AI", "ai", "Ai", "aI", "A", "a", "I", "i");
-        if (key.stream().anyMatch(message::contains)) {
-            System.out.println("AI");
-        } else {
-            System.out.println("not AI");
-        }
+        String s = """
+                  {
+                  "tool_call": {
+                    "id": "此处填写与工具列表中完全一致的唯一调用ID",
+                    "parameters": {
+                      "参数1名称": "参数1值",
+                      "参数2名称": "参数2值"
+                    }
+                  }
+                }
+                """;
+        AgentInput agentInput = new Gson().fromJson(s, AgentInput.class);
+        System.out.println(agentInput.toString());
+        while (true);
     }
 }

@@ -28,13 +28,13 @@ public class ChatHistory {
 
     @Override
     public String toString() {
-        log.info("Converting to String");
+        log.debug("Converting to String");
         StringBuilder sb = new StringBuilder();
         for (ChatBlock b : histories) {
             sb.append("{\"role\":\"").append(b.role).append("\",\"content\":\"").append(b.content).append("\"},");
         }
         String result = "[" + sb.substring(0, sb.length() - 1) + "]";
-        log.info("Converted to String: {}", result);
+        log.debug("Converted to String: {}", result);
         return result;
     }
 }

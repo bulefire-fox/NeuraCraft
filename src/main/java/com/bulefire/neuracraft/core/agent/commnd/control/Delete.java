@@ -3,7 +3,7 @@ package com.bulefire.neuracraft.core.agent.commnd.control;
 import com.bulefire.neuracraft.compatibility.command.FullCommand;
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
 import com.bulefire.neuracraft.compatibility.util.FileUtil;
-import com.bulefire.neuracraft.core.Agent;
+import com.bulefire.neuracraft.core.agent.Agent;
 import com.bulefire.neuracraft.core.agent.AgentController;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;

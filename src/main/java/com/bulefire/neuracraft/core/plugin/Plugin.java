@@ -1,5 +1,8 @@
 package com.bulefire.neuracraft.core.plugin;
 
+import com.bulefire.neuracraft.core.agent.annotation.Agent;
+import com.bulefire.neuracraft.core.agent.annotation.RegisterAgent;
+
 import java.lang.annotation.*;
 
 /**
@@ -16,8 +19,8 @@ import java.lang.annotation.*;
  *
  * @author bulefire_fox
  * @version 1.0
- * @see com.bulefire.neuracraft.core.annotation.Agent
- * @see com.bulefire.neuracraft.core.annotation.RegisterAgent
+ * @see Agent
+ * @see RegisterAgent
  * @since 2.0
  */
 @Target(ElementType.TYPE)

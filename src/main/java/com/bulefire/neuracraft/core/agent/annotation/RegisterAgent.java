@@ -1,9 +1,9 @@
-package com.bulefire.neuracraft.core.annotation;
+package com.bulefire.neuracraft.core.agent.annotation;
 
 import java.lang.annotation.*;
 
 /**
- * 注册一个 {@link com.bulefire.neuracraft.core.Agent} 的初始化方法.
+ * 注册一个 {@link com.bulefire.neuracraft.core.agent.Agent} 的初始化方法.
  * 名字任意, 但必须为 {@code public static void} 的 {@code 空参数} 的方法.
  * <pre>
  *     {@code
@@ -13,12 +13,12 @@ import java.lang.annotation.*;
  *          }
  *     }
  * </pre>
- * 注册类请使用 {@link com.bulefire.neuracraft.core.annotation.Agent}
+ * 注册类请使用 {@link Agent}
  *
  * @author bulefire_fox
  * @version 1.0
- * @see com.bulefire.neuracraft.core.Agent
- * @see com.bulefire.neuracraft.core.annotation.Agent
+ * @see com.bulefire.neuracraft.core.agent.Agent
+ * @see Agent
  * @since 2.0
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -12,4 +12,7 @@ public class MUtil {
 
     public static void init() {
     }
+    
+    public static void afterInit() {
+    }
 }

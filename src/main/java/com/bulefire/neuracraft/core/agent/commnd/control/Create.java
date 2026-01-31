@@ -6,7 +6,7 @@ import com.bulefire.neuracraft.compatibility.function.process.ChatEventProcesser
 import com.bulefire.neuracraft.compatibility.function.process.PlayerJoinEventProcesser;
 import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.compatibility.util.FileUtil;
-import com.bulefire.neuracraft.core.Agent;
+import com.bulefire.neuracraft.core.agent.Agent;
 import com.bulefire.neuracraft.core.agent.AgentController;
 import com.bulefire.neuracraft.core.util.NoAgentFound;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -14,7 +14,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.TextColor;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -49,8 +52,20 @@ public class Create extends FullCommand.AbsCommand {
         agent.addPlayer(player);
         agent.addAdmin(player);
         playerManager.updatePlayer(player, agent.getUUID());
-        agent.saveToFile(FileUtil.agent_base_url.resolve(agent.getModelName()).resolve(agent.getUUID().toString()));
-        feedback(commandContext.getSource(), Component.translatable("neuracraft.command.create.success", agent.getName(), agent.getUUID()));
+        agent.saveToFile(FileUtil.getAgentBaseUrl().resolve(agent.getModelName()).resolve(agent.getUUID().toString()));
+        var name = Component.literal(agent.getName())
+                 .withStyle(style -> style
+                         .withColor(TextColor.parseColor("#7CFC00"))
+                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("neuracraft.command.hover.copy_to_clipboard")))
+                         .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, agent.getName()))
+                 );
+        var uuid = Component.literal(agent.getUUID().toString())
+                 .withStyle(style -> style
+                         .withColor(TextColor.parseColor("#00ffff"))
+                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("neuracraft.command.hover.copy_to_clipboard")))
+                         .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, agent.getUUID().toString()))
+                 );
+        feedback(commandContext.getSource(), Component.translatable("neuracraft.command.create.success", name, uuid));
         if (greet) {
             var server = CUtil.getServer.get();
             ChatEventProcesser.ChatMessage.Env env = CUtil.getEnv(server);

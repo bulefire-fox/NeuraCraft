@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import net.minecraft.world.level.storage.LevelResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -28,36 +29,35 @@ public class FileUtil {
      */
     public static final Path base_url = NeuraCraft.configPath.resolve("neuracraft");
     /**
-     * Agent 文件根目录
-     */
-    public static final Path agent_base_url = base_url.resolve("agent");
-    /**
-     * Agent 配置文件根目录
-     */
-    public static final Path agent_config_url = agent_base_url.resolve("config");
-    /**
-     * 玩家配置文件根目录
-     */
-    public static final Path player_url = base_url.resolve("player");
-
-    /**
      * 插件目录
      */
     public static final Path plugin_url = base_url.resolve("plugin");
+    /**
+     * Agent 配置文件根目录
+     */
+    public static final Path agent_config_url = base_url.resolve("agent").resolve("config");
 
     /**
      * 模组目录
      */
     public static final Path mod_url = NeuraCraft.modsPath;
 
+    public static @NotNull Path getWorldUrl() {
+        return CUtil.getServer.get().getWorldPath(LevelResource.ROOT);
+    }
+    public static @NotNull Path getAgentBaseUrl() {
+        return getWorldUrl().resolve("agent");
+    }
+    
     public static void init() {
         // 创建不存在的目录
         if (! base_url.toFile().exists())
             base_url.toFile().mkdirs();
-        if (! agent_base_url.toFile().exists())
-            agent_base_url.toFile().mkdirs();
-        if (! player_url.toFile().exists())
-            player_url.toFile().mkdirs();
+        log.debug(getWorldUrl());
+        if (! getWorldUrl().toFile().exists())
+            getWorldUrl().toFile().mkdirs();
+        if (! getAgentBaseUrl().toFile().exists())
+            getAgentBaseUrl().toFile().mkdirs();
         if (! plugin_url.toFile().exists())
             plugin_url.toFile().mkdirs();
         log.debug("init file util done");
@@ -188,6 +188,7 @@ public class FileUtil {
 
     @SneakyThrows
     public static boolean deleteFile(@NotNull Path filePath) {
+        log.debug("delete file: {}", filePath);
         return Files.deleteIfExists(filePath);
     }
 }

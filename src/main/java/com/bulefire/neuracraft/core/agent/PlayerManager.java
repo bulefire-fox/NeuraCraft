@@ -1,8 +1,8 @@
 package com.bulefire.neuracraft.core.agent;
 
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
-import com.bulefire.neuracraft.core.Agent;
 import lombok.extern.log4j.Log4j2;
+import net.minecraft.world.level.storage.WorldData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

@@ -1,13 +1,15 @@
-package com.bulefire.neuracraft.core;
+package com.bulefire.neuracraft.core.agent;
 
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
 import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.compatibility.util.FileUtil;
-import com.bulefire.neuracraft.core.agent.AgentController;
-import com.bulefire.neuracraft.core.agent.AgentManager;
 import com.bulefire.neuracraft.core.agent.entity.AgentMessage;
+import com.bulefire.neuracraft.core.agent.entity.AgentResponse;
 import com.bulefire.neuracraft.core.util.AgentOutOfTime;
 import com.bulefire.neuracraft.core.util.UnSupportFormattedMessage;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
@@ -65,6 +67,8 @@ public abstract class AbsAgent implements Agent {
     // 计时器
     // 此字段不会被序列化
     private final transient Timer timer;
+    // 是否处于MCP调用过程
+    private boolean isMcpCalling;
 
     /**
      * 创建一个抽象地聊天室
@@ -146,24 +150,69 @@ public abstract class AbsAgent implements Agent {
     public void removeAdmin(@NotNull APlayer player) {
         this.admins.remove(player);
     }
-
+    
     /**
-     * 发送消息, 默认进行频率限制
+     * 是否处于MCP调用过程中, 如果处于MCP调用过程中则 {@link AgentController} 将特殊处理
+     * @return 是否处于MCP调用过程中，是为{@code true}，否为{@code false}
+     */
+    @Override
+    public boolean isMCPCalling() {
+        return isMcpCalling;
+    }
+    
+    /**
+     * 发送消息, 默认进行频率限制并处理MCP调用
      *
      * @param msg 传入的消息
      * @return 返回的消息
      * @throws AgentOutOfTime 当发送频率太快时抛出
      * @apiNote 此方法会调用抽象方法 {@link AbsAgent#message(String)}, 将传入的消息转为格式化后的消息并返回<br>
-     *         {@link AbsAgent#message(String)}由子类实现
+     *         {@link AbsAgent#message(String)}由子类实现。
+     *         此方法通过调用 {@link AbsAgent#isMCPCall(String)} 判断是否为MCP调用
+     *         同时将 {@link AbsAgent#isMcpCalling} 设置为true. 子类可用重写 {@link AbsAgent#isMCPCall(String)}
+     *         实现更精细的判断
      * @see AbsAgent#message(String)
+     * @see AbsAgent#isMCPCall(String)
      */
     @Override
-    public @NotNull String sendMessage(@NotNull AgentMessage msg) throws AgentOutOfTime, UnSupportFormattedMessage {
+    public @NotNull AgentResponse sendMessage(@NotNull AgentMessage msg) throws AgentOutOfTime, UnSupportFormattedMessage {
         if (timer.isOutOfTimes()) {
             throw new AgentOutOfTime("out of times", timePerMin);
         }
         //String message = msg.toFormatedMessage();
-        return message(msg.msg());
+        String rawResponse = message(msg.msg());
+        if (isMCPCall(rawResponse)) {
+            if (!isMcpCalling) {
+                isMcpCalling = true;
+                return new AgentResponse(rawResponse, AgentResponse.State.START_MCP_CALL, msg.player());
+             }else {
+                return new AgentResponse(rawResponse, AgentResponse.State.MCP_CALLING, msg.player());
+            }
+        } else {
+            timer.add();
+            return new AgentResponse(rawResponse, AgentResponse.State.NORMAL, msg.player());
+        }
+    }
+    
+    /**
+     * 判断是否为MCP调用
+     *
+     * @param jsonString 原始字符串
+     * @return 是否为MCP调用
+     * @implSpec 此方法将尝试将传入的json字符串转为json对象, 如果成功则返回{@code true}, 否则返回{@code false}
+     * @implNote 此方法将调用 {@link JsonParser#parseString(String)}， 此方法只会被 {@link AbsAgent#sendMessage(AgentMessage)} 调用
+     * @see JsonParser#parseString(String)
+     */
+    protected static boolean isMCPCall(String jsonString) {
+        if (jsonString == null || jsonString.isEmpty() || jsonString.trim().isEmpty()) return false;
+        try {
+            JsonElement jsonElement = JsonParser.parseString(jsonString);
+            log.debug("string {} is json {}", jsonString, jsonElement.isJsonObject());
+            return jsonElement.isJsonObject();
+        } catch (JsonSyntaxException e) {
+            log.debug("string {} is json false", jsonString);
+            return false;
+        }
     }
 
     /**

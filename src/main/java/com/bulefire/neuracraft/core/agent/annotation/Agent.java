@@ -1,9 +1,9 @@
-package com.bulefire.neuracraft.core.annotation;
+package com.bulefire.neuracraft.core.agent.annotation;
 
 import java.lang.annotation.*;
 
 /**
- * 注册一个 {@link com.bulefire.neuracraft.core.Agent}. <br>
+ * 注册一个 {@link com.bulefire.neuracraft.core.agent.Agent}. <br>
  * 此注解会默认类实现了一个 {@code init}
  * <pre>
  *     {@code
@@ -25,8 +25,8 @@ import java.lang.annotation.*;
  *
  * @author bulefire_fox
  * @version 1.0
- * @see com.bulefire.neuracraft.core.Agent
- * @see com.bulefire.neuracraft.core.annotation.RegisterAgent
+ * @see com.bulefire.neuracraft.core.agent.Agent
+ * @see RegisterAgent
  * @since 2.0
  */
 @Retention(RetentionPolicy.RUNTIME)

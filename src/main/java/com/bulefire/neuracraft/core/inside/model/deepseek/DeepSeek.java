@@ -3,9 +3,9 @@ package com.bulefire.neuracraft.core.inside.model.deepseek;
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
 import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.compatibility.util.FileUtil;
-import com.bulefire.neuracraft.core.AbsAgent;
+import com.bulefire.neuracraft.core.agent.AbsAgent;
 import com.bulefire.neuracraft.core.agent.AgentController;
-import com.bulefire.neuracraft.core.annotation.RegisterAgent;
+import com.bulefire.neuracraft.core.agent.annotation.RegisterAgent;
 import com.google.gson.Gson;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,7 +31,7 @@ public class DeepSeek extends AbsAgent {
         chatHistory.addBlock(
                 new ChatHistory.ChatBlock(
                         "system",
-                        DeepSeekConfig.getPrompt()
+                        DeepSeekConfig.getPrompt()+AgentController.fullRecommendedPrompt
                 )
         );
     }

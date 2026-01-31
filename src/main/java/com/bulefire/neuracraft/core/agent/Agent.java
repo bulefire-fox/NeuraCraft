@@ -1,9 +1,10 @@
-package com.bulefire.neuracraft.core;
+package com.bulefire.neuracraft.core.agent;
 
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
-import com.bulefire.neuracraft.core.agent.AgentController;
 import com.bulefire.neuracraft.core.agent.entity.AgentMessage;
+import com.bulefire.neuracraft.core.agent.entity.AgentResponse;
 import com.bulefire.neuracraft.core.util.AgentOutOfTime;
+import com.bulefire.neuracraft.core.util.MCPCallBreak;
 import com.bulefire.neuracraft.core.util.UnSupportFormattedMessage;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +33,7 @@ public interface Agent {
      * @return 返回的消息
      * @throws AgentOutOfTime 当发送频率太快时抛出
      */
-    @NotNull String sendMessage(@NotNull AgentMessage message) throws AgentOutOfTime, UnSupportFormattedMessage;
+    @NotNull AgentResponse sendMessage(@NotNull AgentMessage message) throws AgentOutOfTime, UnSupportFormattedMessage;
 
     /**
      * 设置聊天室的名称，面向用户，可以重复
@@ -118,7 +119,13 @@ public interface Agent {
      * @return 聊天室的显示名称
      */
     @NotNull String getDisPlayName();
-
+    
+    /**
+     * 是否处于MCP调用过程中, 如果处于MCP调用过程中则 {@link AgentController} 将特殊处理
+     * @return 是否处于MCP调用过程中，是为{@code true}，否为{@code false}
+     */
+    boolean isMCPCalling();
+    
     /**
      * 保存聊天室信息到文件
      *
