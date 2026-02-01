@@ -1,5 +1,6 @@
 package com.bulefire.neuracraft.core.mcp;
 
+import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.compatibility.util.scanner.AnnotationsMethodScanner;
 import com.bulefire.neuracraft.core.agent.annotation.RegisterAgent;
 import com.bulefire.neuracraft.core.mcp.annotation.MCP;
@@ -9,6 +10,7 @@ import com.bulefire.neuracraft.core.mcp.mssage.MCPError;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPMessage;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPRequest;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPResponse;
+import com.bulefire.neuracraft.core.mcp.network.RemoteMCPServerController;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 
 @Log4j2
 public class MCPController {
@@ -47,6 +50,11 @@ public class MCPController {
                 throw new RuntimeException(e);
             }
         }
+        
+        // TODO:从配置文件加载远程 MCP 服务器
+        
+        // 初始化远程 MCP 服务器
+        RemoteMCPServerController.getInstance().initializeAllRemoteServer();
     }
     
     /*
@@ -62,12 +70,13 @@ public class MCPController {
     }
     
     out put look like:
-    [工具调用结果]: [tool_response]: details
+    [工具调用结果]: details
      */
-    public String processAgentInput(@NotNull String input) {
+    public String processAgentInput(@NotNull String input, @NotNull Consumer<String> print) {
         log.debug("catch agent input");
         MCPRequest request = parseAgentInput(input);
         log.debug("parse agent input to {}", request);
+        print.accept(Objects.requireNonNull(mcpManager.getToolByMethod(request.getMethod())).getName());
         MCPResponse response;
         try {
             response = callTool(request);

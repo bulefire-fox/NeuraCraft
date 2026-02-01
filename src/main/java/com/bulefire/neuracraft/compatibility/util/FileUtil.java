@@ -189,6 +189,11 @@ public class FileUtil {
     @SneakyThrows
     public static boolean deleteFile(@NotNull Path filePath) {
         log.debug("delete file: {}", filePath);
+        Thread.sleep(2000);
+        if (! Files.exists(filePath)) {
+            log.warn("file {} not exists", filePath);
+            return false;
+        }
         return Files.deleteIfExists(filePath);
     }
 }

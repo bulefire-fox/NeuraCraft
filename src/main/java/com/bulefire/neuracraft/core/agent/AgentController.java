@@ -27,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -308,7 +309,16 @@ public class AgentController {
         // 判断并进行MCP调用
         if (remessage.state() == AgentResponse.State.START_MCP_CALL || remessage.state() == AgentResponse.State.MCP_CALLING) {
             // 将控制权流转至MCP调用方法
-            remessage = mcpCall(agent, remessage);
+            remessage = mcpCall(agent, remessage,
+                                (input) -> CUtil.broadcastMessageToGroupPlayer(
+                                        new SendMessage(
+                                                Component.translatable("neuracraft.mcp.message.format.system", agent.getDisPlayName(), input),
+                                                chatMessage.env(),
+                                                chatMessage.player()
+                                        ),
+                                        agent.getPlayers()
+                                )
+            );
         }
         
         // 在成功之后保存聊天室,防止崩溃导致的数据丢失
@@ -329,11 +339,11 @@ public class AgentController {
         );
     }
     
-    private static @NotNull AgentResponse  mcpCall(@NotNull Agent agent, @NotNull AgentResponse startResponse) {
+    private static @NotNull AgentResponse  mcpCall(@NotNull Agent agent, @NotNull AgentResponse startResponse, Consumer<String> print) {
         log.debug("AgentController MCP call start");
         AgentResponse agentResponse;
         do {
-            String response = mcpController.processAgentInput(startResponse.msg());
+            String response = mcpController.processAgentInput(startResponse.msg(), print);
             log.debug("response from MCPController is: {}", response);
             agentResponse = agent.sendMessage(new AgentMessage(response, startResponse.player()));
             log.debug("response from agent is: {}", agentResponse);
@@ -343,7 +353,9 @@ public class AgentController {
     }
     
     public static @NotNull Path getAgentPath(@NotNull Agent agent) {
-        return FileUtil.getAgentBaseUrl().resolve(agent.getModelName()).resolve(agent.getUUID() +"."+agent.getSuffix());
+        Path path = FileUtil.getAgentBaseUrl().resolve(agent.getModelName()).resolve(agent.getUUID()+"."+agent.getSuffix());
+        log.debug("getAgentPath for {} is {}", agent, path);
+        return path;
     }
     
     private static void loadAllAgentFromFile() {

@@ -118,6 +118,7 @@ public class DeepSeek extends AbsAgent {
     @Override
     @SneakyThrows
     public void saveToFile(@NotNull Path path) {
+        log.debug("deepseek save to file: {}", path);
         FileUtil.saveJsonToFile(this, path);
     }
 

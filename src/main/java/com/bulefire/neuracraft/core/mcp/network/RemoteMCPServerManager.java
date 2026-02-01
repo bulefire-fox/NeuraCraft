@@ -1,36 +1,31 @@
 package com.bulefire.neuracraft.core.mcp.network;
 
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.stream.Collectors;
 
 public class RemoteMCPServerManager {
     private final ConcurrentMap<String, RemoteMCPServer> servers;
-    private final ConcurrentMap<String, String> toolToServer;
+    private final ConcurrentMap<String, String> toolMthodToServer;
     
     public RemoteMCPServerManager() {
         servers = new ConcurrentHashMap<>();
-        toolToServer = new ConcurrentHashMap<>();
+        toolMthodToServer = new ConcurrentHashMap<>();
     }
     
     public void registerServer(@NotNull String serverName, @NotNull RemoteMCPServer server) {
         servers.put(serverName, server);
+        var tools = server.getAliveTools();
+        for (var tool : tools) {
+            toolMthodToServer.put(tool.getInfo().getMethod(), serverName);
+        }
     }
     
     public void deleteServer(@NotNull String serverName) {
         servers.remove(serverName);
-    }
-    
-    public void registerTool(@NotNull String toolName, @NotNull String serverName) {
-        toolToServer.put(toolName, serverName);
-    }
-    
-    public void deleteTool(@NotNull String toolName) {
-        toolToServer.remove(toolName);
     }
     
     public @NotNull RemoteMCPServer getServer(@NotNull String serverName) {
@@ -40,8 +35,8 @@ public class RemoteMCPServerManager {
         return servers.values().stream().filter(RemoteMCPServer::isAlive).toList();
     }
     
-    public @NotNull RemoteMCPServer getServerByTool(@NotNull String toolName) {
-        var serverName = toolToServer.get(toolName);
+    public @Nullable RemoteMCPServer getServerByTool(@NotNull String toolMethodName) {
+        var serverName = toolMthodToServer.get(toolMethodName);
         return servers.get(serverName);
     }
 }

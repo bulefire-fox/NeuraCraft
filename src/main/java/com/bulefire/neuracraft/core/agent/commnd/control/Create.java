@@ -52,7 +52,7 @@ public class Create extends FullCommand.AbsCommand {
         agent.addPlayer(player);
         agent.addAdmin(player);
         playerManager.updatePlayer(player, agent.getUUID());
-        agent.saveToFile(FileUtil.getAgentBaseUrl().resolve(agent.getModelName()).resolve(agent.getUUID().toString()));
+        agent.saveToFile(AgentController.getAgentPath(agent));
         var name = Component.literal(agent.getName())
                  .withStyle(style -> style
                          .withColor(TextColor.parseColor("#7CFC00"))

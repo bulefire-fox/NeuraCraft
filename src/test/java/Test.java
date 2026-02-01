@@ -16,6 +16,5 @@ public class Test {
                 """;
         AgentInput agentInput = new Gson().fromJson(s, AgentInput.class);
         System.out.println(agentInput.toString());
-        while (true);
     }
 }

@@ -1,6 +1,7 @@
 package com.bulefire.neuracraft.core.inside.model.deepseek;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,15 @@ public class ChatHistory {
         this.histories.add(b);
     }
 
+    public @Nullable ChatBlock getSystemBlock() {
+        for (ChatBlock b : histories) {
+            if (b.role.equals("system")) {
+                return b;
+            }
+        }
+        return null;
+    }
+    
     public record ChatBlock(String role, String content) {
     }
 

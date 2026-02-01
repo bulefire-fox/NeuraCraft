@@ -4,6 +4,7 @@ import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.core.mcp.AbsMCPTool;
 import com.bulefire.neuracraft.core.mcp.MCPController;
 import com.bulefire.neuracraft.core.mcp.MCPToolInfo;
+import com.bulefire.neuracraft.core.mcp.annotation.MCP;
 import com.bulefire.neuracraft.core.mcp.annotation.RegisterMCP;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPError;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPMessage;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.net.URI;
 import java.util.Map;
 
+@MCP
 @Log4j2
 public class PlayerPositionQuery extends AbsMCPTool {
     @RegisterMCP

@@ -32,5 +32,6 @@
   "neuracraft.chat.error.nullMessage": "No message received",
   "neuracraft.chat.error.notInChatRoom": "You have not joined any Agent",
   "neuracraft.chat.error.notInChatRoom.help": "Use the /agent command to join or create a Agent.",
-  "neuracraft.chat.message.format.player": "<%s> %s"
+  "neuracraft.chat.message.format.player": "<%s> %s",
+  "neuracraft.mcp.message.format.system": "[MCP] %s is calling %s"
 }

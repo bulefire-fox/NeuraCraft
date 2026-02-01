@@ -249,11 +249,6 @@ public abstract class AbsAgent implements Agent {
     protected static Logger getLogger(@NotNull Class<?> klass) {
         return LogManager.getLogger(klass);
     }
-
-    @Override
-    public String getSuffix() {
-        return suffix;
-    }
     
     /**
      * 计时器，用于限制发送频率.<br>
