@@ -62,6 +62,9 @@ public abstract class AbsAgent implements Agent {
     // 显示名称
     @Getter
     private final String disPlayName;
+    // 后缀
+    @Getter
+    private final String suffix;
     // 每分钟消息次数
     private final int timePerMin;
     // 计时器
@@ -84,7 +87,7 @@ public abstract class AbsAgent implements Agent {
      * @param timePerMin  每分钟消息次数
      * @since 1.0
      */
-    public AbsAgent(String name, UUID uuid, List<APlayer> players, @NotNull List<APlayer> admins, String modelName, String disPlayName, int timePerMin) {
+    public AbsAgent(String name, UUID uuid, List<APlayer> players, @NotNull List<APlayer> admins, String modelName, String disPlayName, String suffix, int timePerMin) {
         this.name = name;
         this.uuid = uuid;
         this.players = players;
@@ -92,6 +95,7 @@ public abstract class AbsAgent implements Agent {
         this.persistentAdmins = new ArrayList<>(admins.stream().map(APlayer::uuid).toList());
         this.modelName = modelName;
         this.disPlayName = disPlayName;
+        this.suffix = suffix;
         this.timePerMin = timePerMin;
         this.timer = new Timer(timePerMin);
     }
@@ -105,6 +109,7 @@ public abstract class AbsAgent implements Agent {
         this.persistentAdmins = data.persistentAdmins;
         this.modelName = data.modelName;
         this.disPlayName = data.disPlayName;
+        this.suffix = data.suffix;
         this.timePerMin = data.timePerMin;
         this.timer = new Timer(timePerMin);
     }
@@ -245,6 +250,11 @@ public abstract class AbsAgent implements Agent {
         return LogManager.getLogger(klass);
     }
 
+    @Override
+    public String getSuffix() {
+        return suffix;
+    }
+    
     /**
      * 计时器，用于限制发送频率.<br>
      * 为 {@link AbsAgent#sendMessage(AgentMessage)} 提供支持
@@ -328,6 +338,8 @@ public abstract class AbsAgent implements Agent {
         public String modelName;
         // 显示名称
         public String disPlayName;
+        // 后缀
+        public String suffix;
         // 每分钟消息次数
         public int timePerMin;
 
@@ -340,6 +352,7 @@ public abstract class AbsAgent implements Agent {
             this.persistentAdmins = agent.persistentAdmins;
             this.modelName = agent.modelName;
             this.disPlayName = agent.disPlayName;
+            this.suffix = agent.suffix;
             this.timePerMin = agent.timePerMin;
         }
 
@@ -351,6 +364,7 @@ public abstract class AbsAgent implements Agent {
             this.persistentAdmins = new ArrayList<>(0);
             this.modelName = "";
             this.disPlayName = "";
+            this.suffix = "";
             this.timePerMin = - 1;
         }
     }

@@ -54,7 +54,7 @@ public class YinYing extends AbsAgent {
 
     YinYing(String name, UUID uuid, List<APlayer> players, @NotNull List<APlayer> admins, String modelName, String disPlayName, int timePerMin,
             String chatId, String appId, Variables variables, String systemPrompt) {
-        super(name, uuid, players, admins, modelName, disPlayName, timePerMin);
+        super(name, uuid, players, admins, modelName, disPlayName, "yinying", timePerMin);
         this.chatId = chatId;
         this.appId = appId;
         this.variables = variables;
@@ -250,7 +250,7 @@ public class YinYing extends AbsAgent {
     @Override
     @SneakyThrows
     public void saveToFile(@NotNull Path path) {
-        FileUtil.saveJsonToFile(this, Path.of(path + ".yinying"));
+        FileUtil.saveJsonToFile(this, path);
     }
 
     @Override

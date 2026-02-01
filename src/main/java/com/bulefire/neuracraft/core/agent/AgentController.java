@@ -343,7 +343,7 @@ public class AgentController {
     }
     
     public static @NotNull Path getAgentPath(@NotNull Agent agent) {
-        return FileUtil.getAgentBaseUrl().resolve(agent.getModelName()).resolve(agent.getUUID().toString());
+        return FileUtil.getAgentBaseUrl().resolve(agent.getModelName()).resolve(agent.getUUID() +"."+agent.getSuffix());
     }
     
     private static void loadAllAgentFromFile() {

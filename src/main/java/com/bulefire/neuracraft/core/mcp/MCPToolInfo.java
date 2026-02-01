@@ -20,7 +20,7 @@ public class MCPToolInfo {
     @Builder.Default
     private Map<String, Param> optional = new HashMap<>();
     
-    public static record Param(String type, String describe, Class<?> javaType) {}
+    public record Param(String type, String describe, Class<?> javaType) {}
     
     public enum Type {
         LOCAL,

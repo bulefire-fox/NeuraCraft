@@ -18,11 +18,27 @@ public class MCPError {
     private Object data;
 
     // 标准错误码
+    /**
+     * JSON解析错误
+     */
     public static final int PARSE_ERROR = - 32700;
+    /**
+     * 无效的请求
+     */
     public static final int INVALID_REQUEST = - 32600;
+    /**
+     * 方法未找到
+     */
     public static final int METHOD_NOT_FOUND = - 32601;
+    /**
+     * 无效的参数
+     */
     public static final int INVALID_PARAMS = - 32602;
+    /**
+     * 内部错误
+     */
     public static final int INTERNAL_ERROR = - 32603;
+    /// -32000 to -32099	Server error	服务器错误（保留）
     
     public MCPError(int code, String message) {
         this.code = code;

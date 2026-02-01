@@ -26,7 +26,7 @@ public class DeepSeek extends AbsAgent {
     private final ChatHistory chatHistory;
 
     public DeepSeek(String name, UUID uuid, List<APlayer> players, List<APlayer> admins, String modelName, String disPlayName, int timePerMin) {
-        super(name, uuid, players, admins, modelName, disPlayName, timePerMin);
+        super(name, uuid, players, admins, modelName, disPlayName, "deepseek", timePerMin);
         chatHistory = new ChatHistory();
         chatHistory.addBlock(
                 new ChatHistory.ChatBlock(
@@ -42,7 +42,7 @@ public class DeepSeek extends AbsAgent {
     }
 
     public DeepSeek() {
-        super("DeepSeek1", UUID.randomUUID(), new ArrayList<>(), new ArrayList<>(), DeepSeekConfig.getModelName(), DeepSeekConfig.getDisplayName(), DeepSeekConfig.getTimePerMin());
+        super("DeepSeek1", UUID.randomUUID(), new ArrayList<>(), new ArrayList<>(), DeepSeekConfig.getModelName(), DeepSeekConfig.getDisplayName(), "deepseek", DeepSeekConfig.getTimePerMin());
         chatHistory = new ChatHistory();
     }
 
@@ -118,7 +118,7 @@ public class DeepSeek extends AbsAgent {
     @Override
     @SneakyThrows
     public void saveToFile(@NotNull Path path) {
-        FileUtil.saveJsonToFile(this, Path.of(path + ".deepseek"));
+        FileUtil.saveJsonToFile(this, path);
     }
 
     @Override

@@ -141,6 +141,11 @@ public interface Agent {
      * @implSpec 可以自定义文件格式和内容，但必须与 saveToFile 保持一致
      */
     void loadFromFile(@NotNull Path path);
-
+    
+    /**
+     * 获取聊天室后缀
+     */
+    String getSuffix();
+    
     void reloadConfig();
 }

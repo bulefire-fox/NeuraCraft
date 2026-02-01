@@ -32,17 +32,25 @@ public abstract class AbsMCPTool implements MCPTool {
         sb.append("工具名称:").append(name).append("\n\t")
           .append("- 唯一调用ID:").append(info.getMethod()).append("\n\t")
           .append("- 功能描述：").append(description).append("\n\t");
-        if (! info.getParams().isEmpty())
+        boolean hasParams = false;
+        if (!info.getParams().isEmpty()) {
             sb.append("- 必需参数：");
-        for (Map.Entry<String, MCPToolInfo.Param> entry : info.getParams().entrySet()) {
-            sb.append("[").append(entry.getKey()).append("] (")
-              .append(entry.getValue().type()).append(", ").append(entry.getValue().describe()).append("), ");
+            for (Map.Entry<String, MCPToolInfo.Param> entry : info.getParams().entrySet()) {
+                sb.append("[").append(entry.getKey()).append("] (")
+                  .append(entry.getValue().type()).append(", ").append(entry.getValue().describe()).append("), ");
+            }
+            hasParams = true;
         }
-        if (! info.getOptional().isEmpty())
+        if (!info.getOptional().isEmpty()) {
             sb.append("\n\t- 可选参数：");
-        for (Map.Entry<String, MCPToolInfo.Param> entry : info.getOptional().entrySet()) {
-            sb.append("[").append(entry.getKey()).append("] (")
-              .append(entry.getValue().type()).append(", ").append(entry.getValue().describe()).append("), ");
+            for (Map.Entry<String, MCPToolInfo.Param> entry : info.getOptional().entrySet()) {
+                sb.append("[").append(entry.getKey()).append("] (")
+                  .append(entry.getValue().type()).append(", ").append(entry.getValue().describe()).append("), ");
+            }
+            hasParams = true;
+        }
+        if (!hasParams) {
+            sb.append("\n\t- 无参数");
         }
         return sb.toString();
     }
