@@ -21,6 +21,7 @@
 # 忽略本地配置文件
 .local
 .env
+.trae
 
 # 忽略操作系统生成的文件
 .DS_Store
