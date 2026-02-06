@@ -15,7 +15,7 @@ import net.minecraft.commands.Commands;
 
 public class NCCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> getCommands() {
-        return AgentController.getAgentGameCommand().getBaseCommand()
+        return AgentController.getGAME_COMMAND().getAgentBaseCommand()
                               .requires(source -> source.hasPermission(0))
                               .executes(new AgentCommand())
                               .then(Commands.literal("create")
@@ -28,7 +28,7 @@ public class NCCommand {
                                                           )
                                             )
                               )
-
+                              
                               .then(Commands.literal("delete")
                                             .executes(new Delete())
                                             .then(Commands.argument("agentName", StringArgumentType.word())
@@ -38,7 +38,7 @@ public class NCCommand {
                                                           .executes(new Delete())
                                             )
                               )
-
+                              
                               .then(Commands.literal("join")
                                             .then(Commands.argument("agentName", StringArgumentType.word())
                                                           .executes(new Join())
@@ -47,19 +47,19 @@ public class NCCommand {
                                                           .executes(new Join())
                                             )
                               )
-
+                              
                               .then(Commands.literal("exit")
                                             .executes(new Exit())
                               )
-
+                              
                               .then(Commands.literal("show")
                                             .executes(new Show())
                               )
-
+                              
                               .then(Commands.literal("find")
                                             .executes(new Find())
                               )
-
+                              
                               //                .then(Commands.literal("invite")
                               //                        .then(Commands.argument("inviteName", StringArgumentType.word())
                               //                                .executes(new Invite())
@@ -76,7 +76,7 @@ public class NCCommand {
                                             .requires(source -> source.hasPermission(2))
                                             .executes(new ListAgents())
                               )
-
+                              
                               .then(Commands.literal("reload")
                                             .requires(source -> source.hasPermission(2))
                                             .executes(new ReloadAgentConfig())

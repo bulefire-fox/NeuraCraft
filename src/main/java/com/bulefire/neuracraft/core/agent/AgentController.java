@@ -7,6 +7,7 @@ import com.bulefire.neuracraft.compatibility.function.process.*;
 import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.compatibility.util.FileUtil;
 import com.bulefire.neuracraft.compatibility.util.scanner.AnnotationsMethodScanner;
+import com.bulefire.neuracraft.core.command.GameCommand;
 import com.bulefire.neuracraft.core.agent.annotation.RegisterAgent;
 import com.bulefire.neuracraft.core.agent.commnd.NCCommand;
 import com.bulefire.neuracraft.core.agent.entity.AgentMessage;
@@ -20,6 +21,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -40,7 +43,7 @@ import java.util.regex.Pattern;
  * @see Agent
  * @see AgentManager
  * @see PlayerManager
- * @see AgentGameCommand
+ * @see GameCommand
  * @see ChatEventProcesser.ChatMessage
  * @see AgentController#registerAgentClassInitFunction(Runnable)
  * @since 2.0
@@ -103,7 +106,7 @@ public class AgentController {
     @Getter
     private static final PlayerManager playerManager = new PlayerManager();
     @Getter
-    private static final AgentGameCommand agentGameCommand = new AgentGameCommand();
+    private static final GameCommand GAME_COMMAND = GameCommand.getINSTANCE();
     @Getter
     private static final MCPController mcpController = MCPController.getInstance();
     
@@ -234,7 +237,7 @@ public class AgentController {
         }
         // 加载所有的指令
         //CommandRegister.registerCommands(agentGameCommand.getAllCommands());
-        CommandRegister.registerCommands(agentGameCommand.getAllCommands());
+        CommandRegister.registerCommands(GAME_COMMAND.getAllCommands());
     }
     
     public static void afterInit(){
@@ -266,7 +269,7 @@ public class AgentController {
             // 提示即可
             CUtil.sendMessageToPlayer(
                     new SendMessage(
-                            Component.translatable("neuracraft.command.find.notInChatRoom"),
+                            Component.translatable("neuracraft.agent.command.find.notInChatRoom"),
                             chatMessage.env(),
                             chatMessage.player()
                     )
@@ -287,7 +290,7 @@ public class AgentController {
             // 提示即可
             CUtil.broadcastMessageToGroupPlayer(
                     new SendMessage(
-                            Component.translatable("neuracraft.chat.error.tooFast"),
+                            Component.translatable("neuracraft.agent.chat.error.tooFast"),
                             chatMessage.env(),
                             chatMessage.player()
                     ),
@@ -297,7 +300,7 @@ public class AgentController {
         } catch (UnSupportFormattedMessage e) {
             CUtil.broadcastMessageToGroupPlayer(
                     new SendMessage(
-                            Component.translatable("neuracraft.chat.warn.unsupport.message.type", agent.getName(), e.getMessageType().name()),
+                            Component.translatable("neuracraft.agent.chat.warn.unsupport.message.type", agent.getName(), e.getMessageType().name()),
                             chatMessage.env(),
                             chatMessage.player()
                     ),
@@ -312,7 +315,13 @@ public class AgentController {
             remessage = mcpCall(agent, remessage,
                                 (input) -> CUtil.broadcastMessageToGroupPlayer(
                                         new SendMessage(
-                                                Component.translatable("neuracraft.mcp.message.format.system", agent.getDisPlayName(), input),
+                                                Component.translatable(
+                                                        "neuracraft.mcp.message.format.system",
+                                                        Component.literal(agent.getDisPlayName()).withStyle(
+                                                                style -> style.withColor(TextColor.parseColor("#7CFC00"))
+                                                        ),
+                                                        input
+                                                ),
                                                 chatMessage.env(),
                                                 chatMessage.player()
                                         ),
@@ -331,7 +340,7 @@ public class AgentController {
         // 这里使用 Component 是因为 Component 为minecraft内置接口,与具体loader无关
         CUtil.broadcastMessageToGroupPlayer(
                 new SendMessage(
-                        Component.translatable("neuracraft.chat.message.format.player", agent.getDisPlayName(), remessage.msg()),
+                        Component.translatable("neuracraft.agent.chat.message.format.player", agent.getDisPlayName(), remessage.msg()),
                         chatMessage.env(),
                         chatMessage.player()
                 ),
@@ -339,7 +348,7 @@ public class AgentController {
         );
     }
     
-    private static @NotNull AgentResponse  mcpCall(@NotNull Agent agent, @NotNull AgentResponse startResponse, Consumer<String> print) {
+    private static @NotNull AgentResponse  mcpCall(@NotNull Agent agent, @NotNull AgentResponse startResponse, Consumer<Component> print) {
         log.debug("AgentController MCP call start");
         AgentResponse agentResponse;
         do {

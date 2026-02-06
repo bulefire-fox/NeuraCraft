@@ -44,14 +44,14 @@ public class Join extends FullCommand.AbsCommand {
         if (agentName != null && agentUUID == null) {
             var agents = agentManager.getAgentByName(agentName);
             if (agents.size() != 1) {
-                feedback(commandContext.getSource(), Component.translatable("neuracraft.command.join.failure.manyAgents", agents.size(), agentName));
+                feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.join.failure.manyAgents", agents.size(), agentName));
                 return 1;
             }
             agent = agents.get(0);
         } else if (agentName == null && agentUUID != null) {
             agent = agentManager.getAgent(UUID.fromString(agentUUID));
             if (agent == null) {
-                feedback(commandContext.getSource(), Component.translatable("neuracraft.command.join.failure.notExist", agentUUID));
+                feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.join.failure.notExist", agentUUID));
                 return 1;
             }
         } else {
@@ -61,7 +61,7 @@ public class Join extends FullCommand.AbsCommand {
         agent.addPlayer(player);
         playerManager.updatePlayer(player, agent.getUUID());
 
-        feedback(commandContext.getSource(), Component.translatable("neuracraft.command.join.success", agent.getName()));
+        feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.join.success", agent.getName()));
         PlayerJoinEventProcesser.onPlayerJoin(new PlayerJoinEventProcesser.JoinMessage(player, CUtil.getEnv(CUtil.getServer.get())));
         log.info("player {} join agent: {}, UUID: {}", playerName, agent.getName(), agent.getUUID());
         return 1;

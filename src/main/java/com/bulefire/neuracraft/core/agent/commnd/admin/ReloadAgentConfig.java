@@ -33,14 +33,14 @@ public class ReloadAgentConfig extends FullCommand.AbsCommand {
             try {
                 agentManager.reloadAgentConfig(agentName);
             } catch (NoAgentFound e) {
-                feedback(commandContext.getSource(), Component.translatable("neuracraft.command.delete.noAgent", agentUUID));
+                feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.delete.noAgent", agentUUID));
             }
         } else if (agentName == null && agentUUID != null) {
             // use uuid
             try {
                 agentManager.reloadAgentConfig(agentUUID);
             } catch (NoAgentFound e) {
-                feedback(commandContext.getSource(), Component.translatable("neuracraft.command.delete.noAgent", agentUUID));
+                feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.delete.noAgent", agentUUID));
             }
         } else if (agentName == null && agentUUID == null) {
             // reload all

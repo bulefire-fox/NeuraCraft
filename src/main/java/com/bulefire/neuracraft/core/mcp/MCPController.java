@@ -1,10 +1,9 @@
 package com.bulefire.neuracraft.core.mcp;
 
-import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.compatibility.util.scanner.AnnotationsMethodScanner;
-import com.bulefire.neuracraft.core.agent.annotation.RegisterAgent;
-import com.bulefire.neuracraft.core.mcp.annotation.MCP;
+import com.bulefire.neuracraft.core.command.GameCommand;
 import com.bulefire.neuracraft.core.mcp.annotation.RegisterMCP;
+import com.bulefire.neuracraft.core.mcp.command.MCPCommandRegister;
 import com.bulefire.neuracraft.core.mcp.entity.AgentInput;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPError;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPMessage;
@@ -12,7 +11,12 @@ import com.bulefire.neuracraft.core.mcp.mssage.MCPRequest;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPResponse;
 import com.bulefire.neuracraft.core.mcp.network.RemoteMCPServerController;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.TextColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
@@ -35,6 +39,11 @@ public class MCPController {
     
     @Getter
     private final MCPManager mcpManager;
+    @Getter
+    private final GameCommand GAME_COMMAND = GameCommand.getINSTANCE();
+    
+    @Getter
+    private final Consumer<Component> emptyPrint = log::info;
     
     public void init() {
         log.info("MCPController init");
@@ -55,6 +64,9 @@ public class MCPController {
         
         // 初始化远程 MCP 服务器
         RemoteMCPServerController.getInstance().initializeAllRemoteServer();
+        
+        // 注册命令
+        MCPCommandRegister.buildCommands();
     }
     
     /*
@@ -72,11 +84,20 @@ public class MCPController {
     out put look like:
     [工具调用结果]: details
      */
-    public String processAgentInput(@NotNull String input, @NotNull Consumer<String> print) {
+    public String processAgentInput(@NotNull String input, @NotNull Consumer<Component> print) {
         log.debug("catch agent input");
         MCPRequest request = parseAgentInput(input);
         log.debug("parse agent input to {}", request);
-        print.accept(Objects.requireNonNull(mcpManager.getToolByMethod(request.getMethod())).getName());
+        print.accept(
+                Component.literal(
+                    Objects.requireNonNull(mcpManager.getToolByMethod(request.getMethod())).getName()
+                ).withStyle(
+                        style -> style
+                                .withColor(TextColor.parseColor("#FF69B4"))
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("neuracraft.mcp.command.list.hover.detail")))
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/neuracraft mcp detail " + request.getMethod()))
+                )
+        );
         MCPResponse response;
         try {
             response = callTool(request);
@@ -102,6 +123,10 @@ public class MCPController {
     }
     
     public MCPResponse callTool(@NotNull MCPMessage message) {
+        return callTool(message, emptyPrint);
+    }
+    
+    public MCPResponse callTool(@NotNull MCPMessage message, @NotNull Consumer<Component> print) {
         log.debug("catch tool call");
         var request = MCPMessage.asRequest(Objects.requireNonNull(message));
         if (! request.getJsonrpc().equals("2.0"))
@@ -116,6 +141,6 @@ public class MCPController {
                     .id(request.getId())
                     .error(new MCPError(MCPError.METHOD_NOT_FOUND, "tool %s not found".formatted(request.getMethod()), null))
                     .build();
-        return tool.execute(request);
+        return tool.execute(request, print);
     }
 }

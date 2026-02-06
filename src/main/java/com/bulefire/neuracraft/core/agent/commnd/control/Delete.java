@@ -41,20 +41,20 @@ public class Delete extends FullCommand.AbsCommand {
         if (agentName != null && agentUUID == null) {
             var agents = agentManager.getAgentByName(agentName);
             if (agents.size() != 1) {
-                feedback(commandContext.getSource(), Component.translatable("neuracraft.command.delete.manyAgents", agents.size(), agentName));
+                feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.delete.manyAgents", agents.size(), agentName));
                 return 1;
             }
             agent = agents.get(0);
         } else if (agentName == null && agentUUID != null) {
             agent = agentManager.getAgent(agentUUID);
             if (agent == null) {
-                feedback(commandContext.getSource(), Component.translatable("neuracraft.command.delete.noAgent", agentUUID));
+                feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.delete.noAgent", agentUUID));
                 return 1;
             }
         } else if (agentName == null && agentUUID == null) {
             agent = agentManager.getAgent(playerManager.getPlayerAgentUUID(player));
             if (agent == null) {
-                feedback(commandContext.getSource(), Component.translatable("neuracraft.command.delete.playerNotInAgent"));
+                feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.delete.playerNotInAgent"));
                 return 1;
             }
         } else {
@@ -63,7 +63,7 @@ public class Delete extends FullCommand.AbsCommand {
 
         agentUUID = agent.getUUID();
         if (! agent.getAdmins().contains(player) && agent.hasAdmin(player) && ! commandContext.getSource().hasPermission(4)) {
-            feedback(commandContext.getSource(), Component.translatable("neuracraft.command.delete.notAdmin", agent.getName()));
+            feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.delete.notAdmin", agent.getName()));
             return 1;
         }
         agent.getPlayers().forEach(player1 -> playerManager.updatePlayer(player1, null));
@@ -71,7 +71,7 @@ public class Delete extends FullCommand.AbsCommand {
 
         FileUtil.deleteFile(AgentController.getAgentPath(agent));
 
-        feedback(commandContext.getSource(), Component.translatable("neuracraft.command.delete.success", agentName, agentUUID));
+        feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.delete.success", agentName, agentUUID));
         log.info("player {} delete Agent: {} , UUID: {}", playerName, agentName, agentUUID);
         return 1;
     }

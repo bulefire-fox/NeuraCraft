@@ -12,12 +12,14 @@ import com.bulefire.neuracraft.core.mcp.mssage.MCPRequest;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPResponse;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @MCP
 @Log4j2
@@ -56,7 +58,7 @@ public class BlockQuery extends AbsMCPTool {
     }
     
     @Override
-    public @NotNull MCPResponse execute(@NotNull MCPRequest request) {
+    public @NotNull MCPResponse execute(@NotNull MCPRequest request, @NotNull Consumer<Component> print) {
         var params = request.getParams();
         if (! params.containsKey("x") ||
                 ! params.containsKey("y") ||

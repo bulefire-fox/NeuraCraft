@@ -108,7 +108,7 @@ public class YinYing extends AbsAgent {
         );
         // 注册命令!
         // region yinying subcommand
-        var commands = AgentController.getAgentGameCommand();
+        var commands = AgentController.getGAME_COMMAND();
         //commands.registerCommand(
         commands.getPluginBaseCommand()
                 .then(Commands.literal("yinying")

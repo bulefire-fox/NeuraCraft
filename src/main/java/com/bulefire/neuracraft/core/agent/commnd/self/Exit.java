@@ -26,7 +26,7 @@ public class Exit extends FullCommand.AbsCommand {
         var player = new APlayer(playerName, playerUUID);
         var agentUUID = playerManager.getPlayerAgentUUID(player);
         if (agentUUID == null) {
-            feedback(commandContext.getSource(), Component.translatable("neuracraft.command.exit.notInChatRoom"));
+            feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.exit.notInChatRoom"));
             return 1;
         }
         var agent = agentManager.getAgent(agentUUID);
@@ -34,7 +34,7 @@ public class Exit extends FullCommand.AbsCommand {
         playerManager.updatePlayer(player, null);
         agent.removePlayer(player);
         agent.removeAdmin(player);
-        feedback(commandContext.getSource(), Component.translatable("neuracraft.command.exit.success", agent.getName()));
+        feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.exit.success", agent.getName()));
         log.info("player {} exit agent: {}, UUID: {}", playerName, agent.getName(), agent.getUUID());
         return 1;
     }

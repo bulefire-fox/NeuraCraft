@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class MCPError {
     private int code;
     private String message;
-    private Object data;
+    private String data;
 
     // 标准错误码
     /**

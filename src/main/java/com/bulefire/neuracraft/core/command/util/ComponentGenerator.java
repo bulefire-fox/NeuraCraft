@@ -1,4 +1,4 @@
-package com.bulefire.neuracraft.core.agent.commnd.util;
+package com.bulefire.neuracraft.core.command.util;
 
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -15,7 +15,7 @@ public class ComponentGenerator {
         return Component.literal(s)
                         .withStyle(style -> style
                                 .withColor(TextColor.parseColor(color))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("neuracraft.command.hover.copy_to_clipboard")))
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("neuracraft.agent.command.hover.copy_to_clipboard")))
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, s))
                         );
     }

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -13,5 +15,5 @@ import lombok.NoArgsConstructor;
 public non-sealed class MCPNotification implements MCPMessage {
     private String jsonrpc;
     private String method;
-    private JsonElement params;
+    private Map<String, Object> params;
 }

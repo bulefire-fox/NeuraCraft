@@ -11,12 +11,14 @@ import com.bulefire.neuracraft.core.mcp.mssage.MCPMessage;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPRequest;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPResponse;
 import lombok.extern.log4j.Log4j2;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @MCP
 @Log4j2
@@ -29,7 +31,7 @@ public class CommandExec extends AbsMCPTool {
     
     public CommandExec() {
         super(
-                "命令执行器",
+                "command_exec",
                 "执行minecraft命令",
                 MCPToolInfo.builder()
                            .type(MCPToolInfo.Type.LOCAL)
@@ -44,7 +46,7 @@ public class CommandExec extends AbsMCPTool {
     }
     
     @Override
-    public @NotNull MCPResponse execute(@NotNull MCPRequest request) {
+    public @NotNull MCPResponse execute(@NotNull MCPRequest request, @NotNull Consumer<Component> print) {
         MinecraftServer server = CUtil.getServer.get();
         if (! request.getParams().containsKey("command") || ! request.getParams().containsKey("player"))
             return MCPMessage.responseFailedBuilder()

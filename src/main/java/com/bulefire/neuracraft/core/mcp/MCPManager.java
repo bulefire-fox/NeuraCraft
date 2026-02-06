@@ -17,6 +17,14 @@ public class MCPManager {
     }
     
     public void registerTool(@NotNull MCPTool tool) {
+        if (tool.isValid()) throw new IllegalArgumentException("Invalid tool");
+        if (tools.containsKey(tool.getName())) throw new IllegalArgumentException("Tool already exists");
+        tools.put(tool.getName(), tool);
+        toolsPath.put(tool.getInfo().getMethod(), tool);
+    }
+    
+    public void updateTool(@NotNull MCPTool tool) {
+        if (tool.isValid()) throw new IllegalArgumentException("Invalid tool");
         tools.put(tool.getName(), tool);
         toolsPath.put(tool.getInfo().getMethod(), tool);
     }

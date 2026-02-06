@@ -14,6 +14,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+    id 'java-library'
 }
 
 apply plugin: 'org.spongepowered.mixin'
@@ -233,12 +234,17 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+    //api "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     implementation 'com.google.code.gson:gson:2.8.9'
 
-    compileOnly 'org.projectlombok:lombok:1.18.34'
-    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
+
+    testCompileOnly("org.projectlombok:lombok:1.18.42")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
     
     // 添加ASM依赖
     implementation 'org.ow2.asm:asm:9.9'

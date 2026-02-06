@@ -12,6 +12,7 @@ import com.bulefire.neuracraft.core.mcp.mssage.MCPRequest;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPResponse;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.core.Position;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @MCP
 @Log4j2
@@ -43,7 +45,7 @@ public class PlayerPositionQuery extends AbsMCPTool {
     }
     
     @Override
-    public @NotNull MCPResponse execute(@NotNull MCPRequest request) {
+    public @NotNull MCPResponse execute(@NotNull MCPRequest request, @NotNull Consumer<Component> print) {
         var params = request.getParams();
         if (!params.containsKey("player_name"))
             return MCPMessage.responseFailedBuilder()

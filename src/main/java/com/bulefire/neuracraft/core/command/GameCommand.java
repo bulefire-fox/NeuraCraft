@@ -1,6 +1,8 @@
-package com.bulefire.neuracraft.core.agent;
+package com.bulefire.neuracraft.core.command;
 
+import com.bulefire.neuracraft.core.agent.AgentController;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import lombok.Getter;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.jetbrains.annotations.NotNull;
@@ -16,15 +18,19 @@ import java.util.List;
  * @see AgentController
  * @since 2.0
  */
-public class AgentGameCommand {
-    public static final LiteralArgumentBuilder<CommandSourceStack> baseCommand = Commands.literal("agent");
+public class GameCommand {
+    @Getter
+    private static final GameCommand INSTANCE = new GameCommand();
+    private GameCommand() {
+        commands = new ArrayList<>();
+    }
+    
+    public static final LiteralArgumentBuilder<CommandSourceStack> baseCommand = Commands.literal("neuracraft");
+    public static final LiteralArgumentBuilder<CommandSourceStack> agentBaseCommand = Commands.literal("agent");
+    public static final LiteralArgumentBuilder<CommandSourceStack> mcpBaseCommand = Commands.literal("mcp");
     public static final LiteralArgumentBuilder<CommandSourceStack> pluginBaseCommand = Commands.literal("plugin");
 
     private final List<LiteralArgumentBuilder<CommandSourceStack>> commands;
-
-    public AgentGameCommand() {
-        commands = new ArrayList<>();
-    }
 
     public void registerCommand(@NotNull LiteralArgumentBuilder<CommandSourceStack> command) {
         commands.add(command);
@@ -37,13 +43,24 @@ public class AgentGameCommand {
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommand() {
         return baseCommand;
     }
+    
+    public LiteralArgumentBuilder<CommandSourceStack> getAgentBaseCommand() {
+        return agentBaseCommand;
+    }
+    
+    public LiteralArgumentBuilder<CommandSourceStack> getMcpBaseCommand() {
+        return mcpBaseCommand;
+    }
 
     public LiteralArgumentBuilder<CommandSourceStack> getPluginBaseCommand() {
         return pluginBaseCommand;
     }
 
     public List<LiteralArgumentBuilder<CommandSourceStack>> getAllCommands() {
-        baseCommand.then(pluginBaseCommand);
+        baseCommand
+                .then(agentBaseCommand)
+                .then(mcpBaseCommand)
+                .then(pluginBaseCommand);
         commands.add(baseCommand);
         return new ArrayList<>(commands);
     }
