@@ -7,6 +7,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
+/**
+ * MCP工具接口
+ * 仅用于Java内部的简化表示，与外部MCP工具接口不同
+ */
 public interface MCPTool {
     @NotNull String getName();
     @NotNull String getDescription();

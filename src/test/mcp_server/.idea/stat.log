@@ -69,3 +69,11 @@
 {"ts":1770361360825,"action":"IDE_DEACTIVATED"}
 {"ts":1770361362794,"action":"IDE_ACTIVATED"}
 {"ts":1770361377882,"action":"IDE_DEACTIVATED"}
+{"ts":1770361563187,"action":"IDE_ACTIVATED"}
+{"ts":1770361564402,"action":"IDE_DEACTIVATED"}
+{"ts":1770361692307,"action":"IDE_ACTIVATED"}
+{"ts":1770361700195,"action":"IDE_DEACTIVATED"}
+{"ts":1770361739879,"action":"IDE_ACTIVATED"}
+{"ts":1770361740778,"action":"FILE_CLOSED","file":"/main.py","tags":{"FILE_LINE_OF_CODE":"14"}}
+{"ts":1770361803459,"action":"FILE_OPENED","file":"/main.py","tags":{"FILE_LINE_OF_CODE":"14"}}
+{"ts":1770361849116,"action":"IDE_DEACTIVATED"}

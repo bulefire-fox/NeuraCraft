@@ -9,9 +9,7 @@ import com.bulefire.neuracraft.core.mcp.mssage.MCPError;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPMessage;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPRequest;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPResponse;
-import com.bulefire.neuracraft.core.mcp.network.RemoteMCPServerController;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -63,7 +61,7 @@ public class MCPController {
         // TODO:从配置文件加载远程 MCP 服务器
         
         // 初始化远程 MCP 服务器
-        RemoteMCPServerController.getInstance().initializeAllRemoteServer();
+        //RemoteMCPServerController.getInstance().initializeAllRemoteServer();
         
         // 注册命令
         MCPCommandRegister.buildCommands();
