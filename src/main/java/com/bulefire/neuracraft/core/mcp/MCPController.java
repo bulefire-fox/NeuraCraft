@@ -5,6 +5,7 @@ import com.bulefire.neuracraft.core.command.GameCommand;
 import com.bulefire.neuracraft.core.mcp.annotation.RegisterMCP;
 import com.bulefire.neuracraft.core.mcp.command.MCPCommandRegister;
 import com.bulefire.neuracraft.core.mcp.entity.AgentInput;
+import com.bulefire.neuracraft.core.mcp.extern.ExternMCPController;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPError;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPMessage;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPRequest;
@@ -39,6 +40,8 @@ public class MCPController {
     private final MCPManager mcpManager;
     @Getter
     private final GameCommand GAME_COMMAND = GameCommand.getINSTANCE();
+    @Getter
+    private final ExternMCPController extern = ExternMCPController.getInstance();
     
     @Getter
     private final Consumer<Component> emptyPrint = log::info;
@@ -59,7 +62,7 @@ public class MCPController {
         }
         
         // TODO:从配置文件加载远程 MCP 服务器
-        
+        extern.init();
         // 初始化远程 MCP 服务器
         //RemoteMCPServerController.getInstance().initializeAllRemoteServer();
         

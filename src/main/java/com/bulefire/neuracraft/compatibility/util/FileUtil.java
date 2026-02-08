@@ -36,6 +36,10 @@ public class FileUtil {
      * Agent 配置文件根目录
      */
     public static final Path agent_config_url = base_url.resolve("agent").resolve("config");
+    /**
+     * MCP 配置文件根目录
+     */
+    public static final Path mcp_config_url = base_url.resolve("mcp").resolve("config");
 
     /**
      * 模组目录
@@ -60,6 +64,10 @@ public class FileUtil {
             getAgentBaseUrl().toFile().mkdirs();
         if (! plugin_url.toFile().exists())
             plugin_url.toFile().mkdirs();
+        if (! mcp_config_url.toFile().exists())
+            mcp_config_url.toFile().mkdirs();
+        if (! agent_config_url.toFile().exists())
+            agent_config_url.toFile().mkdirs();
         log.debug("init file util done");
     }
 

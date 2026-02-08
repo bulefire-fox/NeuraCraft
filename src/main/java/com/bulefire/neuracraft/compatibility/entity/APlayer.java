@@ -8,6 +8,6 @@ import java.util.UUID;
 public record APlayer(String name, UUID uuid) {
     @Contract(pure = true)
     public @NotNull String toFormatedString() {
-        return "[" + name + "(" + uuid + ")]";
+        return "[" + name + "(" + uuid + ")] ";
     }
 }

@@ -185,7 +185,7 @@ public abstract class AbsAgent implements Agent {
             throw new AgentOutOfTime("out of times", timePerMin);
         }
         //String message = msg.toFormatedMessage();
-        String rawResponse = message(msg.msg());
+        String rawResponse = message(msg.player().toFormatedString()+msg.msg());
         if (isMCPCall(rawResponse)) {
             if (!isMcpCalling) {
                 isMcpCalling = true;

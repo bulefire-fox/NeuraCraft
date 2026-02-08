@@ -4,6 +4,7 @@ import com.bulefire.neuracraft.compatibility.entity.APlayer;
 import com.bulefire.neuracraft.compatibility.entity.SendMessage;
 import com.bulefire.neuracraft.compatibility.function.process.ChatEventProcesser;
 import com.bulefire.neuracraft.core.util.InitFailedException;
+import com.bulefire.neuracraft.mod.event.listener.PlayerJoinEventListener;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
@@ -23,18 +24,27 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Log4j2
 public class CUtil {
+    /** 判断当前环境是否加载了当前模组 */
     public static Function<String, Boolean> hasMod;
+    /** 获取当前服务器对象 */
     public static Supplier<MinecraftServer> getServer;
-
+    /** 获取当前操作的玩家对象, 默认抛出 {@link InitFailedException} , 除非 {@link PlayerJoinEventListener#onPlayerJoin} 覆盖此函数 */
     public static Supplier<Player> getPlayer = () -> {
         throw (InitFailedException) (new InitFailedException("CUtil.getPlayer not inject").initCause(new NullPointerException("CUtil.getPlayer is null")));
     };
-
+    
+    public static final APlayer broadcast = new APlayer("Broadcast", UUID.fromString("00000000-0000-0000-0000-000000000000"));
+    
+    /**
+     * 广播消息到所有玩家
+     * @param message 要发送的消息对象, 其中 player 使用 {@link CUtil#broadcast} 标记或发起的 {@linkplain APlayer 玩家}
+     */
     @Contract(pure = true)
     public static void broadcastMessageToCharBar(@NotNull SendMessage message) {
         switch (message.env()) {
@@ -48,7 +58,12 @@ public class CUtil {
                     Objects.requireNonNullElse(Minecraft.getInstance().player, getPlayer.get()).sendSystemMessage(message.message());
         }
     }
-
+    
+    /**
+     * 给组内的玩家广播消息
+     * @param message 要发送的消息对象, 其中 player 使用 {@link CUtil#broadcast} 标记或发起的 {@linkplain APlayer 玩家}
+     * @param playerGroup 玩家组
+     */
     @Contract(pure = true)
     public static void broadcastMessageToGroupPlayer(@NotNull SendMessage message, @NotNull List<APlayer> playerGroup) {
         switch (message.env()) {
@@ -63,6 +78,10 @@ public class CUtil {
         }
     }
 
+    /**
+     * 给指定玩家发送消息
+     * @param message 要发送的消息对象, 其中 player 为发送的 {@linkplain APlayer 玩家}
+     */
     @Contract(pure = true)
     public static void sendMessageToPlayer(@NotNull SendMessage message) {
         switch (message.env()) {
@@ -147,6 +166,11 @@ public class CUtil {
         return connection;
     }
 
+    /**
+     * 获取指定服务器的环境
+     * @param server 服务器对象
+     * @return 指定服务器的环境
+     */
     public static ChatEventProcesser.ChatMessage.@NotNull Env getEnv(MinecraftServer server) {
         ChatEventProcesser.ChatMessage.Env env;
         if (server == null) {
@@ -157,5 +181,14 @@ public class CUtil {
             env = ChatEventProcesser.ChatMessage.Env.SINGLE;
         }
         return env;
+    }
+    
+    /**
+     * 获取当前服务的环境, 使用 {@link CUtil#getServer} 获取当前服务器对象
+     * @return 当前服务的环境
+     * @see CUtil#getServer
+     */
+    public static ChatEventProcesser.ChatMessage.@NotNull Env getCurrentEnv() {
+        return getEnv(getServer.get());
     }
 }

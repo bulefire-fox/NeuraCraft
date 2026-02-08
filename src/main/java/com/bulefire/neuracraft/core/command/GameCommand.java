@@ -21,6 +21,7 @@ import java.util.List;
 public class GameCommand {
     @Getter
     private static final GameCommand INSTANCE = new GameCommand();
+    
     private GameCommand() {
         commands = new ArrayList<>();
     }
@@ -29,17 +30,17 @@ public class GameCommand {
     public static final LiteralArgumentBuilder<CommandSourceStack> agentBaseCommand = Commands.literal("agent");
     public static final LiteralArgumentBuilder<CommandSourceStack> mcpBaseCommand = Commands.literal("mcp");
     public static final LiteralArgumentBuilder<CommandSourceStack> pluginBaseCommand = Commands.literal("plugin");
-
+    
     private final List<LiteralArgumentBuilder<CommandSourceStack>> commands;
-
+    
     public void registerCommand(@NotNull LiteralArgumentBuilder<CommandSourceStack> command) {
         commands.add(command);
     }
-
+    
     public void deleteCommand(@NotNull LiteralArgumentBuilder<CommandSourceStack> command) {
         commands.remove(command);
     }
-
+    
     public LiteralArgumentBuilder<CommandSourceStack> getBaseCommand() {
         return baseCommand;
     }
@@ -51,20 +52,21 @@ public class GameCommand {
     public LiteralArgumentBuilder<CommandSourceStack> getMcpBaseCommand() {
         return mcpBaseCommand;
     }
-
+    
     public LiteralArgumentBuilder<CommandSourceStack> getPluginBaseCommand() {
         return pluginBaseCommand;
     }
-
+    
     public List<LiteralArgumentBuilder<CommandSourceStack>> getAllCommands() {
         baseCommand
-                .then(agentBaseCommand)
-                .then(mcpBaseCommand)
-                .then(pluginBaseCommand);
+                .then(agentBaseCommand
+                              .then(pluginBaseCommand)
+                )
+                .then(mcpBaseCommand);
         commands.add(baseCommand);
         return new ArrayList<>(commands);
     }
-
+    
     //    public List<FullCommand> commands;
     //
     //    public AgentGameCommand() {

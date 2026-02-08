@@ -2,6 +2,7 @@ package com.bulefire.neuracraft.core.agent;
 
 import com.bulefire.neuracraft.NeuraCraft;
 import com.bulefire.neuracraft.compatibility.command.CommandRegister;
+import com.bulefire.neuracraft.compatibility.entity.APlayer;
 import com.bulefire.neuracraft.compatibility.entity.SendMessage;
 import com.bulefire.neuracraft.compatibility.function.process.*;
 import com.bulefire.neuracraft.compatibility.util.CUtil;
@@ -55,6 +56,8 @@ public class AgentController {
     
     public static final Function<String, Boolean> JOIN_MSG_FORMATE = (s) -> JOIN_MSG_P.matcher(s).matches();
     public static final Function<String, Boolean> LEAVE_MSG_FORMATE = (s) -> LEAVE_MSG_P.matcher(s).matches();
+    
+    public static final Consumer<Component> gameLogger = (c) -> CUtil.broadcastMessageToCharBar(new SendMessage(c, CUtil.getCurrentEnv(), CUtil.broadcast));
     // region prompt
     public static String AgentIdentityPrompt = """
             你的身份与核心原则
