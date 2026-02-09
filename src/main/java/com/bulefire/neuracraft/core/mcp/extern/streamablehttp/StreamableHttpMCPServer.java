@@ -14,9 +14,4 @@ public class StreamableHttpMCPServer implements RemoteMCPServer {
     public void stop() {
     
     }
-    
-    @Override
-    public String send(String msg) {
-        return "";
-    }
 }

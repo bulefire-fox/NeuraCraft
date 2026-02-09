@@ -7,14 +7,14 @@ import java.util.Map;
 
 public abstract class AbsMCPTool implements MCPTool {
     @Getter
-    private final String name;
+    private final String displayName;
     @Getter
     private final String description;
     @Getter
     private final MCPToolInfo info;
     
-    public AbsMCPTool(String name, String description, MCPToolInfo info) {
-        this.name = name;
+    public AbsMCPTool(String displayName, String description, MCPToolInfo info) {
+        this.displayName = displayName;
         this.description = description;
         this.info = info;
     }
@@ -29,8 +29,8 @@ public abstract class AbsMCPTool implements MCPTool {
     @Override
     public @NotNull String getPrompt() {
         StringBuilder sb = new StringBuilder();
-        sb.append("工具名称:").append(name).append("\n\t")
-          .append("- 唯一调用ID:").append(info.getMethod()).append("\n\t")
+        sb.append("工具名称:").append(displayName).append("\n\t")
+          .append("- 唯一调用ID:").append(info.getName()).append("\n\t")
           .append("- 功能描述：").append(description).append("\n\t");
         boolean hasParams = false;
         if (!info.getParams().isEmpty()) {

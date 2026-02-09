@@ -14,7 +14,7 @@ public class Detail extends FullCommand.AbsCommand {
     @Override
     public int run(@NotNull CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         String method = context.getArgument("method", String.class);
-        MCPTool tool = MCPController.getInstance().getMcpManager().getToolByMethod(method);
+        MCPTool tool = MCPController.getInstance().getMcpManager().getToolByName(method);
         if (tool == null) {
             feedback(context.getSource(), Component.translatable("neuracraft.mcp.command.detail.not_found", method));
             return SINGLE_SUCCESS;
@@ -23,15 +23,14 @@ public class Detail extends FullCommand.AbsCommand {
         feedback(
                 context.getSource(), Component.translatable(
                         "neuracraft.mcp.command.detail",
-                        tool.getName(),
-                        tool.getName(),
-                        info.getMethod(),
+                        tool.getDisplayName(),
+                        tool.getDescription(),
+                        info.getName(),
                         tool.getDescription(),
                         tool.getPrompt(),
                         info.getParams(),
                         info.getOptional(),
-                        info.getType(),
-                        info.getHost()
+                        info.getType()
                 )
         );
         return SINGLE_SUCCESS;

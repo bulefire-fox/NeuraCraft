@@ -12,9 +12,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public non-sealed class MCPRequest implements MCPMessage {
-    @Builder.Default
-    private String jsonrpc = "2.0";
     private String id;
-    private String method;
+    private String name;
     private Map<String, Object> params;
 }

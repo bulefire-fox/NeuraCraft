@@ -21,14 +21,6 @@ public sealed interface MCPMessage permits MCPNotification, MCPRequest, MCPRespo
         return msg instanceof MCPResponse;
     }
     
-    static boolean isResponseSuccess(@NotNull MCPMessage msg) {
-        return msg instanceof MCPResponse.Success;
-    }
-    
-    static boolean isResponseFailed(@NotNull MCPMessage msg) {
-        return msg instanceof MCPResponse.Failed;
-    }
-    
     // endregion
     // region as
     static @NotNull MCPRequest asRequest(@NotNull MCPMessage msg) {
@@ -41,18 +33,6 @@ public sealed interface MCPMessage permits MCPNotification, MCPRequest, MCPRespo
         if (! isResponse(msg))
             throw new ClassCastException("MCPMessage is not a response");
         return Objects.requireNonNull((MCPResponse) msg);
-    }
-    
-    static @NotNull MCPResponse.Success asResponseSuccess(@NotNull MCPMessage msg) {
-        if (! isResponseSuccess(msg))
-            throw new ClassCastException("MCPMessage is not a response success");
-        return Objects.requireNonNull((MCPResponse.Success) msg);
-    }
-    
-    static @NotNull MCPResponse.Failed asResponseFailed(@NotNull MCPMessage msg) {
-        if (! isResponseFailed(msg))
-            throw new ClassCastException("MCPMessage is not a response failed");
-        return Objects.requireNonNull((MCPResponse.Failed) msg);
     }
     
     static @NotNull MCPNotification asNotification(@NotNull MCPMessage msg) {
@@ -71,14 +51,6 @@ public sealed interface MCPMessage permits MCPNotification, MCPRequest, MCPRespo
         return MCPResponse.builder();
     }
     
-    static @NotNull MCPResponse.Success.SuccessBuilder responseSuccessBuilder() {
-        return MCPResponse.Success.successBuilder();
-    }
-    
-    static @NotNull MCPResponse.Failed.FailedBuilder responseFailedBuilder() {
-        return MCPResponse.Failed.failedBuilder();
-    }
-    
     static @NotNull MCPNotification.MCPNotificationBuilder notificationBuilder() {
         return MCPNotification.builder();
     }
@@ -91,14 +63,6 @@ public sealed interface MCPMessage permits MCPNotification, MCPRequest, MCPRespo
     
     static @NotNull MCPResponse toResponse(@NotNull String json) {
         return gobalGson.fromJson(json, MCPResponse.class);
-    }
-    
-    static @NotNull MCPResponse.Success toResponseSuccess(@NotNull String json) {
-        return gobalGson.fromJson(json, MCPResponse.Success.class);
-    }
-    
-    static @NotNull MCPResponse.Failed toResponseFailed(@NotNull String json) {
-        return gobalGson.fromJson(json, MCPResponse.Failed.class);
     }
     
     static @NotNull MCPNotification toNotification(@NotNull String json) {

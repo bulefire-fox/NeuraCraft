@@ -21,7 +21,7 @@ public class NCMainConfig {
                 mainConfigFile.createNewFile();
                 var neuraCraft = new NeuraCraft();
                 neuraCraft.setPrefix("AI");
-                neuraCraft.setMcpServers(List.of());
+                neuraCraft.setThreadsNumber(20);
                 FileUtil.saveJsonToFile(neuraCraft, mainConfigPath);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -32,21 +32,20 @@ public class NCMainConfig {
 
     @Getter
     private static String prefix = "AI";
-    
     @Getter
-    private static List<String> mcpServers = new ArrayList<>();
+    private static int threadsNumber = 20;
 
     @SneakyThrows
     public static void load() {
         NeuraCraft neuraCraft = FileUtil.loadJsonFromFile(mainConfigPath, NeuraCraft.class);
         prefix = neuraCraft.getPrefix();
-        mcpServers = neuraCraft.getMcpServers();
+        threadsNumber = neuraCraft.getThreadsNumber();
     }
 
     @Getter
     @Setter
     public static class NeuraCraft {
         private String prefix;
-        private List<String> mcpServers;
+        private int threadsNumber;
     }
 }

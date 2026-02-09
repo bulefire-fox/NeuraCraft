@@ -2,6 +2,7 @@ package com.bulefire.neuracraft.core.inside.model.yinying;
 
 import com.bulefire.neuracraft.compatibility.command.FullCommand;
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
+import com.bulefire.neuracraft.compatibility.entity.Content;
 import com.bulefire.neuracraft.compatibility.entity.SendMessage;
 import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.compatibility.util.FileUtil;
@@ -52,7 +53,7 @@ public class YinYing extends AbsAgent {
         }
     }
 
-    YinYing(String name, UUID uuid, List<APlayer> players, @NotNull List<APlayer> admins, String modelName, String disPlayName, int timePerMin,
+    YinYing(String name, UUID uuid, Set<APlayer> players, @NotNull Set<APlayer> admins, String modelName, String disPlayName, int timePerMin,
             String chatId, String appId, Variables variables, String systemPrompt) {
         super(name, uuid, players, admins, modelName, disPlayName, "yinying", timePerMin);
         this.chatId = chatId;
@@ -76,8 +77,8 @@ public class YinYing extends AbsAgent {
         return new YinYing(
                 "YinYing" + ri,
                 uuid,
-                new ArrayList<>(),
-                new ArrayList<>(),
+                new HashSet<>(),
+                new HashSet<>(),
                 YinYingConfig.getModelName(),
                 YinYingConfig.getDisplayName(),
                 YinYingConfig.getTimePerMin(),
@@ -181,10 +182,10 @@ public class YinYing extends AbsAgent {
     }
 
     @Override
-    protected @NotNull String message(@NotNull String msg) throws UnSupportFormattedMessage {
-        if (AgentController.JOIN_MSG_FORMATE.apply(msg))
+    protected @NotNull String message(@NotNull List<Content> msg) throws UnSupportFormattedMessage {
+        if (AgentController.JOIN_MSG_FORMATE.apply(msg.get(0).textOrThrow()))
             throw new UnSupportFormattedMessage("this agent is single", UnSupportFormattedMessage.Type.JOIN);
-        if (AgentController.LEAVE_MSG_FORMATE.apply(msg))
+        if (AgentController.LEAVE_MSG_FORMATE.apply(msg.get(0).textOrThrow()))
             throw new UnSupportFormattedMessage("this agent is single", UnSupportFormattedMessage.Type.LEAVE);
         var body = new SendBody(
                 appId,
@@ -196,7 +197,7 @@ public class YinYing extends AbsAgent {
                 ),
                 getModelName(),
                 systemPrompt,
-                msg
+                msg.get(0).textOrThrow()
         );
         Gson g = new Gson();
         String response;

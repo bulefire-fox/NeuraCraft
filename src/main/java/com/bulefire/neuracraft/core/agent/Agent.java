@@ -10,7 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.locks.Lock;
 
 /**
  * 表示一个 Agent 的接口
@@ -75,7 +77,7 @@ public interface Agent {
      *
      * @return 聊天室中的玩家列表
      */
-    @NotNull List<APlayer> getPlayers();
+    @NotNull Set<APlayer> getPlayers();
 
     /**
      * 将管理员添加到聊天室中的管理员列表
@@ -104,7 +106,7 @@ public interface Agent {
      *
      * @return 聊天室中的管理员列表
      */
-    @NotNull List<APlayer> getAdmins();
+    @NotNull Set<APlayer> getAdmins();
 
     /**
      * 获取聊天室的模型名称，面向程序，不能重复
@@ -125,6 +127,27 @@ public interface Agent {
      * @return 是否处于MCP调用过程中，是为{@code true}，否为{@code false}
      */
     boolean isMCPCalling();
+    
+    /**
+     * 是否正在一个消息循环。 消息循环中不允许其他线程发送消息
+     * @return 是否正在一个消息循环，是为{@code true}，否为{@code false}
+     */
+    boolean isMessaging();
+    
+    /**
+     * 给当前对象加锁，不允许其他线程发送消息
+     */
+    void lockMessageLock();
+    
+    /**
+     * 释放消息锁
+     */
+    void releaseMessageLock();
+    
+    /**
+     * 释放全部消息锁，允许其他线程发送消息
+     */
+    void releaseAllMessageLock();
     
     /**
      * 保存聊天室信息到文件

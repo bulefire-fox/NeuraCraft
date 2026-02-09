@@ -1,5 +1,7 @@
 package com.bulefire.neuracraft.core.inside.model.deepseek;
 
+import com.bulefire.neuracraft.compatibility.entity.Content;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -8,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+@ToString
 public class ChatHistory {
     private static final Logger log = LoggerFactory.getLogger(ChatHistory.class);
     List<ChatBlock> histories;
@@ -33,18 +36,6 @@ public class ChatHistory {
         return null;
     }
     
-    public record ChatBlock(String role, String content) {
-    }
-
-    @Override
-    public String toString() {
-        log.debug("Converting to String");
-        StringBuilder sb = new StringBuilder();
-        for (ChatBlock b : histories) {
-            sb.append("{\"role\":\"").append(b.role).append("\",\"content\":\"").append(b.content).append("\"},");
-        }
-        String result = "[" + sb.substring(0, sb.length() - 1) + "]";
-        log.debug("Converted to String: {}", result);
-        return result;
+    public record ChatBlock(String role, List<Content> contents) {
     }
 }

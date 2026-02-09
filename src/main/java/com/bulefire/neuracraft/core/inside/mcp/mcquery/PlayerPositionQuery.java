@@ -37,8 +37,7 @@ public class PlayerPositionQuery extends AbsMCPTool {
                 "查询当前游戏内指定玩家的位置信息和维度,以 (x,y,z,level) 形式返回",
                 MCPToolInfo.builder()
                            .type(MCPToolInfo.Type.LOCAL)
-                           .host(URI.create(MCPToolInfo.Type.LOCAL.getHead()+"player_position_query"))
-                           .method("tool.game.query.player.position")
+                           .name("tool.game.query.player.position")
                            .params(Map.of("player_name",new MCPToolInfo.Param("string","查询的玩家名称", String.class)))
                            .build()
         );
@@ -48,17 +47,17 @@ public class PlayerPositionQuery extends AbsMCPTool {
     public @NotNull MCPResponse execute(@NotNull MCPRequest request, @NotNull Consumer<Component> print) {
         var params = request.getParams();
         if (!params.containsKey("player_name"))
-            return MCPMessage.responseFailedBuilder()
+            return MCPMessage.responseBuilder()
                              .id(request.getId())
-                             .error(new MCPError(MCPError.INVALID_REQUEST, "player_name is null", null))
+                             .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_REQUEST, "player_name is null", null)))
                              .build();
         if (params.get("player_name") instanceof String playerName) {
             var server = CUtil.getServer.get();
             Player player = server.getPlayerList().getPlayerByName(playerName);
             if (player == null)
-                return MCPMessage.responseFailedBuilder()
+                return MCPMessage.responseBuilder()
                                .id(request.getId())
-                               .error(new MCPError(MCPError.INVALID_PARAMS, "player is not in the game", null))
+                               .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_PARAMS, "player is not in the game", null)))
                                .build();
             Position pos = player.position();
             ResourceKey<Level> level = player.level().dimension();
@@ -71,14 +70,14 @@ public class PlayerPositionQuery extends AbsMCPTool {
                 levelName = "end";
             else
                 levelName = "unknow";
-            return MCPMessage.responseSuccessBuilder()
+            return MCPMessage.responseBuilder()
                             .id(request.getId())
-                            .result(String.format("(%f,%f,%f,%s)", pos.x(), pos.y(), pos.z(), levelName))
+                            .result(MCPResponse.Result.of(String.format("(%f,%f,%f,%s)", pos.x(), pos.y(), pos.z(), levelName)))
                             .build();
         }
-        return MCPMessage.responseFailedBuilder()
+        return MCPMessage.responseBuilder()
                          .id(request.getId())
-                         .error(new MCPError(MCPError.INVALID_PARAMS, "player_name is not a string", null))
+                         .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_PARAMS, "player_name is not a string", null)))
                          .build();
     }
 }

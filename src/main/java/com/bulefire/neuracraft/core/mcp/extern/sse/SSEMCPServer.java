@@ -27,9 +27,4 @@ public class SSEMCPServer implements RemoteMCPServer {
     public void stop() {
     
     }
-    
-    @Override
-    public String send(String msg) {
-        return "";
-    }
 }

@@ -8,6 +8,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * PlayerManager
@@ -22,14 +27,17 @@ import java.util.UUID;
  */
 @Log4j2
 public class PlayerManager {
-    private final Map<APlayer, UUID> players;
+    private final ConcurrentMap<APlayer, UUID> players;
 
-    public PlayerManager(Map<APlayer, UUID> players) {
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
+    private final Lock writeLock = lock.writeLock();
+    
+    public PlayerManager(ConcurrentMap<APlayer, UUID> players) {
         this.players = players;
     }
 
     public PlayerManager() {
-        this.players = new HashMap<>();
+        this.players = new ConcurrentHashMap<>();
     }
 
     /**
@@ -37,15 +45,13 @@ public class PlayerManager {
      *
      * @param player {@linkplain APlayer 玩家对象}
      * @param uuid   玩家对应的 {@link Agent} 的 {@linkplain Agent#getUUID() UUID}
-     * @apiNote 不会覆盖重复的 {@linkplain APlayer 玩家} 对应的 {@linkplain Agent#getUUID() UUID}. 如需更新玩家对应的 {@link Agent}, 请使用 {@link #updatePlayer(APlayer, UUID)}
+     * @apiNote 不会覆盖重复的 {@linkplain APlayer 玩家} 对应的 {@linkplain Agent#getUUID() UUID}.
+     * 如需更新玩家对应的 {@link Agent}, 请使用 {@link #updatePlayer(APlayer, UUID)}
      * @see PlayerManager#players
      * @see #updatePlayer(APlayer, UUID)
      */
     public void addPlayer(APlayer player, UUID uuid) {
-        if (players.containsKey(player)) {
-            return;
-        }
-        players.put(player, uuid);
+        players.putIfAbsent(player, uuid);
     }
 
     /**
@@ -53,15 +59,12 @@ public class PlayerManager {
      *
      * @param player {@linkplain APlayer 玩家对象}
      * @param uuid   玩家对应的 {@link Agent} 的 {@linkplain Agent#getUUID() UUID}
-     * @apiNote 会覆盖重复的 {@linkplain APlayer 玩家} 对应的 {@linkplain Agent#getUUID() UUID}. 如需添加 {@linkplain APlayer 玩家}, 请使用 {@link #addPlayer(APlayer, UUID)}
+     * @apiNote 会覆盖重复的 {@linkplain APlayer 玩家} 对应的 {@linkplain Agent#getUUID() UUID}.
+     * 如需添加 {@linkplain APlayer 玩家}, 请使用 {@link #addPlayer(APlayer, UUID)}
      * @see PlayerManager#players
      * @see #addPlayer(APlayer, UUID)
      */
     public void updatePlayer(APlayer player, UUID uuid) {
-        if (! players.containsKey(player)) {
-            addPlayer(player, uuid);
-            return;
-        }
         players.put(player, uuid);
     }
 
@@ -96,11 +99,16 @@ public class PlayerManager {
      * @see #updatePlayer(APlayer, UUID)
      */
     public void loadPlayerFromAgentManager(@NotNull AgentManager agentManager) {
-        for (var agent : agentManager.getAllAgents()) {
-            for (var player : agent.getPlayers()) {
-                log.info("Load player {} from agent {}", player.name(), agent.getName());
-                updatePlayer(player, agent.getUUID());
+        writeLock.lock();
+        try {
+            for (var agent : agentManager.getAllAgents()) {
+                for (var player : agent.getPlayers()) {
+                    log.info("Load player {} from agent {}", player.name(), agent.getName());
+                    updatePlayer(player, agent.getUUID());
+                }
             }
+        } finally {
+            writeLock.unlock();
         }
     }
 }

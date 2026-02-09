@@ -2,17 +2,17 @@ package com.bulefire.neuracraft.core.agent;
 
 import com.bulefire.neuracraft.NeuraCraft;
 import com.bulefire.neuracraft.compatibility.command.CommandRegister;
-import com.bulefire.neuracraft.compatibility.entity.APlayer;
+import com.bulefire.neuracraft.compatibility.entity.Content;
 import com.bulefire.neuracraft.compatibility.entity.SendMessage;
 import com.bulefire.neuracraft.compatibility.function.process.*;
 import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.compatibility.util.FileUtil;
 import com.bulefire.neuracraft.compatibility.util.scanner.AnnotationsMethodScanner;
-import com.bulefire.neuracraft.core.command.GameCommand;
 import com.bulefire.neuracraft.core.agent.annotation.RegisterAgent;
 import com.bulefire.neuracraft.core.agent.commnd.NCCommand;
 import com.bulefire.neuracraft.core.agent.entity.AgentMessage;
 import com.bulefire.neuracraft.core.agent.entity.AgentResponse;
+import com.bulefire.neuracraft.core.command.GameCommand;
 import com.bulefire.neuracraft.core.config.NCMainConfig;
 import com.bulefire.neuracraft.core.mcp.MCPController;
 import com.bulefire.neuracraft.core.mcp.MCPTool;
@@ -22,7 +22,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +30,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -113,10 +114,12 @@ public class AgentController {
     @Getter
     private static final MCPController mcpController = MCPController.getInstance();
     
-    private static final List<Runnable> agentClassInitFunctions = new ArrayList<>();
+    private static final List<Runnable> agentClassInitFunctions = Collections.synchronizedList(new ArrayList<>());
     
     @Setter
     private static String prefix = NCMainConfig.getPrefix();
+    
+    private static final ExecutorService executor = Executors.newFixedThreadPool(NCMainConfig.getThreadsNumber());
     
     /**
      * 注册一个 Agent 类初始化逻辑
@@ -125,7 +128,7 @@ public class AgentController {
      * @see Runnable
      * @see AgentController#agentClassInitFunctions
      */
-    public static void registerAgentClassInitFunction(Runnable fun) {
+    public static synchronized void registerAgentClassInitFunction(Runnable fun) {
         log.debug("register agent class init function {}", fun);
         agentClassInitFunctions.add(fun);
     }
@@ -211,12 +214,12 @@ public class AgentController {
         
         fullRecommendedPrompt =
                 AgentIdentityPrompt +
-                AliveMCPPromptHead +
-                AliveMCPPrompt +
-                MCPFormatPrompt +
-                AgentMCPOutputPrompt +
-                AgentMCPWorkflowPrompt +
-                reiteratedKeyPrompt;
+                        AliveMCPPromptHead +
+                        AliveMCPPrompt +
+                        MCPFormatPrompt +
+                        AgentMCPOutputPrompt +
+                        AgentMCPWorkflowPrompt +
+                        reiteratedKeyPrompt;
         log.info("fullRecommendedPrompt {}", fullRecommendedPrompt);
         
         // 扫描我们自己的Agent类
@@ -233,8 +236,9 @@ public class AgentController {
         }
         
         // 执行所有Agent类的初始化逻辑
-        log.debug("all functions {}", agentClassInitFunctions);
-        for (Runnable fun : agentClassInitFunctions) {
+        List<Runnable> copy = new ArrayList<>(agentClassInitFunctions);
+        log.debug("all functions {}", copy);
+        for (Runnable fun : copy) {
             log.debug("Running agent class init function {}", fun);
             fun.run();
         }
@@ -243,15 +247,19 @@ public class AgentController {
         CommandRegister.registerCommands(GAME_COMMAND.getAllCommands());
     }
     
-    public static void afterInit(){
+    public static void afterInit() {
         // 加载所有Agent,必须在Agent类加载完后加载,否则无法注入Function
         loadAllAgentFromFile();
         // 加载玩家
         playerManager.loadPlayerFromAgentManager(agentManager);
     }
     
-    // 消息入口
     public static void onMessage(@NotNull ChatEventProcesser.ChatMessage chatMessage) {
+        executor.submit(() -> AsyncMessage(chatMessage));
+    }
+    
+    // 消息入口
+    private static void AsyncMessage(@NotNull ChatEventProcesser.ChatMessage chatMessage) {
         if (! chatMessage.msg().startsWith(prefix))
             return;
         String msg = chatMessage.msg().substring(prefix.length());
@@ -282,14 +290,30 @@ public class AgentController {
         // 获取聊天室
         Agent agent = agentManager.getAgent(uuid);
         
+        // 上锁!
+        agent.lockMessageLock();
+        // 防止多重调用的幻觉
+        if (agent.isMCPCalling()) {
+            CUtil.broadcastMessageToGroupPlayer(
+                    new SendMessage(
+                            Component.translatable("neuracraft.agent.chat.error.mcpcalling"),
+                            chatMessage.env(),
+                            chatMessage.player()
+                    ),
+                    agent.getPlayers().stream().toList()
+            );
+            return;
+        }
+        
         AgentResponse remessage;
-        // 这里异常是最好的办法,尽管这样会让代码变得臃肿一些
+        // 这里异常是最好的办法(?),尽管这样会让代码变得臃肿一些
         // 判断 null 的话就太不优雅了
         // 虽然现在也不是很优雅 :D
         try {
             // 邪恶的作用域
-            remessage = agent.sendMessage(new AgentMessage(msg, chatMessage.player()));
+            remessage = agent.sendMessage(new AgentMessage(List.of(new Content("text", msg)), chatMessage.player()));
         } catch (AgentOutOfTime e) {
+            agent.releaseMessageLock();
             // 提示即可
             CUtil.broadcastMessageToGroupPlayer(
                     new SendMessage(
@@ -297,17 +321,18 @@ public class AgentController {
                             chatMessage.env(),
                             chatMessage.player()
                     ),
-                    agent.getPlayers()
+                    agent.getPlayers().stream().toList()
             );
             return;
         } catch (UnSupportFormattedMessage e) {
+            agent.releaseMessageLock();
             CUtil.broadcastMessageToGroupPlayer(
                     new SendMessage(
                             Component.translatable("neuracraft.agent.chat.warn.unsupport.message.type", agent.getName(), e.getMessageType().name()),
                             chatMessage.env(),
                             chatMessage.player()
                     ),
-                    agent.getPlayers()
+                    agent.getPlayers().stream().toList()
             );
             return;
         }
@@ -315,21 +340,22 @@ public class AgentController {
         // 判断并进行MCP调用
         if (remessage.state() == AgentResponse.State.START_MCP_CALL || remessage.state() == AgentResponse.State.MCP_CALLING) {
             // 将控制权流转至MCP调用方法
-            remessage = mcpCall(agent, remessage,
-                                (input) -> CUtil.broadcastMessageToGroupPlayer(
-                                        new SendMessage(
-                                                Component.translatable(
-                                                        "neuracraft.mcp.message.format.system",
-                                                        Component.literal(agent.getDisPlayName()).withStyle(
-                                                                style -> style.withColor(TextColor.parseColor("#7CFC00"))
-                                                        ),
-                                                        input
-                                                ),
-                                                chatMessage.env(),
-                                                chatMessage.player()
-                                        ),
-                                        agent.getPlayers()
-                                )
+            remessage = mcpCall(
+                    agent, remessage,
+                    (input) -> CUtil.broadcastMessageToGroupPlayer(
+                            new SendMessage(
+                                    Component.translatable(
+                                            "neuracraft.mcp.message.format.system",
+                                            Component.literal(agent.getDisPlayName()).withStyle(
+                                                    style -> style.withColor(TextColor.parseColor("#7CFC00"))
+                                            ),
+                                            input
+                                    ),
+                                    chatMessage.env(),
+                                    chatMessage.player()
+                            ),
+                            agent.getPlayers().stream().toList()
+                    )
             );
         }
         
@@ -339,6 +365,12 @@ public class AgentController {
                 getAgentPath(agent)
         );
         
+        try {
+            agent.releaseAllMessageLock();
+        } catch (IllegalMonitorStateException  e) {
+            log.info("lock already released for agent {}",agent.getUUID());
+        }
+        
         // 返回格式化消息
         // 这里使用 Component 是因为 Component 为minecraft内置接口,与具体loader无关
         CUtil.broadcastMessageToGroupPlayer(
@@ -347,25 +379,27 @@ public class AgentController {
                         chatMessage.env(),
                         chatMessage.player()
                 ),
-                agent.getPlayers()
+                agent.getPlayers().stream().toList()
         );
     }
     
-    private static @NotNull AgentResponse  mcpCall(@NotNull Agent agent, @NotNull AgentResponse startResponse, Consumer<Component> print) {
+    // 这应该是一个一异步方法....
+    // 调用这个方法的人应该确保自己获取了对应agent的锁....
+    private static @NotNull AgentResponse mcpCall(@NotNull Agent agent, @NotNull AgentResponse startResponse, Consumer<Component> print) {
         log.debug("AgentController MCP call start");
         AgentResponse agentResponse;
         do {
-            String response = mcpController.processAgentInput(startResponse.msg(), print);
+            List<Content> response = mcpController.processAgentInput(startResponse.msg(), print);
             log.debug("response from MCPController is: {}", response);
             agentResponse = agent.sendMessage(new AgentMessage(response, startResponse.player()));
             log.debug("response from agent is: {}", agentResponse);
         } while (agentResponse.state() == AgentResponse.State.MCP_CALLING || agentResponse.state() == AgentResponse.State.START_MCP_CALL);
-        log.debug("AgentController MCP call end and return {}",agentResponse);
+        log.debug("AgentController MCP call end and return {}", agentResponse);
         return agentResponse;
     }
     
     public static @NotNull Path getAgentPath(@NotNull Agent agent) {
-        Path path = FileUtil.getAgentBaseUrl().resolve(agent.getModelName()).resolve(agent.getUUID()+"."+agent.getSuffix());
+        Path path = FileUtil.getAgentBaseUrl().resolve(agent.getModelName()).resolve(agent.getUUID() + "." + agent.getSuffix());
         log.debug("getAgentPath for {} is {}", agent, path);
         return path;
     }
@@ -394,7 +428,7 @@ public class AgentController {
                 }
                 log.debug("load agent name {}", agentName);
                 // 创建聊天室并加载
-                agentManager.creatAgent(agentName).loadFromFile(path);
+                agentManager.createAgent(agentName).loadFromFile(path);
             }
         }
     }

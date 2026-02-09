@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.net.URI;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -35,8 +34,7 @@ public class PlayerMainHandItemQuery extends AbsMCPTool {
                 "查询指定玩家主手的物品, 以 (name, namespace_item_id) 返回物品名称和物品命名空间id",
                 MCPToolInfo.builder()
                            .type(MCPToolInfo.Type.LOCAL)
-                           .host(URI.create(MCPToolInfo.Type.LOCAL.getHead() + "player_main_hand_item_query"))
-                           .method("tool.game.query.player.hand.main.item")
+                           .name("tool.game.query.player.hand.main.item")
                            .params(Map.of("player", new MCPToolInfo.Param("string", "玩家名称", String.class)))
                            .build()
         );
@@ -46,31 +44,31 @@ public class PlayerMainHandItemQuery extends AbsMCPTool {
     public @NotNull MCPResponse execute(@NotNull MCPRequest request, @NotNull Consumer<Component> print) {
         var params = request.getParams();
         if (! params.containsKey("player"))
-            return MCPMessage.responseFailedBuilder()
+            return MCPMessage.responseBuilder()
                                 .id(request.getId())
-                               .error(new MCPError(MCPError.INVALID_REQUEST, "player is null", null))
+                               .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_REQUEST, "player is null", null)))
                                .build();
         if (params.get("player") instanceof String playerName) {
             var server = CUtil.getServer.get();
             var player = server.getPlayerList().getPlayerByName(playerName);
             if (player == null)
-                return MCPMessage.responseFailedBuilder()
+                return MCPMessage.responseBuilder()
                                 .id(request.getId())
-                                .error(new MCPError(MCPError.INVALID_PARAMS, "player is not in server", null))
+                                .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_PARAMS, "player is not in server", null)))
                                 .build();
             
             ItemStack itemStack = player.getMainHandItem();
             String itemName = itemStack.getItem().getDescription().getString();
             String itemNamespace = itemStack.getItem().getCreatorModId(itemStack);
-            return MCPMessage.responseSuccessBuilder()
+            return MCPMessage.responseBuilder()
                             .id(request.getId())
-                            .result("(%s, %s)".formatted(itemName, itemNamespace+":"+itemName))
+                            .result(MCPResponse.Result.of("(%s, %s)".formatted(itemName, itemNamespace+":"+itemName)))
                             .build();
         }
         
-        return MCPMessage.responseFailedBuilder()
+        return MCPMessage.responseBuilder()
                          .id(request.getId())
-                         .error(new MCPError(MCPError.INVALID_PARAMS, "player is not string", null))
+                         .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_PARAMS, "player is not string", null)))
                          .build();
     }
 }

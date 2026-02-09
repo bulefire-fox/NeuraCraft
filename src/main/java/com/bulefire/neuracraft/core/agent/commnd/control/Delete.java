@@ -67,7 +67,7 @@ public class Delete extends FullCommand.AbsCommand {
             return 1;
         }
         agent.getPlayers().forEach(player1 -> playerManager.updatePlayer(player1, null));
-        agentManager.removeAgentMapping(agentUUID);
+        agentManager.removeAgent(agentUUID);
 
         FileUtil.deleteFile(AgentController.getAgentPath(agent));
 

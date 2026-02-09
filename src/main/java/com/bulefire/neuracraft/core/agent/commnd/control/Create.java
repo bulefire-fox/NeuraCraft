@@ -40,7 +40,7 @@ public class Create extends FullCommand.AbsCommand {
 
         Agent agent;
         try {
-            agent = agentManger.creatAgent(sModel);
+            agent = agentManger.createAgent(sModel);
         } catch (NoAgentFound e) {
             feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.create.failure.unknownModel", sModel, agentManger.getAllAliveAgentKeys()));
             return 1;

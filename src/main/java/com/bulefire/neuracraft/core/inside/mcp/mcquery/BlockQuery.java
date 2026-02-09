@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
-import java.net.URI;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -43,8 +42,7 @@ public class BlockQuery extends AbsMCPTool {
                 "查询指定坐标的方块名称",
                 MCPToolInfo.builder()
                            .type(MCPToolInfo.Type.LOCAL)
-                           .host(URI.create(MCPToolInfo.Type.LOCAL.getHead() + "block_query"))
-                           .method("tool.game.query.position.block")
+                           .name("tool.game.query.position.block")
                            .params(Map.of(
                                            "x", new MCPToolInfo.Param("int", "方块X坐标", Integer.class),
                                            "y", new MCPToolInfo.Param("int", "方块Y坐标", Integer.class),
@@ -65,9 +63,9 @@ public class BlockQuery extends AbsMCPTool {
                 ! params.containsKey("z") ||
                 ! params.containsKey("level"))
             
-            return MCPMessage.responseFailedBuilder()
+            return MCPMessage.responseBuilder()
                              .id(request.getId())
-                             .error(new MCPError(MCPError.INVALID_REQUEST, "x or y or z or level is null", null))
+                             .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_REQUEST, "x or y or z or level is null", null)))
                              .build();
         if ((params.get("x") instanceof Integer x) &&
                 (params.get("y") instanceof Integer y) &&
@@ -76,9 +74,9 @@ public class BlockQuery extends AbsMCPTool {
             
             // 验证坐标范围
             if (x < MIN_XZ || x > MAX_XZ || z < MIN_XZ || z > MAX_XZ || y < MIN_Y || y > MAX_Y) {
-                return MCPMessage.responseFailedBuilder()
+                return MCPMessage.responseBuilder()
                                  .id(request.getId())
-                                 .error(new MCPError(MCPError.INVALID_PARAMS, "coordinates are out of valid range", null))
+                                 .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_PARAMS, "coordinates are out of valid range", null)))
                                  .build();
             }
             
@@ -91,29 +89,29 @@ public class BlockQuery extends AbsMCPTool {
             };
             
             if (level == null)
-                return MCPMessage.responseFailedBuilder()
+                return MCPMessage.responseBuilder()
                                  .id(request.getId())
-                                 .error(new MCPError(MCPError.INVALID_PARAMS, "level is not a valid dimension", null))
+                                 .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_PARAMS, "level is not a valid dimension", null)))
                                  .build();
             
             try {
                 Block block = level.getBlockState(new BlockPos(x, y, z)).getBlock();
                 
-                return MCPMessage.responseSuccessBuilder()
+                return MCPMessage.responseBuilder()
                                  .id(request.getId())
-                                 .result(block.getName().getString())
+                                 .result(MCPResponse.Result.of(block.getName().getString()))
                                  .build();
             } catch (Exception e) {
-                return MCPMessage.responseFailedBuilder()
+                return MCPMessage.responseBuilder()
                                  .id(request.getId())
-                                 .error(new MCPError(MCPError.INTERNAL_ERROR, "failed to get block at specified position", e.getMessage()))
+                                 .result(MCPResponse.Result.of(new MCPError(MCPError.INTERNAL_ERROR, "failed to get block at specified position", e.getMessage())))
                                  .build();
             }
         }
         
-        return MCPMessage.responseFailedBuilder()
+        return MCPMessage.responseBuilder()
                          .id(request.getId())
-                         .error(new MCPError(MCPError.INVALID_PARAMS, "x or y or z is not int or level is not string", null))
+                         .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_PARAMS, "x or y or z is not int or level is not string", null)))
                          .build();
     }
 }

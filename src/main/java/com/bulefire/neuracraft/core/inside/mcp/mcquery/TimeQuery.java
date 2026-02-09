@@ -36,8 +36,7 @@ public class TimeQuery extends AbsMCPTool {
                 "查询当前游戏的时间,返回HH:MM:SS格式的游戏时间,SS时间不精确",
                 MCPToolInfo.builder()
                            .type(MCPToolInfo.Type.LOCAL)
-                           .host(URI.create(MCPToolInfo.Type.LOCAL.getHead() + "time_query"))
-                           .method("tool.game.query.time")
+                           .name("tool.game.query.time")
                            .params(Map.of("level",new MCPToolInfo.Param("string","查询的维度, 在[overworld,nether,end]之中", String.class)))
                            .build()
         );
@@ -47,34 +46,34 @@ public class TimeQuery extends AbsMCPTool {
     public @NotNull MCPResponse execute(@NotNull MCPRequest request, @NotNull Consumer<Component> print) {
         var params = request.getParams();
         if (!params.containsKey("level"))
-            return MCPMessage.responseFailedBuilder()
+            return MCPMessage.responseBuilder()
                              .id(request.getId())
-                             .error(new MCPError(MCPError.INVALID_REQUEST, "level is null", null))
+                             .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_REQUEST, "level is null", null)))
                              .build();
         if (params.get("level") instanceof String level) {
             var server = CUtil.getServer.get();
             return switch (level) {
-                case "overworld" -> MCPMessage.responseSuccessBuilder()
+                case "overworld" -> MCPMessage.responseBuilder()
                                               .id(request.getId())
-                                              .result("overworld 当前时间: "+ getWeatherAndRainfall(Objects.requireNonNull(server.getLevel(Level.OVERWORLD))))
+                                              .result(MCPResponse.Result.of("overworld 当前时间: "+ getWeatherAndRainfall(Objects.requireNonNull(server.getLevel(Level.OVERWORLD)))))
                                               .build();
-                case "nether" -> MCPMessage.responseSuccessBuilder()
+                case "nether" -> MCPMessage.responseBuilder()
                                            .id(request.getId())
-                                           .result("nether 当前时间: "+getWeatherAndRainfall(Objects.requireNonNull(server.getLevel(Level.NETHER))))
+                                           .result(MCPResponse.Result.of("nether 当前时间: "+getWeatherAndRainfall(Objects.requireNonNull(server.getLevel(Level.NETHER)))))
                                            .build();
-                case "end" -> MCPMessage.responseSuccessBuilder()
+                case "end" -> MCPMessage.responseBuilder()
                                         .id(request.getId())
-                                        .result("end 当前时间: "+getWeatherAndRainfall(Objects.requireNonNull(server.getLevel(Level.END))))
+                                        .result(MCPResponse.Result.of("end 当前时间: "+getWeatherAndRainfall(Objects.requireNonNull(server.getLevel(Level.END)))))
                                         .build();
-                default -> MCPMessage.responseFailedBuilder()
+                default -> MCPMessage.responseBuilder()
                                      .id(request.getId())
-                                     .error(new MCPError(MCPError.INVALID_PARAMS, "level is not a valid dimension", null))
+                                     .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_PARAMS, "level is not a valid dimension", null)))
                                      .build();
             };
         }
-        return MCPMessage.responseFailedBuilder()
+        return MCPMessage.responseBuilder()
                          .id(request.getId())
-                         .error(new MCPError(MCPError.INVALID_PARAMS, "level is not a string", null))
+                         .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_PARAMS, "level is not a string", null)))
                          .build();
     }
     

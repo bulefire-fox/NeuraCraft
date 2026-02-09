@@ -13,8 +13,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class MCPToolInfo {
     private Type type;
-    private URI host;
-    private String method;
+    private String name;
     @Builder.Default
     private Map<String, Param> params = new HashMap<>();
     @Builder.Default
@@ -23,14 +22,10 @@ public class MCPToolInfo {
     public record Param(String type, String describe, Class<?> javaType) {}
     
     public enum Type {
+        BUILT_IN,
+        PLUGIN,
         LOCAL,
-        REMOTE;
-        
-        @Getter
-        private final String head;
-        
-        Type() {
-            head = "mcp:" + name().toLowerCase() + ":";
-        }
+        SSE,
+        STREAMABLE_HTTP;
     }
 }

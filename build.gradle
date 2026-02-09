@@ -15,6 +15,7 @@ plugins {
     id 'idea'
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
     id 'java-library'
+    //id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 apply plugin: 'org.spongepowered.mixin'
@@ -255,6 +256,7 @@ dependencies {
     implementation 'org.jetbrains:annotations:24.0.1'
 
     // mcp java sdk
+    implementation(fileTree("libs"))
     implementation "io.modelcontextprotocol.sdk:mcp:0.17.2"
     implementation "io.modelcontextprotocol.sdk:mcp-test:0.17.2"
 
@@ -343,6 +345,12 @@ tasks.register('javadocJar', Jar) {
     archiveClassifier = 'javadoc'
     from javadoc
 }
+
+//shadowJar {
+//    zip64 = true
+//    configurations = [project.configurations.runtimeClasspath]
+//    archiveClassifier = '' // 覆盖默认 JAR
+//}
 
 artifacts {
     archives sourceJar

@@ -1,5 +1,6 @@
 package com.bulefire.neuracraft.core.mcp;
 
+import com.bulefire.neuracraft.compatibility.entity.Content;
 import com.bulefire.neuracraft.compatibility.util.scanner.AnnotationsMethodScanner;
 import com.bulefire.neuracraft.core.command.GameCommand;
 import com.bulefire.neuracraft.core.mcp.annotation.RegisterMCP;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -85,40 +87,38 @@ public class MCPController {
     out put look like:
     [工具调用结果]: details
      */
-    public String processAgentInput(@NotNull String input, @NotNull Consumer<Component> print) {
+    public List<Content> processAgentInput(@NotNull String input, @NotNull Consumer<Component> print) {
         log.debug("catch agent input");
         MCPRequest request = parseAgentInput(input);
         log.debug("parse agent input to {}", request);
         print.accept(
                 Component.literal(
-                    Objects.requireNonNull(mcpManager.getToolByMethod(request.getMethod())).getName()
+                    Objects.requireNonNull(mcpManager.getToolByName(request.getName())).getDisplayName()
                 ).withStyle(
                         style -> style
                                 .withColor(TextColor.parseColor("#FF69B4"))
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("neuracraft.mcp.command.list.hover.detail")))
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/neuracraft mcp detail " + request.getMethod()))
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/neuracraft mcp detail " + request.getName()))
                 )
         );
         MCPResponse response;
         try {
-            response = callTool(request);
+            response = callTool(request, print);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(e);
         }
-        if (! Objects.equals(request.getId(), response.getId())) return "[工具调用失败]: 调用丢失,请重试.";
-        if (response instanceof MCPResponse.Failed failed) {
-            var error = failed.getError();
-            return "[工具调用失败]: " + error.getCode() + " " + MCPError.getCodeString(error.getCode()) +" "+ error.getMessage();
+        if (! Objects.equals(request.getId(), response.getId())) return List.of(new Content("text","[工具调用失败]: 调用丢失,请重试."));
+        if (response.getResult().isError()) {
+            return response.getResult().appendTextFirst("[工具调用失败] ").getContent();
         }
-        MCPResponse.Success success = (MCPResponse.Success) response;
-        return "[工具调用成功]: " + success.getResult();
+        return response.getResult().appendTextFirst("[工具调用成功] ").getContent();
     }
     
     private @NotNull MCPRequest parseAgentInput(@NotNull String input) {
         AgentInput agentInput = MCPMessage.gobalGson.fromJson(input, AgentInput.class);
         return MCPMessage.requestBuilder()
                 .id(String.valueOf(System.currentTimeMillis()))
-                .method(agentInput.getTool_call().getId())
+                .name(agentInput.getTool_call().getId())
                 .params(agentInput.getTool_call().getParameters())
                 .build();
     }
@@ -130,17 +130,18 @@ public class MCPController {
     public MCPResponse callTool(@NotNull MCPMessage message, @NotNull Consumer<Component> print) {
         log.debug("catch tool call");
         var request = MCPMessage.asRequest(Objects.requireNonNull(message));
-        if (! request.getJsonrpc().equals("2.0"))
-            return MCPMessage.responseFailedBuilder()
-                    .id(request.getId())
-                    .error(new MCPError(MCPError.INTERNAL_ERROR, "jsonrpc is not 2.0", null))
-                    .build();
-        var tool = mcpManager.getToolByMethod(request.getMethod());
-        log.debug("call {} ; found {}", request.getMethod(), tool);
+        var tool = mcpManager.getToolByName(request.getName());
+        log.debug("call {} ; found {}", request.getName(), tool);
         if (tool == null)
-            return MCPMessage.responseFailedBuilder()
+            return MCPMessage.responseBuilder()
                     .id(request.getId())
-                    .error(new MCPError(MCPError.METHOD_NOT_FOUND, "tool %s not found".formatted(request.getMethod()), null))
+                    .result(
+                            MCPResponse.Result
+                                    .builder()
+                                    .content(List.of(new Content("txt", "工具不存在")))
+                                    .isError(true)
+                                    .build()
+                    )
                     .build();
         return tool.execute(request, print);
     }

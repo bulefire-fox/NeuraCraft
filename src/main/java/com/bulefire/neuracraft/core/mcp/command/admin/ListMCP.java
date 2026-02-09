@@ -21,12 +21,12 @@ public class ListMCP extends FullCommand.AbsCommand {
                                    .withStyle(style -> style
                                            .withColor(TextColor.parseColor("#FF69B4"))
                                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("neuracraft.mcp.command.list.hover.detail")))
-                                           .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/neuracraft mcp detail "+mcp.getInfo().getMethod()))
+                                           .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/neuracraft mcp detail "+mcp.getInfo().getName()))
                                    );
             component.append(Component.translatable(
                     "neuracraft.mcp.command.list.single",
-                    withHoverAndCopy(mcp.getName(), "#7CFC00"),
-                    withHoverAndCopy(mcp.getInfo().getMethod(), "#00ffff"),
+                    withHoverAndCopy(mcp.getDisplayName(), "#7CFC00"),
+                    withHoverAndCopy(mcp.getInfo().getName(), "#00ffff"),
                     details
             ));
         }

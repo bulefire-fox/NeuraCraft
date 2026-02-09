@@ -1,6 +1,7 @@
 package com.bulefire.neuracraft.core.inside.model.deepseek;
 
 import com.bulefire.neuracraft.compatibility.entity.APlayer;
+import com.bulefire.neuracraft.compatibility.entity.Content;
 import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.compatibility.util.FileUtil;
 import com.bulefire.neuracraft.core.agent.AbsAgent;
@@ -15,23 +16,23 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class DeepSeek extends AbsAgent {
     private static final Logger log = getLogger(DeepSeek.class);
 
     private final ChatHistory chatHistory;
 
-    public DeepSeek(String name, UUID uuid, List<APlayer> players, List<APlayer> admins, String modelName, String disPlayName, int timePerMin) {
+    public DeepSeek(String name, UUID uuid, Set<APlayer> players, Set<APlayer> admins, String modelName, String disPlayName, int timePerMin) {
         super(name, uuid, players, admins, modelName, disPlayName, "deepseek", timePerMin);
         chatHistory = new ChatHistory();
         chatHistory.addBlock(
                 new ChatHistory.ChatBlock(
                         "system",
-                        DeepSeekConfig.getPrompt()+AgentController.fullRecommendedPrompt
+                        List.of(
+                                new Content("text", DeepSeekConfig.getPrompt()),
+                                new Content("text", AgentController.fullRecommendedPrompt)
+                        )
                 )
         );
     }
@@ -42,7 +43,7 @@ public class DeepSeek extends AbsAgent {
     }
 
     public DeepSeek() {
-        super("DeepSeek1", UUID.randomUUID(), new ArrayList<>(), new ArrayList<>(), DeepSeekConfig.getModelName(), DeepSeekConfig.getDisplayName(), "deepseek", DeepSeekConfig.getTimePerMin());
+        super("DeepSeek1", UUID.randomUUID(), new HashSet<>(), new HashSet<>(), DeepSeekConfig.getModelName(), DeepSeekConfig.getDisplayName(), "deepseek", DeepSeekConfig.getTimePerMin());
         chatHistory = new ChatHistory();
     }
 
@@ -51,8 +52,8 @@ public class DeepSeek extends AbsAgent {
         return new DeepSeek(
                 "DeepSeek" + (new Random()).nextInt(),
                 UUID.randomUUID(),
-                new ArrayList<>(),
-                new ArrayList<>(),
+                new HashSet<>(),
+                new HashSet<>(),
                 DeepSeekConfig.getModelName(),
                 DeepSeekConfig.getDisplayName(),
                 DeepSeekConfig.getTimePerMin()
@@ -81,7 +82,7 @@ public class DeepSeek extends AbsAgent {
     }
 
     @Override
-    protected @NotNull String message(@NotNull String msg) {
+    protected @NotNull String message(@NotNull List<Content> msg) {
         try {
             CUtil.Response response = CUtil.AiPOST(
                     DeepSeekConfig.getUrl(),
@@ -97,10 +98,10 @@ public class DeepSeek extends AbsAgent {
         }
     }
 
-    private String buildBody(@NotNull String message) {
+    private String buildBody(@NotNull List<Content> message) {
         log.info("start build body");
         Gson g = new Gson();
-        chatHistory.addBlock(new ChatHistory.ChatBlock("user", message));
+        chatHistory.addBlock(new ChatHistory.ChatBlock("user",message));
         return g.toJson(new SendBody(this.getModelName(), chatHistory.histories));
     }
 
@@ -111,7 +112,7 @@ public class DeepSeek extends AbsAgent {
         Gson g = new Gson();
         OPAResult result = g.fromJson(repose, OPAResult.class);
         OPAResult.ChoicesBean.Message m = result.getChoices().get(0).getMessage();
-        chatHistory.addBlock(new ChatHistory.ChatBlock(m.getRole(), m.getContent()));
+        chatHistory.addBlock(new ChatHistory.ChatBlock(m.getRole(), List.of(new Content("text", m.getContent()))));
         return m.getContent();
     }
 

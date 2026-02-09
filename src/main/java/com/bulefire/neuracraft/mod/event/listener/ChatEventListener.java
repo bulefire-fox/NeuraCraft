@@ -36,13 +36,13 @@ public class ChatEventListener {
         }
 
         // 异步
-        CompletableFuture.runAsync(() -> ChatEventProcesser.onChat(
+        ChatEventProcesser.onChat(
                 new ChatEventProcesser.ChatMessage(
                         message,
                         new APlayer(name, uuid),
                         Minecraft.getInstance().isSingleplayer() ? ChatEventProcesser.ChatMessage.Env.SINGLE : ChatEventProcesser.ChatMessage.Env.CLIENT
                 )
-        ));
+        );
     }
 
     @SubscribeEvent
@@ -59,12 +59,12 @@ public class ChatEventListener {
         } else {
             throw new RuntimeException("Minecraft.getInstance().player is null");
         }
-        CompletableFuture.runAsync(() -> ChatEventProcesser.onChat(
+        ChatEventProcesser.onChat(
                 new ChatEventProcesser.ChatMessage(
                         message,
                         new APlayer(name, uuid),
                         ChatEventProcesser.ChatMessage.Env.SERVER
                 )
-        ));
+        );
     }
 }

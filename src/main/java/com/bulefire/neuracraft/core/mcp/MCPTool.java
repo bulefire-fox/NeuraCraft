@@ -12,15 +12,14 @@ import java.util.function.Consumer;
  * 仅用于Java内部的简化表示，与外部MCP工具接口不同
  */
 public interface MCPTool {
-    @NotNull String getName();
+    @NotNull String getDisplayName();
     @NotNull String getDescription();
     @NotNull MCPToolInfo getInfo();
     @NotNull String getPrompt();
     @NotNull MCPResponse execute(@NotNull MCPRequest request, @NotNull Consumer<Component> print);
     default boolean isValid() {
-        return getInfo().getMethod() == null ||
-                getInfo().getMethod().isEmpty() ||
-                getInfo().getHost() == null ||
+        return getInfo().getName() == null ||
+                getInfo().getName().isEmpty() ||
                 getInfo().getType() == null;
     }
 }

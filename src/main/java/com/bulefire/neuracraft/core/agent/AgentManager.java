@@ -1,13 +1,23 @@
 package com.bulefire.neuracraft.core.agent;
 
 import com.bulefire.neuracraft.core.util.NoAgentFound;
+import com.google.common.collect.Sets;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * AgentManager <br>
@@ -21,22 +31,26 @@ import java.util.function.Supplier;
  */
 @Log4j2
 public class AgentManager {
-    private final Map<UUID, Agent> agents;
-    private final Map<String, Supplier<Agent>> agentMapping;
-    private final List<Function<Path, String>> agentPathConsumer;
-
-    public AgentManager(Map<UUID, Agent> agents, Map<String, Supplier<Agent>> agentSuppliers, List<Function<Path, String>> agentPathConsumer) {
+    private final ConcurrentMap<UUID, Agent> agents;
+    private final ConcurrentMap<String, Supplier<Agent>> agentMapping;
+    private final Set<Function<Path, String>> agentPathConsumer;
+    
+    private final ReadWriteLock agentsLock = new ReentrantReadWriteLock();
+    private final Lock agentsWriteLock = agentsLock.writeLock();
+    private final Lock agentsReadLock = agentsLock.readLock();
+    
+    public AgentManager(ConcurrentMap<UUID, Agent> agents, ConcurrentMap<String, Supplier<Agent>> agentSuppliers, Set<Function<Path, String>> agentPathConsumer) {
         this.agents = agents;
         this.agentMapping = agentSuppliers;
-        this.agentPathConsumer = agentPathConsumer;
+        this.agentPathConsumer = Sets.newCopyOnWriteArraySet(agentPathConsumer);
     }
-
+    
     public AgentManager() {
-        this.agents = new HashMap<>();
-        this.agentMapping = new HashMap<>();
-        this.agentPathConsumer = new ArrayList<>();
+        this.agents = new ConcurrentHashMap<>();
+        this.agentMapping = new ConcurrentHashMap<>();
+        this.agentPathConsumer = Sets.newCopyOnWriteArraySet();
     }
-
+    
     /**
      * 注册一个 {@link Agent} 的{@linkplain Supplier 创建函数}
      *
@@ -48,7 +62,7 @@ public class AgentManager {
         log.debug("register agent {}", name);
         agentMapping.put(name, agentSupplier);
     }
-
+    
     /**
      * 获取一个 {@link Agent} 的实例
      *
@@ -57,9 +71,10 @@ public class AgentManager {
      * @see AgentManager#agentMapping
      */
     public Agent getAgentMapping(@NotNull String name) {
-        return agentMapping.get(name).get();
+        Supplier<Agent> supplier = agentMapping.get(name);
+        return supplier != null ? supplier.get() : null;
     }
-
+    
     /**
      * 获取所有已注册的 {@link Agent} 的名称
      *
@@ -67,21 +82,20 @@ public class AgentManager {
      * @see AgentManager#agentMapping
      */
     public List<String> getAllAliveAgentKeys() {
-        return new ArrayList<>(agentMapping.keySet());
+        return List.copyOf(agentMapping.keySet());
     }
-
+    
     /**
-     * 移除一个 {@link Agent} 实例
+     * 移除一个 {@link Agent} 的名字和对应的 {@linkplain Supplier 创建函数}
      *
-     * @param uuid {@link Agent} 的 UUID
-     * @return 移除的 {@link Agent} 实例
-     * @see AgentManager#agentMapping
+     * @param name {@link Agent} 的注册名称
+     * @see AgentManager#agents
      */
-    public Agent removeAgentMapping(@NotNull UUID uuid) {
-        log.debug("remove agent {}", uuid);
-        return agents.remove(uuid);
+    public void removeAgentMapping(@NotNull String name) {
+        log.debug("remove agentMapping {}", name);
+        agentMapping.remove(name);
     }
-
+    
     /**
      * 创建一个 {@link Agent} 实例
      *
@@ -90,17 +104,22 @@ public class AgentManager {
      * @throws NoAgentFound 如果没有找到对应的 {@link Agent} 注册名的 {@linkplain Supplier 创建函数}
      * @see AgentManager#agentMapping
      */
-    public Agent creatAgent(@NotNull String agentName) throws NoAgentFound {
-        var getter = agentMapping.get(agentName);
-        if (getter == null)
-            throw new NoAgentFound("can not find agentName model for " + agentName);
-        Agent create = getter.get();
-        if (create == null)
-            throw new NoAgentFound("can not find agentName model for " + agentName);
-        agents.put(create.getUUID(), create);
-        return create;
+    public Agent createAgent(@NotNull String agentName) throws NoAgentFound {
+        agentsWriteLock.lock();
+        try {
+            var getter = agentMapping.get(agentName);
+            if (getter == null)
+                throw new NoAgentFound("can not find agentName model for " + agentName);
+            Agent create = getter.get();
+            if (create == null)
+                throw new NoAgentFound("can not find agentName model for " + agentName);
+            agents.put(create.getUUID(), create);
+            return create;
+        } finally {
+            agentsWriteLock.unlock();
+        }
     }
-
+    
     /**
      * 添加一个 {@link Agent} 实例
      *
@@ -113,7 +132,7 @@ public class AgentManager {
         agents.put(agent.getUUID(), agent);
         return agent;
     }
-
+    
     /**
      * 移除一个 {@link Agent} 实例
      *
@@ -124,7 +143,7 @@ public class AgentManager {
     public Agent removeAgent(@NotNull UUID uuid) {
         return agents.remove(uuid);
     }
-
+    
     /**
      * 获取一个 {@link Agent} 实例
      *
@@ -135,7 +154,7 @@ public class AgentManager {
     public Agent getAgent(@NotNull UUID uuid) {
         return agents.get(uuid);
     }
-
+    
     /**
      * 获取一个指定 {@linkplain Agent#getName() name} 的 {@link Agent} 实例的列表
      *
@@ -145,13 +164,16 @@ public class AgentManager {
      * @see Agent#getName()
      */
     public List<Agent> getAgentByName(String name) {
-        List<Agent> result = new ArrayList<>();
-        for (Agent agent : agents.values())
-            if (agent.getName().equals(name))
-                result.add(agent);
-        return result;
+        agentsReadLock.lock();
+        try {
+            return agents.values().stream()
+                         .filter(agent -> agent.getName().equals(name))
+                         .toList();
+        } finally {
+            agentsReadLock.unlock();
+        }
     }
-
+    
     /**
      * 重新加载 指定 {@linkplain Agent#getName() name} 的 {@link Agent} (们)的配置文件,
      * 如果有多个符合指定 {@linkplain Agent#getName() name} 的 {@link Agent}, 则全部重新加载
@@ -162,13 +184,19 @@ public class AgentManager {
      * @see AgentManager#agents
      */
     public void reloadAgentConfig(@NotNull String name) {
-        List<Agent> agent = this.getAgentByName(name);
-        if (agent != null)
-            agent.forEach(Agent::reloadConfig);
-        else
-            throw new NoAgentFound("can not find agent for " + name);
+        agentsReadLock.lock();
+        try {
+            List<Agent> agentList = agents.values().stream()
+                                          .filter(agent -> agent.getName().equals(name))
+                                          .toList();
+            if (agentList.isEmpty())
+                throw new NoAgentFound("can not find agent for " + name);
+            agentList.forEach(Agent::reloadConfig);
+        } finally {
+            agentsReadLock.unlock();
+        }
     }
-
+    
     /**
      * 重新加载一个 {@link Agent} 的配置文件, 通过 {@link UUID}
      *
@@ -184,7 +212,7 @@ public class AgentManager {
         else
             throw new NoAgentFound("can not find agent for " + uuid);
     }
-
+    
     /**
      * 重新加载所有 {@link Agent} 的配置文件
      *
@@ -192,9 +220,14 @@ public class AgentManager {
      * @see AgentManager#agents
      */
     public void reloadAllAgentConfig() {
-        agents.values().forEach(Agent::reloadConfig);
+        agentsReadLock.lock();
+        try {
+            agents.values().forEach(Agent::reloadConfig);
+        } finally {
+            agentsReadLock.unlock();
+        }
     }
-
+    
     /**
      * 获取包含所有 {@link Agent} 的列表
      *
@@ -205,7 +238,7 @@ public class AgentManager {
     public List<Agent> getAllAgents() {
         return List.copyOf(agents.values());
     }
-
+    
     /**
      * 注册一个判断文件是否为 {@linkplain Agent 自己} 的文件的函数, 包装为 {@link Function}
      *
@@ -216,7 +249,7 @@ public class AgentManager {
     public void registerAgentPathConsumer(Function<Path, String> consumer) {
         agentPathConsumer.add(consumer);
     }
-
+    
     /**
      * 删除一个 {@linkplain Function 函数}
      *
@@ -227,7 +260,7 @@ public class AgentManager {
     public void deleteAgentPathConsumer(Function<Path, String> consumer) {
         agentPathConsumer.remove(consumer);
     }
-
+    
     /**
      * 获取一个指定文件路径的 {@linkplain Agent 模型} {@linkplain String 名称}
      *

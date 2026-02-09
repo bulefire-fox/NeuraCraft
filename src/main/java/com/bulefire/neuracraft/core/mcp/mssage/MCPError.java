@@ -1,6 +1,5 @@
 package com.bulefire.neuracraft.core.mcp.mssage;
 
-import com.google.gson.JsonElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,6 +42,10 @@ public class MCPError {
     public MCPError(int code, String message) {
         this.code = code;
         this.message = message;
+    }
+    
+    public String getErrorMessage() {
+        return "ERROR(error code: " + code + "error message :" + message+")";
     }
     
     @Contract(pure = true)

@@ -13,7 +13,6 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public non-sealed class MCPNotification implements MCPMessage {
-    private String jsonrpc;
     private String method;
     private Map<String, Object> params;
 }

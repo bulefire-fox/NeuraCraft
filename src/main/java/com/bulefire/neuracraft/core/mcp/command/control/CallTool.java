@@ -27,17 +27,18 @@ public class CallTool extends FullCommand.AbsCommand {
         feedback(context.getSource(), Component.translatable("neuracraft.mcp.command.call.feedback", method));
         MCPResponse response = MCPController.getInstance().callTool(
                 MCPMessage.requestBuilder()
-                        .method(method)
+                        .name(method)
                         .params(param)
                         .build(),
                 component -> feedback(context.getSource(), component)
         );
-        if (response instanceof MCPResponse.Success success) {
-            feedback(context.getSource(), Component.translatable("neuracraft.mcp.command.call.success", method,success.getResult()));
-        } else if (response instanceof MCPResponse.Failed failed) {
-            var error = failed.getError();
-            feedback(context.getSource(), Component.translatable("neuracraft.mcp.command.call.failed", method,error.getCode() + " " + MCPError.getCodeString(error.getCode()) +" "+ error.getMessage()));
+        if (response.getResult().isError()) {
+            feedback(context.getSource(), Component.translatable("neuracraft.mcp.command.call.failed", method, response.getResult().getContent()));
+        } else {
+            feedback(context.getSource(), Component.translatable("neuracraft.mcp.command.call.success", method, response.getResult().getContent()));
+            
         }
+        
         return SINGLE_SUCCESS;
     }
 }

@@ -11,19 +11,15 @@ import com.bulefire.neuracraft.core.mcp.mssage.MCPMessage;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPRequest;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPResponse;
 import lombok.extern.log4j.Log4j2;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -43,8 +39,7 @@ public class PlayerFacingEntityQuery extends AbsMCPTool {
                 "查询玩家当前面向的实体的名称和坐标, 以 (x,y,z,block_name) 的格式返回. 当玩家没有看向任何方块时返回 (none,none,none,none) 代表玩家没有看向任何实体",
                 MCPToolInfo.builder()
                            .type(MCPToolInfo.Type.LOCAL)
-                           .host(URI.create(MCPToolInfo.Type.LOCAL.getHead() + "player_facing_entity_query"))
-                           .method("tool.game.query.player.facing.entity")
+                           .name("tool.game.query.player.facing.entity")
                            .params(Map.of("player", new MCPToolInfo.Param("string", "玩家名称", String.class)))
                            .build()
         );
@@ -54,36 +49,36 @@ public class PlayerFacingEntityQuery extends AbsMCPTool {
     public @NotNull MCPResponse execute(@NotNull MCPRequest request, @NotNull Consumer<Component> print) {
         var params = request.getParams();
         if (! params.containsKey("player"))
-            return MCPMessage.responseFailedBuilder()
+            return MCPMessage.responseBuilder()
                              .id(request.getId())
-                             .error(new MCPError(MCPError.INVALID_REQUEST, "player is null", null))
+                             .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_REQUEST, "player is null", null)))
                              .build();
         if (params.get("player") instanceof String playerName) {
             var server = CUtil.getServer.get();
             var player = server.getPlayerList().getPlayerByName(playerName);
             if (player == null)
-                return MCPMessage.responseFailedBuilder()
+                return MCPMessage.responseBuilder()
                                .id(request.getId())
-                               .error(new MCPError(MCPError.INVALID_PARAMS, "player is not in server", null))
+                               .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_PARAMS, "player is not in server", null)))
                                .build();
             
             Entity entity = getPlayerLookingAtEntity(player);
             if (entity == null)
-                return MCPMessage.responseSuccessBuilder()
+                return MCPMessage.responseBuilder()
                              .id(request.getId())
-                             .result("(none,none,none,none)")
+                             .result(MCPResponse.Result.of("(none,none,none,none)"))
                              .build();
             String entityName = entity.getName().getString();
-            return MCPMessage.responseSuccessBuilder()
+            return MCPMessage.responseBuilder()
                              .id(request.getId())
                              .result(
-                                     "(%f,%f,%f,%s)".formatted(entity.getX(), entity.getY(), entity.getZ(), entityName)
+                                     MCPResponse.Result.of("(%f,%f,%f,%s)".formatted(entity.getX(), entity.getY(), entity.getZ(), entityName))
                              )
                             .build();
         }
-        return MCPMessage.responseFailedBuilder()
+        return MCPMessage.responseBuilder()
                          .id(request.getId())
-                         .error(new MCPError(MCPError.INVALID_PARAMS, "player is not string", null))
+                         .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_PARAMS, "player is not string", null)))
                          .build();
     }
     
