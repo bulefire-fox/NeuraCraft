@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Data
 public class ExternMCPConfig {
-    private Map<String, MCPServer> mcpServers = new HashMap<>();
+    private Map<String, MCPServer> mcpServers = new HashMap<>(1);
     
     @SneakyThrows
     public static @NotNull ExternMCPConfig init() {
