@@ -1,7 +1,5 @@
 package com.bulefire.neuracraft.core.mcp.extern.local;
 
-import com.bulefire.neuracraft.core.agent.AgentController;
-import com.bulefire.neuracraft.core.mcp.MCPTool;
 import com.bulefire.neuracraft.core.mcp.MCPToolInfo;
 import com.bulefire.neuracraft.core.mcp.extern.AbsRemoteMCPServer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,20 +7,12 @@ import io.modelcontextprotocol.client.transport.ServerParameters;
 import io.modelcontextprotocol.client.transport.StdioClientTransport;
 import io.modelcontextprotocol.json.jackson.JacksonMcpJsonMapper;
 import io.modelcontextprotocol.spec.McpClientTransport;
-import io.modelcontextprotocol.spec.McpTransport;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 
 /**

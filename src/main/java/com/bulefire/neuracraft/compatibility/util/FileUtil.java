@@ -57,11 +57,6 @@ public class FileUtil {
         // 创建不存在的目录
         if (! base_url.toFile().exists())
             base_url.toFile().mkdirs();
-        log.debug(getWorldUrl());
-        if (! getWorldUrl().toFile().exists())
-            getWorldUrl().toFile().mkdirs();
-        if (! getAgentBaseUrl().toFile().exists())
-            getAgentBaseUrl().toFile().mkdirs();
         if (! plugin_url.toFile().exists())
             plugin_url.toFile().mkdirs();
         if (! mcp_config_url.toFile().exists())
@@ -69,6 +64,13 @@ public class FileUtil {
         if (! agent_config_url.toFile().exists())
             agent_config_url.toFile().mkdirs();
         log.debug("init file util done");
+    }
+    
+    public static void afterInit() {
+        if (! getWorldUrl().toFile().exists())
+            getWorldUrl().toFile().mkdirs();
+        if (! getAgentBaseUrl().toFile().exists())
+            getAgentBaseUrl().toFile().mkdirs();
     }
 
     /**
