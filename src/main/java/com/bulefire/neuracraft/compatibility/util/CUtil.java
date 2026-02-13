@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -38,6 +39,8 @@ public class CUtil {
     public static Supplier<Player> getPlayer = () -> {
         throw (InitFailedException) (new InitFailedException("CUtil.getPlayer not inject").initCause(new NullPointerException("CUtil.getPlayer is null")));
     };
+    /** 获取当前mod jar文件路径 */
+    public static Supplier<Path> getModJarPath;
     
     public static final APlayer broadcast = new APlayer("Broadcast", UUID.fromString("00000000-0000-0000-0000-000000000000"));
     

@@ -2,7 +2,6 @@ package com.bulefire.neuracraft;
 
 import com.bulefire.neuracraft.mod.config.InitM;
 import lombok.extern.log4j.Log4j2;
-import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLPaths;
 

@@ -5,10 +5,10 @@ import com.bulefire.neuracraft.core.mcp.extern.AbsRemoteMCPServer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.client.transport.ServerParameters;
 import io.modelcontextprotocol.client.transport.StdioClientTransport;
+import io.modelcontextprotocol.json.McpJsonMapper;
 import io.modelcontextprotocol.json.jackson.JacksonMcpJsonMapper;
 import io.modelcontextprotocol.spec.McpClientTransport;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,30 +27,49 @@ public class LocalMCPServer extends AbsRemoteMCPServer {
     
     public LocalMCPServer(@NotNull String name, @NotNull String command, @NotNull List<String> args) {
         super(MCPToolInfo.Type.LOCAL);
+        log.debug("init local mcp server");
         this.name = name;
         this.command = command;
         this.args = args;
+        log.debug("init end");
     }
     
     /**
      * 启动 MCP server
      */
     @Override
-    @SneakyThrows
     public void start() {
-        ServerParameters params = ServerParameters.builder(command)
-                                                  .args(args)
-                                                  .build();
-        McpClientTransport transport = new StdioClientTransport(params, new JacksonMcpJsonMapper(new ObjectMapper()));
-        startClient(transport);
+        log.info("local mcp server: {} command {} arg {}", name, command, args);
+        try {
+            ServerParameters params = ServerParameters.builder(command)
+                                                      .args(args)
+                                                      .build();
+            ObjectMapper objectMapper = new ObjectMapper();
+            Class<?> jacksonMapperClass = Class.forName("io.modelcontextprotocol.json.jackson.JacksonMcpJsonMapper");
+            Object jacksonMapper = jacksonMapperClass.getConstructor(ObjectMapper.class).newInstance(objectMapper);
+
+            McpClientTransport transport = new StdioClientTransport(params, (McpJsonMapper) jacksonMapper);
+            startClient(transport);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("MCP class not found: " + e.getMessage() +
+                    ". Ensure implementation('io.modelcontextprotocol.sdk:mcp-*') in build.gradle.", e);
+        } catch (NoClassDefFoundError e) {
+            throw new RuntimeException("MCP class not found: " + e.getMessage() +
+                    ". Run 'gradlew build' or refresh Gradle.", e);
+        } catch (Throwable e) {
+            throw new RuntimeException("Failed to start MCP server " + name, e);
+        }
     }
     
     /**
      * 停止 本地 MCP server
      */
     @Override
-    @SneakyThrows
     public void stop() {
-        client.close();
+        try {
+            if (client != null) client.close();
+        } catch (Exception e) {
+            log.warn("Error closing MCP client", e);
+        }
     }
 }

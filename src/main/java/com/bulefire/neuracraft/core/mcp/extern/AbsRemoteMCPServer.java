@@ -32,7 +32,9 @@ public abstract class AbsRemoteMCPServer implements RemoteMCPServer {
     private ExecutorService executor;
     
     protected AbsRemoteMCPServer(MCPToolInfo.Type type) {
+        log.debug("init remote mcp server");
         this.type = type;
+        log.debug("init end");
     }
     
     protected void startClient(McpClientTransport transport) {

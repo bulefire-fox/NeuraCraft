@@ -37,7 +37,7 @@ public class AnnotationsMethodScanner {
             walk
                     .filter(path -> Files.isRegularFile(path) && path.toString().endsWith(".class"))
                     .forEach(classPath -> {
-                        log.debug("file path: {}", classPath);
+                        //log.debug("file path: {}", classPath);
                         byte[] bytes;
                         try {
                             bytes = Files.readAllBytes(classPath);
@@ -45,7 +45,7 @@ public class AnnotationsMethodScanner {
                             throw new RuntimeException(e);
                         }
                         var insideMethods = scannerClass(bytes, annotations, null);
-                        log.debug("insideMethods: {}", insideMethods);
+                        //log.debug("insideMethods: {}", insideMethods);
                         methods.addAll(insideMethods);
                     });
         } catch (IOException e) {

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -32,6 +33,11 @@ public class PlayerManager {
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Lock writeLock = lock.writeLock();
     
+    /**
+     * 空的 UUID
+     */
+    public static final UUID emptyUUID = UUID.randomUUID();
+    
     public PlayerManager(ConcurrentMap<APlayer, UUID> players) {
         this.players = players;
     }
@@ -51,7 +57,7 @@ public class PlayerManager {
      * @see #updatePlayer(APlayer, UUID)
      */
     public void addPlayer(APlayer player, UUID uuid) {
-        players.putIfAbsent(player, uuid);
+        players.putIfAbsent(player, Objects.requireNonNull(uuid));
     }
 
     /**
@@ -65,7 +71,7 @@ public class PlayerManager {
      * @see #addPlayer(APlayer, UUID)
      */
     public void updatePlayer(APlayer player, UUID uuid) {
-        players.put(player, uuid);
+        players.put(player, Objects.requireNonNull(uuid));
     }
 
     /**

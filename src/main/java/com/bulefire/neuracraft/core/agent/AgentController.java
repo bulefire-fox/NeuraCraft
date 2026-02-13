@@ -119,7 +119,7 @@ public class AgentController {
     @Setter
     private static String prefix = NCMainConfig.getPrefix();
     
-    private static final ExecutorService executor = Executors.newFixedThreadPool(NCMainConfig.getThreadsNumber());
+    private static final ExecutorService executor = Executors.newFixedThreadPool(Math.max(1, NCMainConfig.getThreadsNumber()));
     
     /**
      * 注册一个 Agent 类初始化逻辑
@@ -143,7 +143,7 @@ public class AgentController {
         PlayerJoinEventProcesser.registerFun(
                 (msg) -> {
                     // 将玩家加入管，注意到manager不会覆盖原有值,因此与从配置文件添加的玩家不冲突
-                    playerManager.addPlayer(msg.player(), null);
+                    playerManager.addPlayer(msg.player(), PlayerManager.emptyUUID);
                     String message = NCMainConfig.getPrefix() + msg.player().toFormatedString() + "join the game..";
                     // 稍加处理即可
                     onMessage(
@@ -220,7 +220,7 @@ public class AgentController {
                         AgentMCPOutputPrompt +
                         AgentMCPWorkflowPrompt +
                         reiteratedKeyPrompt;
-        log.info("fullRecommendedPrompt {}", fullRecommendedPrompt);
+        //log.info("fullRecommendedPrompt {}", fullRecommendedPrompt);
         
         // 扫描我们自己的Agent类
         var methods = AnnotationsMethodScanner.scanPackageToMethod("com.bulefire.neuracraft.core", Set.of(RegisterAgent.class));

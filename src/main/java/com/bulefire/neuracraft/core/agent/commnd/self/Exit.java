@@ -5,6 +5,7 @@ import com.bulefire.neuracraft.compatibility.entity.APlayer;
 import com.bulefire.neuracraft.compatibility.function.process.PlayerExitEventProcesser;
 import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.core.agent.AgentController;
+import com.bulefire.neuracraft.core.agent.PlayerManager;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import lombok.extern.log4j.Log4j2;
@@ -31,7 +32,7 @@ public class Exit extends FullCommand.AbsCommand {
         }
         var agent = agentManager.getAgent(agentUUID);
         PlayerExitEventProcesser.onPlayerExit(new PlayerExitEventProcesser.ExitMessage(player, CUtil.getEnv(CUtil.getServer.get())));
-        playerManager.updatePlayer(player, null);
+        playerManager.updatePlayer(player, PlayerManager.emptyUUID);
         agent.removePlayer(player);
         agent.removeAdmin(player);
         feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.exit.success", agent.getName()));

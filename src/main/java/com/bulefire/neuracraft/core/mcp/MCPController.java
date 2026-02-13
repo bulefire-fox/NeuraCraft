@@ -7,11 +7,12 @@ import com.bulefire.neuracraft.core.mcp.annotation.RegisterMCP;
 import com.bulefire.neuracraft.core.mcp.command.MCPCommandRegister;
 import com.bulefire.neuracraft.core.mcp.entity.AgentInput;
 import com.bulefire.neuracraft.core.mcp.extern.ExternMCPController;
-import com.bulefire.neuracraft.core.mcp.mssage.MCPError;
+import com.bulefire.neuracraft.core.mcp.extern.fuckforge.FuckCwpClassLoader;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPMessage;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPRequest;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPResponse;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -21,6 +22,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -42,8 +46,8 @@ public class MCPController {
     private final MCPManager mcpManager;
     @Getter
     private final GameCommand GAME_COMMAND = GameCommand.getINSTANCE();
-    @Getter
-    private final ExternMCPController extern = ExternMCPController.getInstance();
+    
+    public Thread externMCPThread;
     
     @Getter
     private final Consumer<Component> emptyPrint = log::info;
@@ -64,7 +68,49 @@ public class MCPController {
         }
         
         // TODO:从配置文件加载远程 MCP 服务器
-        extern.init();
+        ClassLoader current = MCPController.class.getClassLoader();
+        externMCPThread = new Thread(() -> {
+//            ClassLoader customLoader = new FuckCwpClassLoader(new URL[0], current);
+//            Thread.currentThread().setContextClassLoader(customLoader);
+//
+//            try {
+//                Class<?> k = customLoader.loadClass("io.modelcontextprotocol.json.McpJsonMapper");
+//                Class<?> kl = customLoader.loadClass("io.modelcontextprotocol.spec.McpClientTransport");
+//                log.warn("MCPJsonMapper McpClientTransport loaded success {} {}", k, kl);
+//            } catch (ClassNotFoundException e) {
+//                throw new RuntimeException("why? "+e);
+//            }
+//
+//            Class<?> clazz;
+//            try {
+//                clazz = customLoader.loadClass("com.bulefire.neuracraft.core.mcp.extern.ExternMCPController");
+//            } catch (ClassNotFoundException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            Object o;
+//            try {
+//                o = clazz.getMethod("getInstance").invoke(null);
+//            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            Method m;
+//            try {
+//                m = clazz.getMethod("init");
+//            } catch (NoSuchMethodException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            try {
+//                m.invoke(o);
+//            } catch (IllegalAccessException | InvocationTargetException e) {
+//                throw new RuntimeException(e);
+//            }
+            ExternMCPController.getInstance().init();
+        },"externMCP");
+        externMCPThread.setDaemon(true);
+        externMCPThread.start();
         // 初始化远程 MCP 服务器
         //RemoteMCPServerController.getInstance().initializeAllRemoteServer();
         
