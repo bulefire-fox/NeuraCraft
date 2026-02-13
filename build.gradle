@@ -14,7 +14,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
-    id 'java-library'
+    //id 'java-library'
     //id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
@@ -104,37 +104,22 @@ minecraft {
         configureEach {
             // Recommended logging data for a userdev environment
             // 推荐的用户开发环境日志数据
-            // The markers can be added/remove as needed separated by commas.
-            // 标记可以根据需要添加/删除，用逗号分隔。
-            // "SCAN": For mods scan.
-            // "SCAN": 用于模组扫描。
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRIES": 用于触发注册表事件。
-            // "REGISTRYDUMP": For getting the contents of all registries.
-            // "REGISTRYDUMP": 用于获取所有注册表的内容。
             property 'forge.logging.markers', 'REGISTRIES'
-
-            // Recommended logging level for the console
-            // 推荐的控制台日志级别
-            // You can set various levels here.
-            // 您可以在此处设置各种级别。
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            // 请参阅：https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'debug'
 
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
+            // client 使用 jarJar（含 MCP）从 mods 目录加载，其他 run 使用 source
+            if (it.name != 'client') {
+                mods {
+                    "${mod_id}" {
+                        source sourceSets.main
+                    }
                 }
             }
         }
 
         client {
             workingDirectory project.file('run-client')
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            // 以逗号分隔的命名空间列表，用于加载游戏测试。空=所有命名空间。
             property 'forge.enabledGameTestNamespaces', mod_id
-
         }
 
         server {
@@ -186,10 +171,15 @@ repositories {
     // 如果您在./libs中有mod jar依赖项，可以像这样声明它们为仓库。
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver
     // 请参阅：https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver
-    // flatDir {
-    //     dir 'libs'
-    // }
+    flatDir {
+        dir 'libs'
+    }
+    mavenLocal()
 }
+
+jarJar.enable()
+// 不使用 fromRuntimeConfiguration，避免将 Minecraft/Forge 等打包进 mod，且可能导致开发环境 classpath 异常
+// 仅通过 implementation(jarJar(...)) 显式声明需要打包的 MCP 依赖
 
 dependencies {
     // implementation 'androidx.privacysandbox.tools:tools-core:1.0.0-alpha13'
@@ -246,7 +236,7 @@ dependencies {
 
     testCompileOnly("org.projectlombok:lombok:1.18.42")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
-    
+
     // 添加ASM依赖
     implementation 'org.ow2.asm:asm:9.9'
     implementation 'org.ow2.asm:asm-commons:9.9'
@@ -255,10 +245,25 @@ dependencies {
     implementation 'com.google.guava:guava:32.1.3-jre'
     implementation 'org.jetbrains:annotations:24.0.1'
 
-    // mcp java sdk
-    implementation(fileTree("libs"))
-    implementation "io.modelcontextprotocol.sdk:mcp:0.17.2"
-    implementation "io.modelcontextprotocol.sdk:mcp-test:0.17.2"
+    // Jackson dependencies for MCP JSON processing
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
+
+    implementation('io.modelcontextprotocol.sdk:mcp:[0.17.2.1,)')
+    implementation('io.modelcontextprotocol.sdk:mcp.core:[0.17.2.1,)')
+    implementation('io.modelcontextprotocol.sdk:mcp.json:[0.17.2.1,)')
+    implementation('io.modelcontextprotocol.sdk:mcp.json.jackson2:[0.17.2.1,)')
+
+    minecraftLibrary('io.modelcontextprotocol.sdk:mcp:[0.17.2.1,)')
+    minecraftLibrary('io.modelcontextprotocol.sdk:mcp.core:[0.17.2.1,)')
+    minecraftLibrary('io.modelcontextprotocol.sdk:mcp.json:[0.17.2.1,)')
+    minecraftLibrary('io.modelcontextprotocol.sdk:mcp.json.jackson2:[0.17.2.1,)')
+
+    jarJar('io.modelcontextprotocol.sdk:mcp:[0.17.2.1,)')
+    jarJar('io.modelcontextprotocol.sdk:mcp.core:[0.17.2.1,)')
+    jarJar('io.modelcontextprotocol.sdk:mcp.json:[0.17.2.1,)')
+    jarJar('io.modelcontextprotocol.sdk:mcp.json.jackson2:[0.17.2.1,)')
 
     testImplementation platform('org.junit:junit-bom:6.1.0-M1')
     testImplementation 'org.junit.jupiter:junit-jupiter:6.1.0-M1'
@@ -312,7 +317,7 @@ tasks.named('jar', Jar).configure {
 
     // This is the preferred method to reobfuscate your jar file
     // 这是重新混淆jar文件的首选方法
-    finalizedBy 'reobfJar'
+    //finalizedBy 'reobfJar'
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -346,11 +351,47 @@ tasks.register('javadocJar', Jar) {
     from javadoc
 }
 
+//jarJar {
+//    // 在此处包含或排除运行时依赖项
+//    dependencies {
+//        include(dependency('io.modelcontextprotocol.sdk:mcp:0.17.2'))
+//        include(dependency('io.modelcontextprotocol.sdk:mcp.core:0.17.2'))
+//        include(dependency('io.modelcontextprotocol.sdk:mcp.json:0.17.2'))
+//        include(dependency('io.modelcontextprotocol.sdk:mcp.json.jackson2:0.17.2'))
+//    }
+//}
+
+reobf {
+    jarJar {}
+}
+
 //shadowJar {
 //    zip64 = true
-//    configurations = [project.configurations.runtimeClasspath]
+//    configurations = [project.configurations.shadow]
 //    archiveClassifier = '' // 覆盖默认 JAR
+//    archiveVersion = ''
+//
+//    minimize {
+//        include(dependency('io.modelcontextprotocol.sdk:mcp:0.17.2'))
+//        include(dependency('io.modelcontextprotocol.sdk:mcp.core:0.17.2'))
+//        include(dependency('io.modelcontextprotocol.sdk:mcp.json:0.17.2'))
+//        include(dependency('io.modelcontextprotocol.sdk:mcp.json.jackson2:0.17.2'))
+//    }
+//
+//    //finalizedBy 'jarJar'
+//    //finalizedBy 'reobfJar'
 //}
+
+//tasks.named("reobfJar") {
+//    dependsOn(tasks.named('shadowJar'))
+//}
+
+//tasks.named("build") {
+//    //dependsOn(tasks.named('shadowJar'))
+//    dependsOn(tasks.named('jarJar'))
+//}
+
+tasks.build.dependsOn tasks.jarJar
 
 artifacts {
     archives sourceJar

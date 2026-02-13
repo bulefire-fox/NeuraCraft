@@ -5,7 +5,6 @@ import com.bulefire.neuracraft.core.mcp.extern.AbsRemoteMCPServer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.client.transport.ServerParameters;
 import io.modelcontextprotocol.client.transport.StdioClientTransport;
-import io.modelcontextprotocol.json.McpJsonMapper;
 import io.modelcontextprotocol.json.jackson.JacksonMcpJsonMapper;
 import io.modelcontextprotocol.spec.McpClientTransport;
 import lombok.Getter;
@@ -44,15 +43,8 @@ public class LocalMCPServer extends AbsRemoteMCPServer {
             ServerParameters params = ServerParameters.builder(command)
                                                       .args(args)
                                                       .build();
-            ObjectMapper objectMapper = new ObjectMapper();
-            Class<?> jacksonMapperClass = Class.forName("io.modelcontextprotocol.json.jackson.JacksonMcpJsonMapper");
-            Object jacksonMapper = jacksonMapperClass.getConstructor(ObjectMapper.class).newInstance(objectMapper);
-
-            McpClientTransport transport = new StdioClientTransport(params, (McpJsonMapper) jacksonMapper);
+            McpClientTransport transport = new StdioClientTransport(params, new JacksonMcpJsonMapper(new ObjectMapper()));
             startClient(transport);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("MCP class not found: " + e.getMessage() +
-                    ". Ensure implementation('io.modelcontextprotocol.sdk:mcp-*') in build.gradle.", e);
         } catch (NoClassDefFoundError e) {
             throw new RuntimeException("MCP class not found: " + e.getMessage() +
                     ". Run 'gradlew build' or refresh Gradle.", e);
