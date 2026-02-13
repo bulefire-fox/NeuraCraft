@@ -7,30 +7,23 @@ import io.modelcontextprotocol.client.transport.ServerParameters;
 import io.modelcontextprotocol.client.transport.StdioClientTransport;
 import io.modelcontextprotocol.json.jackson.JacksonMcpJsonMapper;
 import io.modelcontextprotocol.spec.McpClientTransport;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.concurrent.*;
 
 /**
  * 表示本地 MCP server
  */
 @Log4j2
 public class LocalMCPServer extends AbsRemoteMCPServer {
-    @Getter
-    private final String name;
     private final String command;
     private final List<String> args;
     
     public LocalMCPServer(@NotNull String name, @NotNull String command, @NotNull List<String> args) {
-        super(MCPToolInfo.Type.LOCAL);
-        log.debug("init local mcp server");
-        this.name = name;
+        super(name, MCPToolInfo.Type.LOCAL);
         this.command = command;
         this.args = args;
-        log.debug("init end");
     }
     
     /**
@@ -38,19 +31,12 @@ public class LocalMCPServer extends AbsRemoteMCPServer {
      */
     @Override
     public void start() {
-        log.info("local mcp server: {} command {} arg {}", name, command, args);
-        try {
-            ServerParameters params = ServerParameters.builder(command)
-                                                      .args(args)
-                                                      .build();
-            McpClientTransport transport = new StdioClientTransport(params, new JacksonMcpJsonMapper(new ObjectMapper()));
-            startClient(transport);
-        } catch (NoClassDefFoundError e) {
-            throw new RuntimeException("MCP class not found: " + e.getMessage() +
-                    ". Run 'gradlew build' or refresh Gradle.", e);
-        } catch (Throwable e) {
-            throw new RuntimeException("Failed to start MCP server " + name, e);
-        }
+        log.info("local mcp server: {} command {} arg {}", getName(), command, args);
+        ServerParameters params = ServerParameters.builder(command)
+                                                  .args(args)
+                                                  .build();
+        McpClientTransport transport = new StdioClientTransport(params, new JacksonMcpJsonMapper(new ObjectMapper()));
+        startClient(transport);
     }
     
     /**
@@ -59,7 +45,8 @@ public class LocalMCPServer extends AbsRemoteMCPServer {
     @Override
     public void stop() {
         try {
-            if (client != null) client.close();
+            if (client != null)
+                client.close();
         } catch (Exception e) {
             log.warn("Error closing MCP client", e);
         }

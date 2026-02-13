@@ -6,12 +6,13 @@ import com.bulefire.neuracraft.core.mcp.extern.config.ExternMCPConfig;
 import com.bulefire.neuracraft.core.mcp.extern.local.LocalMCPServer;
 import com.bulefire.neuracraft.core.mcp.extern.sse.SSEMCPServer;
 import com.bulefire.neuracraft.core.mcp.extern.streamablehttp.StreamableHttpMCPServer;
+import io.modelcontextprotocol.json.schema.jackson.JacksonJsonSchemaValidatorSupplier;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,17 +38,32 @@ public class ExternMCPController {
         log.info("ExternMCPController init");
         config = ExternMCPConfig.init();
         serverManager = new ExternMCPServerManager();
-        executor = Executors.newFixedThreadPool(
-                config.getMcpServers().size(),
-                r -> {
-                    Thread thread = new Thread(r);
-                    thread.setName("ExternMCPController-Thread-" + thread.getId());
-//                    thread.setContextClassLoader(new FuckCwpClassLoader(new URL[0], getClass().getClassLoader()));
-                    return thread;
-                }
-        );
+        executor = Executors.newFixedThreadPool(config.getMcpServers().size());
         
+        // fuck mcp-java-sdk
+        // fuck forge
+        // fuck serviceloader
+        // I like java reflection (～￣▽￣)～
+        // don't remove it in jdk21 (although this has already happened /_ \)
+        try {
+            // 暴力设置 JsonSchemaInternal.defaultValidator 字段
+            // serviceLoader 被forge干废力 (悲)
+            Class<?> jsonSchemaInternal = Class.forName("io.modelcontextprotocol.json.schema.JsonSchemaInternal");
+            Field defaultValidator = jsonSchemaInternal.getDeclaredField("defaultValidator");
+            defaultValidator.setAccessible(true);
+            defaultValidator.set(null, (new JacksonJsonSchemaValidatorSupplier()).get());
+            log.debug("JsonSchemaInternal.defaultValidator set to {}", defaultValidator.get(null));
+        } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException e) {
+            // 你问我兼容性怎么办?
+            // 我sdk都是手动构建塞进去的你和我说兼容性? (
+            // 我都用上反射了还在乎这些东西吗 (
+            // 我真没招了
+            throw new RuntimeException(e);
+        }
+        
+        log.debug("config is {}", config);
         for (Map.Entry<String, ExternMCPConfig.MCPServer> entry : config.getMcpServers().entrySet()) {
+            log.info("Starting mcp server: {} with type {}", entry.getKey(), entry.getValue().getType());
             switch (entry.getValue().getType()) {
                 case "stdio" -> startLocalMCPServer(entry);
                 case "sse" -> startSSEMCPServer(entry);
@@ -81,6 +97,7 @@ public class ExternMCPController {
                 executor.shutdownNow();
             }
         });
+        log.info("ExternMCPController init end");
     }
     
     private void startLocalMCPServer(Map.@NotNull Entry<String, ExternMCPConfig.MCPServer> entry) {

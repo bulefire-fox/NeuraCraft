@@ -12,6 +12,7 @@ import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.McpSyncClient;
 import io.modelcontextprotocol.spec.McpClientTransport;
 import io.modelcontextprotocol.spec.McpSchema;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.network.chat.Component;
@@ -27,14 +28,15 @@ import java.util.function.Consumer;
 
 @Log4j2
 public abstract class AbsRemoteMCPServer implements RemoteMCPServer {
+    @Getter
+    private final String name;
     private final MCPToolInfo.Type type;
     protected McpSyncClient client;
     private ExecutorService executor;
     
-    protected AbsRemoteMCPServer(MCPToolInfo.Type type) {
-        log.debug("init remote mcp server");
+    protected AbsRemoteMCPServer(@NotNull String name, @NotNull MCPToolInfo.Type type) {
+        this.name = name;
         this.type = type;
-        log.debug("init end");
     }
     
     protected void startClient(McpClientTransport transport) {

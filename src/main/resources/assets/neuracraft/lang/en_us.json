@@ -41,7 +41,7 @@
   "neuracraft.mcp.command.list.hover.detail": "click to show detail information",
   "neuracraft.mcp.command.list.hover.call": "click to call the tool",
   "neuracraft.mcp.command.call.feedback": "calling the tool %s",
-  "neuracraft.mcp.command.detail": "detail information for §r§9%s\n\t§r§l§bdisplay_name: §r§c%s, §r§l§bname §r§e%s\n\t§r§l§bdescribe: §r§3§n%s\n\t§r§l§bprompt: §r§2§n%s\n\t§r§l§bparams: §r§6§o%s\n\t§r§l§boptional: §r§6§o%s\n\t§r§l§btype: §r§d%s",
+  "neuracraft.mcp.command.detail": "detail information for %s\n\t§r§l§bdisplay_name: %s, §r§l§bname %s\n\t§r§l§bdescribe: %s\n\t§r§l§bprompt: %s\n\t§r§l§bparams: %s\n\t§r§l§boptional: %s\n\t§r§l§btype: %s",
   "neuracraft.mcp.command.detail.not_found": "tool %s no found",
   "neuracraft.mcp.command.call.success": "call %s success the result is \n %s",
   "neuracraft.mcp.command.call.failed": "call %s failed the error message is \n %s"

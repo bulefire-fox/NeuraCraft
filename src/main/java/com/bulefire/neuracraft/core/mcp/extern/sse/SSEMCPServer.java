@@ -1,30 +1,42 @@
 package com.bulefire.neuracraft.core.mcp.extern.sse;
 
+import com.bulefire.neuracraft.core.mcp.MCPToolInfo;
+import com.bulefire.neuracraft.core.mcp.extern.AbsRemoteMCPServer;
 import com.bulefire.neuracraft.core.mcp.extern.RemoteMCPServer;
+import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
+import io.modelcontextprotocol.spec.McpClientTransport;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 
 @Log4j2
-public class SSEMCPServer implements RemoteMCPServer {
-    private final String name;
-    private final URL baseURL;
+public class SSEMCPServer extends AbsRemoteMCPServer {
+    private final String url;
     
-    public SSEMCPServer(@NotNull String name, @NotNull String url) throws MalformedURLException {
-        this.name = name;
-        if (!url.endsWith("/sse")) throw new IllegalArgumentException("url must end with /sse");
-        this.baseURL = new URL(url.substring(0, url.length() - "/sse".length()));
+    public SSEMCPServer(@NotNull String name, @NotNull String url) {
+        super(name, MCPToolInfo.Type.SSE);
+        this.url = url;
     }
     
     @Override
     public void start() {
-    
+        McpClientTransport transport = HttpClientSseClientTransport
+                .builder(url)
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
+        startClient(transport);
     }
     
     @Override
     public void stop() {
-    
+        try {
+            if (client != null)
+                client.close();
+        } catch (Exception e) {
+            log.warn("Error closing MCP client", e);
+        }
     }
 }
