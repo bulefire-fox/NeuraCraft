@@ -80,7 +80,7 @@ public abstract class AbsRemoteMCPServer implements RemoteMCPServer {
                 name, description,
                 MCPToolInfo.builder()
                            .type(type)
-                           .name("tool.extern.local" + name.replace("/", "."))
+                           .name("tool.extern."+type.toString().toLowerCase()+"."+name.replace("/", "."))
                            .params(params)
                            .optional(optional)
                            .build(),

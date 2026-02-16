@@ -16,19 +16,21 @@ public class ListMCP extends FullCommand.AbsCommand {
     @Override
     public int run(@NotNull CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         MutableComponent component = Component.literal("");
-        for (MCPTool mcp : MCPController.getInstance().getMcpManager().getTools()) {
-            var details = Component.literal(" detail")
-                                   .withStyle(style -> style
-                                           .withColor(TextColor.parseColor("#FF69B4"))
-                                           .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("neuracraft.mcp.command.list.hover.detail")))
-                                           .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/neuracraft mcp detail "+mcp.getInfo().getName()))
-                                   );
-            component.append(Component.translatable(
-                    "neuracraft.mcp.command.list.single",
-                    withHoverAndCopy(mcp.getDisplayName(), "#7CFC00"),
-                    withHoverAndCopy(mcp.getInfo().getName(), "#00ffff"),
-                    details
-            ));
+        for (var mcps : MCPController.getInstance().getMcpManager().getTools()) {
+            for (var mcp : mcps) {
+                var details = Component.literal(" detail")
+                                       .withStyle(style -> style
+                                               .withColor(TextColor.parseColor("#FF69B4"))
+                                               .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("neuracraft.mcp.command.list.hover.detail")))
+                                               .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/neuracraft mcp detail "+mcp.getInfo().getName()))
+                                       );
+                component.append(Component.translatable(
+                        "neuracraft.mcp.command.list.single",
+                        withHoverAndCopy(mcp.getDisplayName(), "#7CFC00"),
+                        withHoverAndCopy(mcp.getInfo().getName(), "#00ffff"),
+                        details
+                ));
+            }
         }
         feedback(context.getSource(), Component.translatable("neuracraft.mcp.command.list", MCPToolInfo.Type.LOCAL, component));
         return SINGLE_SUCCESS;

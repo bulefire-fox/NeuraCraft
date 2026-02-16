@@ -1,5 +1,6 @@
 package com.bulefire.neuracraft.core.mcp;
 
+import com.google.common.collect.Sets;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +14,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MCPManager {
     // display name
-    private final ConcurrentMap<String, MCPTool> tools;
+    private final ConcurrentMap<String, Set<MCPTool>> tools;
     // name
     private final ConcurrentMap<String, MCPTool> toolsPath;
     
@@ -28,19 +29,27 @@ public class MCPManager {
         lock.writeLock().lock();
         try {
             if (tool.isValid()) throw new IllegalArgumentException("Invalid tool");
-            if (tools.containsKey(tool.getDisplayName())) throw new IllegalArgumentException("Tool already exists");
-            tools.put(tool.getDisplayName(), tool);
+            var ts = tools.computeIfAbsent(tool.getDisplayName(), k -> Sets.newConcurrentHashSet());
+            ts.add(tool);
             toolsPath.put(tool.getInfo().getName(), tool);
         } finally {
             lock.writeLock().unlock();
         }
     }
     
+    @Deprecated
     public void updateTool(@NotNull MCPTool tool) {
         lock.writeLock().lock();
         try {
             if (tool.isValid()) throw new IllegalArgumentException("Invalid tool");
-            tools.put(tool.getDisplayName(), tool);
+            var ts = tools.get(tool.getDisplayName());
+            if (ts == null) {
+                ts = Sets.newConcurrentHashSet();
+                ts.add(tool);
+                tools.put(tool.getDisplayName(), ts);
+                return;
+            }
+            ts.add(tool);
             toolsPath.put(tool.getInfo().getName(), tool);
         } finally {
             lock.writeLock().unlock();
@@ -59,19 +68,21 @@ public class MCPManager {
         }
     }
     
-    public MCPTool removeToolByDisplayName(@NotNull String displayName) {
+    public Set<MCPTool> removeToolByDisplayName(@NotNull String displayName) {
         lock.writeLock().lock();
         try {
-            MCPTool tool = tools.remove(displayName);
-            if (tool == null) throw new IllegalArgumentException("Tool not found");
-            tools.remove(tool.getInfo().getName());
-            return tool;
+            var ts = tools.remove(displayName);
+            if (ts == null) throw new IllegalArgumentException("Tool not found");
+            for (MCPTool tool : ts) {
+                toolsPath.remove(tool.getInfo().getName());
+            }
+            return ts;
         } finally {
             lock.writeLock().unlock();
         }
     }
     
-    public @Nullable MCPTool getToolByDisplayName(@NotNull String displayName) {
+    public @Nullable Set<MCPTool> getToolByDisplayName(@NotNull String displayName) {
         return tools.get(displayName);
     }
     
@@ -79,7 +90,7 @@ public class MCPManager {
         return toolsPath.get(name);
     }
     
-    public @NotNull Collection<MCPTool> getTools() {
+    public @NotNull Collection<Set<MCPTool>> getTools() {
         return Set.copyOf(tools.values());
     }
 }

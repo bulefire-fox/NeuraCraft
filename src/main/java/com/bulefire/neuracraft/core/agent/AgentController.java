@@ -207,8 +207,10 @@ public class AgentController {
         
         // 构建MCP的提示词供Agent使用
         StringBuilder sb = new StringBuilder();
-        for (MCPTool mcp : mcpController.getMcpManager().getTools()) {
-            sb.append(mcp.getPrompt()).append("\n");
+        for (var mcps : mcpController.getMcpManager().getTools()) {
+            for (var mcp : mcps) {
+                sb.append(mcp.getPrompt()).append("\n");
+            }
         }
         AliveMCPPrompt = sb.toString();
         

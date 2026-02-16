@@ -4,6 +4,7 @@ import com.bulefire.neuracraft.core.mcp.MCPToolInfo;
 import com.bulefire.neuracraft.core.mcp.extern.AbsRemoteMCPServer;
 import com.bulefire.neuracraft.core.mcp.extern.RemoteMCPServer;
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
+import io.modelcontextprotocol.json.McpJsonMapper;
 import io.modelcontextprotocol.spec.McpClientTransport;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
@@ -23,10 +24,12 @@ public class SSEMCPServer extends AbsRemoteMCPServer {
     
     @Override
     public void start() {
+        log.info("staring sse mcp server: {} url {}", getName(), url);
         McpClientTransport transport = HttpClientSseClientTransport
                 .builder(url)
-                .connectTimeout(Duration.ofSeconds(10))
+                .jsonMapper(McpJsonMapper.getDefault())
                 .build();
+        log.info("transport: {}", transport);
         startClient(transport);
     }
     

@@ -50,6 +50,8 @@ public class FileUtil {
         return CUtil.getServer.get().getWorldPath(LevelResource.ROOT);
     }
     public static @NotNull Path getAgentBaseUrl() {
+        if (!getWorldUrl().resolve("agent").toFile().exists())
+            getWorldUrl().resolve("agent").toFile().mkdirs();
         return getWorldUrl().resolve("agent");
     }
     

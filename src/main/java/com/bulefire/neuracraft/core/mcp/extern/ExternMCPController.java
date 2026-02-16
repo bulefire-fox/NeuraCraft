@@ -6,6 +6,9 @@ import com.bulefire.neuracraft.core.mcp.extern.config.ExternMCPConfig;
 import com.bulefire.neuracraft.core.mcp.extern.local.LocalMCPServer;
 import com.bulefire.neuracraft.core.mcp.extern.sse.SSEMCPServer;
 import com.bulefire.neuracraft.core.mcp.extern.streamablehttp.StreamableHttpMCPServer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.modelcontextprotocol.json.McpJsonMapper;
+import io.modelcontextprotocol.json.jackson.JacksonMcpJsonMapper;
 import io.modelcontextprotocol.json.schema.jackson.JacksonJsonSchemaValidatorSupplier;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -38,7 +41,7 @@ public class ExternMCPController {
         log.info("ExternMCPController init");
         config = ExternMCPConfig.init();
         serverManager = new ExternMCPServerManager();
-        executor = Executors.newFixedThreadPool(config.getMcpServers().size());
+        executor = Executors.newFixedThreadPool(Math.max(config.getMcpServers().size(),1));
         
         // fuck mcp-java-sdk
         // fuck forge
@@ -53,6 +56,12 @@ public class ExternMCPController {
             defaultValidator.setAccessible(true);
             defaultValidator.set(null, (new JacksonJsonSchemaValidatorSupplier()).get());
             log.debug("JsonSchemaInternal.defaultValidator set to {}", defaultValidator.get(null));
+            
+            Class<?> mcpJsonInternal = Class.forName("io.modelcontextprotocol.json.McpJsonInternal");
+            Field defaultJsonMapper = mcpJsonInternal.getDeclaredField("defaultJsonMapper");
+            defaultJsonMapper.setAccessible(true);
+            defaultJsonMapper.set(null, new JacksonMcpJsonMapper(new ObjectMapper()));
+            log.debug("McpJsonInternal.defaultJsonMapper set to {}", defaultJsonMapper.get(null));
         } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException e) {
             // 你问我兼容性怎么办?
             // 我sdk都是手动构建塞进去的你和我说兼容性? (
@@ -103,33 +112,21 @@ public class ExternMCPController {
     private void startLocalMCPServer(Map.@NotNull Entry<String, ExternMCPConfig.MCPServer> entry) {
         log.info("Starting local mcp server: {} with command {} and arg {}", entry.getKey(), entry.getValue().getCommand(), entry.getValue().getArgs());
         var server = new LocalMCPServer(entry.getKey(), entry.getValue().getCommand(), entry.getValue().getArgs());
-        executor.submit(() -> {
-            try {
-                server.start();
-            } catch (Throwable e) {
-                Throwable cause = e instanceof RuntimeException ? e.getCause() : e;
-                if (cause instanceof ClassNotFoundException || cause instanceof NoClassDefFoundError) {
-                    log.error("MCP 启动失败: 找不到 MCP 类，请确保 build.gradle 中已添加 implementation 依赖。", e);
-                } else {
-                    log.error("MCP 本地服务器 {} 启动失败", entry.getKey(), e);
-                }
-            }
-        });
+        executor.submit(server::start);
         serverManager.registerServer(entry.getKey(), server);
     }
     
     @SneakyThrows
     private void startSSEMCPServer(Map.@NotNull Entry<String, ExternMCPConfig.MCPServer> entry) {
-        log.info("Starting sse mcp server: {} with command {} and arg {}", entry.getKey(), entry.getValue().getCommand(), entry.getValue().getArgs());
+        log.info("Starting sse mcp server: {} with url {}", entry.getKey(), entry.getValue().getUrl());
         RemoteMCPServer server = new SSEMCPServer(entry.getKey(), entry.getValue().getUrl());
-        log.debug("LocalMCPServer: {}", server);
         executor.submit(server::start);
         serverManager.registerServer(entry.getKey(), server);
     }
     
     @SneakyThrows
     private void startStreamableHttpMCPServer(Map.@NotNull Entry<String, ExternMCPConfig.MCPServer> entry) {
-        log.info("Starting streamable-http mcp server: {} with command {} and arg {}", entry.getKey(), entry.getValue().getCommand(), entry.getValue().getArgs());
+        log.info("Starting streamable-http mcp server: {} with url {}", entry.getKey(), entry.getValue().getUrl());
         RemoteMCPServer server = new StreamableHttpMCPServer(entry.getKey(), entry.getValue().getUrl());
         executor.submit(server::start);
         serverManager.registerServer(entry.getKey(), server);

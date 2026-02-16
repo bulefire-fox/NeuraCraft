@@ -24,7 +24,7 @@ public class Detail extends FullCommand.AbsCommand {
                 context.getSource(), Component.translatable(
                         "neuracraft.mcp.command.detail",
                         tool.getDisplayName(),
-                        tool.getDescription(),
+                        tool.getDisplayName(),
                         info.getName(),
                         tool.getDescription(),
                         tool.getPrompt(),
