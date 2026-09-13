@@ -1,0 +1,42 @@
+# @no-cookie-jar
+GET 127.0.0.1:8000/sse
+Accept: text/event-stream
+
+###
+
+# @no-cookie-jar
+POST 127.0.0.1:8000/messages/?session_id=57d1858609044677b5b98dc81b38365e
+Content-Type: application/json
+
+{"jsonrpc":"2.0","id":"client_initialize_003","method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{"tools":{},"resources":{},"prompts":{}},"clientInfo":{"name":"MCPClient","version":"1.0.0"}}}
+
+###
+# @no-cookie-jar
+POST 127.0.0.1:8000/messages/?session_id=57d1858609044677b5b98dc81b38365e
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "method": "tools/list",
+  "params": {
+  }
+}
+
+###
+# @no-cookie-jar
+POST 127.0.0.1:8000/messages/?session_id=57d1858609044677b5b98dc81b38365e
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "method": "tools/call",
+  "params": {
+    "name": "add",
+    "arguments": {
+      "a": 1,
+      "b": 2
+    }
+  }
+}

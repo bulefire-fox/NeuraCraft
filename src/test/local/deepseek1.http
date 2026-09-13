@@ -1,0 +1,29 @@
+# @no-cookie-jar
+POST https://api.deepseek.com/responses
+Content-Type: application/json
+Authorization: Bearer sk-463b8ec92b494bdc866a5fc9b516d695
+
+{
+  "model": "deepseek-reasoner",
+  "messages": [
+    {
+      "role": "system",
+      "content": [
+        {
+          "type": "text",
+          "text": "you are a helpful assistant."
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "你好"
+        }
+      ]
+    }
+  ],
+  "stream": false
+}

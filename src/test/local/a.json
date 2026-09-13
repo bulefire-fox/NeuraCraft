@@ -1,0 +1,30 @@
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "result": {
+    "tools": [
+      {
+        "name": "add",
+        "description": "add two numbers ",
+        "inputSchema": {
+          "properties": {
+            "a": {
+              "title": "A",
+              "type": "integer"
+            },
+            "b": {
+              "title": "B",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "a",
+            "b"
+          ],
+          "title": "addArguments",
+          "type": "object"
+        }
+      }
+    ]
+  }
+}

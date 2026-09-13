@@ -1,0 +1,82 @@
+package com.bulefire.neuracraft.core.inside.mcp.commandexec;
+
+import com.bulefire.neuracraft.compatibility.entity.Content;
+import com.bulefire.neuracraft.compatibility.util.CUtil;
+import com.bulefire.neuracraft.core.mcp.AbsMCPTool;
+import com.bulefire.neuracraft.core.mcp.MCPController;
+import com.bulefire.neuracraft.core.mcp.MCPToolInfo;
+import com.bulefire.neuracraft.core.mcp.annotation.MCP;
+import com.bulefire.neuracraft.core.mcp.annotation.RegisterMCP;
+import com.bulefire.neuracraft.core.mcp.mssage.MCPError;
+import com.bulefire.neuracraft.core.mcp.mssage.MCPMessage;
+import com.bulefire.neuracraft.core.mcp.mssage.MCPRequest;
+import com.bulefire.neuracraft.core.mcp.mssage.MCPResponse;
+import lombok.extern.log4j.Log4j2;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
+import net.minecraft.server.permissions.PermissionLevel;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
+@MCP
+@Log4j2
+public class CommandExec extends AbsMCPTool {
+    @RegisterMCP
+    public static void init() {
+        log.info("CommandExec init");
+        MCPController.getInstance().getMcpManager().registerTool(new CommandExec());
+    }
+    
+    public CommandExec() {
+        super(
+                "command_exec",
+                "执行minecraft命令",
+                MCPToolInfo.builder()
+                           .type(MCPToolInfo.Type.BUILT_IN)
+                           .name("tool.game.command_exec")
+                           .params(Map.of(
+                                   "command", new MCPToolInfo.Param("string", "要在minecraft服务器中执行的命令", String.class),
+                                   "player", new MCPToolInfo.Param("string", "请求执行命令的玩家的名子", String.class)
+                           ))
+                           .build()
+        );
+    }
+    
+    @Override
+    public @NotNull MCPResponse execute(@NotNull MCPRequest request, @NotNull Consumer<Component> print) {
+        MinecraftServer server = CUtil.getServer.get();
+        if (! request.getParams().containsKey("command") || ! request.getParams().containsKey("player"))
+            return MCPMessage.responseBuilder()
+                             .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_REQUEST, "command or player is null", null)))
+                             .build();
+        if (request.getParams().get("command") instanceof String command && request.getParams().get("player") instanceof String playerName) {
+            Player player = server.getPlayerList().getPlayerByName(playerName);
+            if (player == null)
+                return MCPMessage.responseBuilder()
+                                 .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_PARAMS, "player is not in the game", null)))
+                                 .build();
+            if (!(player.permissions() instanceof LevelBasedPermissionSet permissions
+                    && permissions.level().isEqualOrHigherThan(PermissionLevel.byId(4))))
+                return MCPMessage.responseBuilder()
+                                 .result(MCPResponse.Result.of(new MCPError(MCPError.INTERNAL_ERROR, "player is not a op, can't use command", null)))
+                                 .build();
+            server.getCommands().performPrefixedCommand(
+                    server.createCommandSourceStack(),
+                    command
+            );
+            return MCPMessage.responseBuilder()
+                             .result(MCPResponse.Result.of("success exec command"))
+                             .build();
+        } else {
+            log.debug("command is not a string is {}", request.getParams().get("command").getClass());
+            return MCPMessage.responseBuilder()
+                             .result(MCPResponse.Result.of(new MCPError(MCPError.INVALID_PARAMS, "command or player is not a string", null)))
+                             .build();
+        }
+    }
+}

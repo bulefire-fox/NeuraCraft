@@ -1,0 +1,36 @@
+POST https://openrouter.ai/api/v1/chat/completions
+Content-Type: application/json
+Authorization: Bearer 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
+
+{
+  "model": "deepseek/deepseek-r1-zero:free",
+  "messages": [
+    {
+      "role": "user",
+      "content": "生活的意义是什么"
+    }
+  ]
+}
+
+###
+POST https://openrouter.ai/api/v1/chat/completions
+Content-Type: application/json
+Authorization: Bearer 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
+
+{
+  "model": "deepseek/deepseek-chat-v3-0324:free",
+  "messages": [
+    {
+      "role": "user",
+      "content": "1+1等于几"
+    },
+    {
+      "role": "assistant",
+      "content": "1 + 1 等于 **2**。"
+    },
+    {
+      "role": "user",
+      "content": "2+2等于几"
+    }
+  ]
+}

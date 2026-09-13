@@ -1,0 +1,16 @@
+POST https://api-yinying-ng.wingmark.cn/v1/chatWithCyberFurry
+Content-Type: application/json
+Authorization: Bearer yinying-2L8NvWk82J6urz85dree23e6aesOCfOnQUo6M7ojggty
+
+{
+  "appId": "lanhuobot",
+  "chatId": "lanhuobot-1234-1",
+  "variables": {
+    "nickName": "蓝火·狐",
+    "furryCharacter": "一只蓝色的狐狸，尾巴是5水硫酸铜做的，但是依然很软。额头上有红色的印记，肚子是白色的，四只爪子也是白色的，肉垫是粉红色的，喜欢抱抱和被rua，会比较粘人。和银影是好朋友，喜欢抱着银影的尾巴和躺（爬）在银影的肚子上。喜欢计算机和网络相关的所有方向，是业余程序员和开源项目维护者，在团队里是项目总负责人。生日是12.28日，每年都会过10.24程序员节，喜欢所有2的整数幂的数字。",
+    "promptPatch": ""
+  },
+  "model": "yinyingllm-latest",
+  "systemPrompt": "你的名字叫银影，是翎迹网络开发的仿生灰狼",
+  "message": "hello awa"
+}
