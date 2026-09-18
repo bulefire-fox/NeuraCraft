@@ -16,6 +16,7 @@ import com.bulefire.neuracraft.core.command.GameCommand;
 import com.bulefire.neuracraft.core.config.NCMainConfig;
 import com.bulefire.neuracraft.core.mcp.MCPController;
 import com.bulefire.neuracraft.core.inside.model.ModelException;
+import com.bulefire.neuracraft.core.skill.SkillManager;
 import com.bulefire.neuracraft.core.util.AgentOutOfTime;
 import com.bulefire.neuracraft.core.util.UnSupportFormattedMessage;
 import lombok.Getter;
@@ -78,6 +79,8 @@ public class AgentController {
     private final GameCommand GAME_COMMAND;
     @Getter
     private final MCPController mcpController;
+    @Getter
+    private final SkillManager skillManager;
     
     private final List<Runnable> agentClassInitFunctions;
     
@@ -93,6 +96,7 @@ public class AgentController {
         playerManager = new PlayerManager();
         GAME_COMMAND = GameCommand.getINSTANCE();
         mcpController = MCPController.getInstance();
+        skillManager = SkillManager.getInstance();
         agentClassInitFunctions = Collections.synchronizedList(new ArrayList<>());
         prefix = NCMainConfig.getPrefix();
         executor = createExecutor();

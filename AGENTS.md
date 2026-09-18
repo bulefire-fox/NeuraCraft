@@ -27,8 +27,13 @@ Use the checked-in Gradle wrapper:
 
 Use Java 25 for this checkout; Gradle’s toolchain is configured for it. The first build may download Minecraft, NeoForge, and Maven dependencies.
 
-Runtime configuration is stored under `config/neuracraft/`. Agent archives are stored
-under the active world’s `agent/` directory. External MCP transports are `stdio`,
+Runtime configuration is stored under `config/neuracraft/`. Skill documents are
+stored recursively under `config/neuracraft/skills/` as `SKILL.md` files with
+`name`/`description` front matter. Skill files are parsed and matched against the
+current user message before DeepSeek and GPT requests; Silver Shadow keeps its
+original system prompt and does not receive skill injection. Malformed files must
+not discard valid skills. Agent archives are stored under the active world’s `agent/` directory.
+External MCP transports are `stdio`,
 SSE, and Streamable HTTP. The external adapter uses `mcp-java-sdk 2.0.1`
 (`mcp`, `mcp-core`, and `mcp-json-jackson2`); keep SDK-specific types inside
 `core/mcp/extern/`. Internal calls use immutable `MCPRequest` and `MCPResponse`

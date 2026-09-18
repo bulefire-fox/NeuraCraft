@@ -6,6 +6,7 @@ import com.bulefire.neuracraft.core.config.NCMainConfig;
 import com.bulefire.neuracraft.core.mcp.MCPController;
 import com.bulefire.neuracraft.core.plugin.PluginLoader;
 import com.bulefire.neuracraft.core.plugin.SubModLinker;
+import com.bulefire.neuracraft.core.skill.SkillManager;
 
 import java.io.IOException;
 
@@ -21,6 +22,8 @@ public class InitCore {
         SubModLinker.init();
         // 配置文件初始化
         NCMainConfig.init();
+        // 加载可供 Agent 使用的 SKILL.md 文档
+        SkillManager.getInstance().reload();
         // mcp 初始化
         MCPController.getInstance().init();
         // controller 初始化

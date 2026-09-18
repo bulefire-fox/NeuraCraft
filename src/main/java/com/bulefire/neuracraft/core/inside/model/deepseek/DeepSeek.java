@@ -102,6 +102,7 @@ public class DeepSeek extends AbsAgent {
                 );
             }
         } else {
+            refreshSystemPrompt(message.getText());
             chatHistory.addBlock(new ChatHistory.ChatBlock("user", message.getFormattedMessages()));
         }
         ChatResponse response = MODEL_CLIENT.send(new ChatRequest(
@@ -117,11 +118,20 @@ public class DeepSeek extends AbsAgent {
     }
 
     private void refreshSystemPrompt() {
+        refreshSystemPrompt("");
+    }
+
+    private void refreshSystemPrompt(String userText) {
+        String skillContext = AgentController.getInstance().getSkillManager().buildContext(userText);
+        List<Content> systemContent = new ArrayList<>(List.of(
+                new Content("text", DeepSeekConfig.getPrompt()),
+                new Content("text", AgentController.fullRecommendedPrompt)
+        ));
+        if (!skillContext.isBlank()) {
+            systemContent.add(new Content("text", skillContext));
+        }
         chatHistory.replaceSystemContent(
-                List.of(
-                        new Content("text", DeepSeekConfig.getPrompt()),
-                        new Content("text", AgentController.fullRecommendedPrompt)
-                )
+                systemContent
         );
     }
 

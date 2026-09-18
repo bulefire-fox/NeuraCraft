@@ -41,6 +41,10 @@ public class FileUtil {
      * MCP 配置文件根目录
      */
     public static final Path mcp_config_url = base_url.resolve("mcp").resolve("config");
+    /**
+     * Skill 文档根目录
+     */
+    public static final Path skill_url = base_url.resolve("skills");
 
     /**
      * 模组目录
@@ -66,6 +70,8 @@ public class FileUtil {
             mcp_config_url.toFile().mkdirs();
         if (! agent_config_url.toFile().exists())
             agent_config_url.toFile().mkdirs();
+        if (! skill_url.toFile().exists())
+            skill_url.toFile().mkdirs();
         log.debug("init file util done");
     }
     

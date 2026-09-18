@@ -29,6 +29,10 @@ To use this mod, simply [download](https://github.com/bulrfire/NeuraCraft/releas
 
 For how to use the built-in models, please see the [Built-in Model Configuration Guide](./resource/docs/use/Built-inModelConfigurationGuide.md).
 
+Agents can also load reusable instruction skills from
+`config/neuracraft/skills/**/SKILL.md`. See the [Skills Guide](./resource/docs/use/Skills.md)
+for the front matter format and automatic context injection behavior.
+
 If you want more models, you can try developing your own or use ```plugins``` developed by other developers.
 
 Of course, in the early stages, there might not be enough developers willing to invest time in developing ```NC``` plugins. Therefore, we provide a [Simple Development Guide]() for regular users.

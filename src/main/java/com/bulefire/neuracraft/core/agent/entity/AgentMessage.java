@@ -43,6 +43,14 @@ public record AgentMessage(
         return result;
     }
 
+    public @NotNull String getText() {
+        return messages.stream()
+                .filter(content -> Content.Type.TEXT.equals(content.type()))
+                .map(Content::textOrThrow)
+                .reduce((left, right) -> left + "\n" + right)
+                .orElse("");
+    }
+
     public enum Kind {
         USER,
         TOOL_RESULTS
