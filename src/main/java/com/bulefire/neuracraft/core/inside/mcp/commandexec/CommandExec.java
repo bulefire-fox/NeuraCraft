@@ -35,12 +35,12 @@ public class CommandExec extends AbsMCPTool {
     public CommandExec() {
         super(
                 "command_exec",
-                "执行minecraft命令",
+                "执行Minecraft命令",
                 MCPToolInfo.builder()
                            .type(MCPToolInfo.Type.BUILT_IN)
                            .name("tool.game.command_exec")
                            .params(Map.of(
-                                   "command", new MCPToolInfo.Param("string", "要在minecraft服务器中执行的命令", String.class),
+                                   "command", new MCPToolInfo.Param("string", "要在Minecraft服务器中执行的命令", String.class),
                                    "player", new MCPToolInfo.Param("string", "请求执行命令的玩家的名子", String.class)
                            ))
                            .build()

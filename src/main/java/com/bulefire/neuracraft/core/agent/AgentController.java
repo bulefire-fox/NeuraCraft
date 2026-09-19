@@ -21,6 +21,7 @@ import com.bulefire.neuracraft.core.util.AgentOutOfTime;
 import com.bulefire.neuracraft.core.util.UnSupportFormattedMessage;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
@@ -34,6 +35,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -309,7 +311,19 @@ public class AgentController {
             );
             return;
         }
-
+        
+        if (agent.isMCPCalling()) {
+            CUtil.broadcastMessageToGroupPlayer(
+                    new SendMessage(
+                            Component.translatable("neuracraft.agent.chat.error.mcpcalling"),
+                            chatMessage.env(),
+                            chatMessage.player()
+                    ),
+                    agent.getPlayers().stream().toList()
+            );
+            return;
+        }
+        
         agent.lockMessageLock();
         try {
             // 防止多重调用的幻觉
@@ -489,10 +503,18 @@ public class AgentController {
 
     public synchronized void stop() {
         acceptingMessages = false;
-        executor.shutdownNow();
+        try {
+            if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
+                log.warn("Agent executor timed out");
+            }
+        } catch (InterruptedException e) {
+            log.warn("await is interrupt");
+        } finally {
+            executor.shutdownNow();
+        }
     }
 
     private static @NotNull ExecutorService createExecutor() {
-        return Executors.newFixedThreadPool(Math.max(1, NCMainConfig.getThreadsNumber()));
+        return Executors.newVirtualThreadPerTaskExecutor();
     }
 }

@@ -7,10 +7,7 @@ import com.bulefire.neuracraft.core.inside.model.ModelClient;
 import com.bulefire.neuracraft.core.inside.model.ModelException;
 import com.bulefire.neuracraft.core.inside.model.deepseek.ChatHistory;
 import com.bulefire.neuracraft.core.inside.model.deepseek.OPAResult;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,7 +59,7 @@ public class OpenAiCompatibleClient implements ModelClient {
         } catch (JsonParseException strictFailure) {
             try {
                 JsonReader reader = new JsonReader(new StringReader(removeTrailingCommas(normalized)));
-                reader.setLenient(true);
+                reader.setStrictness(Strictness.LENIENT);
                 root = JsonParser.parseReader(reader);
             } catch (JsonParseException | IllegalStateException lenientFailure) {
                 if (looksLikeHtml(normalized)) {
@@ -102,9 +99,9 @@ public class OpenAiCompatibleClient implements ModelClient {
 
         OPAResult result = GSON.fromJson(root, OPAResult.class);
         if (result == null || result.getChoices() == null || result.getChoices().isEmpty()
-                || result.getChoices().get(0).getMessage() == null)
+                || result.getChoices().getFirst().getMessage() == null)
             throw new ModelException(ModelException.Kind.JSON, "Model response has no assistant message");
-        var message = result.getChoices().get(0).getMessage();
+        var message = result.getChoices().getFirst().getMessage();
         var toolCalls = message.getToolCalls() == null ? java.util.List.<OpenAiToolCall>of() : message.getToolCalls();
         if (message.getContent() == null && toolCalls.isEmpty()) {
             throw new ModelException(ModelException.Kind.JSON, "Model response has no content or tool calls");
@@ -159,9 +156,6 @@ public class OpenAiCompatibleClient implements ModelClient {
             }
             result.append(current);
             escaped = current == '\\' && !escaped;
-            if (current != '\\') {
-                escaped = false;
-            }
         }
         return result.toString();
     }

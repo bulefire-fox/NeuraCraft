@@ -1,6 +1,7 @@
 package com.bulefire.neuracraft.core.mcp;
 
 import com.bulefire.neuracraft.compatibility.entity.Content;
+import com.bulefire.neuracraft.compatibility.util.CUtil;
 import com.bulefire.neuracraft.compatibility.util.scanner.AnnotationsMethodScanner;
 import com.bulefire.neuracraft.core.command.GameCommand;
 import com.bulefire.neuracraft.core.inside.model.openai.OpenAiTool;
@@ -23,22 +24,20 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.TextColor;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Log4j2
 public class MCPController {
     private static final MCPController INSTANCE = new MCPController();
     private static final Gson GSON = new Gson();
+    private static final long SERVER_THREAD_TIMEOUT_MS = 5000;
     
     private MCPController() {
         mcpManager = new MCPManager();
@@ -112,10 +111,11 @@ public class MCPController {
             return List.of(Content.of("text", "[工具调用失败]: " + e.getMessage()));
         }
 
-        MCPTool tool = findToolByOpenAiName(functionName);
-        if (tool == null) {
+        Optional<MCPTool> otool = findToolByOpenAiName(functionName);
+        if (otool.isEmpty()) {
             return List.of(Content.of("text", "[工具调用失败]: 工具不存在: " + functionName));
         }
+        MCPTool tool = otool.get();
 
         final Map<String, Object> params;
         try {
@@ -232,25 +232,89 @@ public class MCPController {
                     .id(request.getId())
                     .result(MCPResponse.Result.of(new MCPError(MCPError.METHOD_NOT_FOUND, "工具不存在: " + request.getName())))
                     .build();
+        
+        return needServerThread(tool) ?
+                onServerThread(tool.getDisplayName(), () -> invokeTool(tool, request, print)) :
+                invokeTool(tool, request, print);
+    }
+    
+    private MCPResponse invokeTool(MCPTool tool, MCPRequest request, Consumer<Component> print) {
         final MCPResponse response;
         try {
             response = tool.execute(request, print);
         } catch (RuntimeException e) {
             log.error("MCP tool execution failed for {}", request.getName(), e);
             return MCPMessage.responseBuilder()
-                    .id(request.getId())
-                    .result(MCPResponse.Result.of(new MCPError(MCPError.INTERNAL_ERROR, "工具执行失败")))
-                    .build();
+                             .id(request.getId())
+                             .result(MCPResponse.Result.of(new MCPError(MCPError.INTERNAL_ERROR, "工具执行失败")))
+                             .build();
         }
-        if (response == null)
-            return MCPMessage.responseBuilder()
-                    .id(request.getId())
-                    .result(MCPResponse.Result.of(new MCPError(MCPError.INTERNAL_ERROR, "工具返回为空")))
-                    .build();
         MCPResponse normalized = response.getId() == null ? response.withId(request.getId()) : response;
         return normalized.getResult() == null
                 ? normalized.withResult(MCPResponse.Result.of(new MCPError(MCPError.INTERNAL_ERROR, "工具结果为空")))
                 : normalized;
+    }
+    
+    private boolean needServerThread(@NonNull MCPTool tool) {
+        return switch (tool.getInfo().getType()) {
+            case BUILT_IN, PLUGIN -> true;
+            default -> false;
+        };
+    }
+    
+    private MCPResponse onServerThread(@NotNull String toolName, @NotNull Supplier<MCPResponse> action) {
+        var server = CUtil.getServer.get();
+        if (server == null) {
+            return MCPMessage.responseBuilder()
+                             .result(MCPResponse.Result.of(
+                                     new MCPError(MCPError.INTERNAL_ERROR, "服务器不可用，工具未执行")))
+                             .build();
+        }
+        
+        if (server.isSameThread()) {
+            return action.get();
+        }
+        
+        CompletableFuture<MCPResponse> future = new CompletableFuture<>();
+        
+        try {
+            server.execute(() -> {
+                try {
+                    future.complete(action.get());          // action 内部已吞掉 RuntimeException
+                } catch (Throwable t) {
+                    future.completeExceptionally(t);         // 兜住 Error 与意外 Throwable
+                }
+            });
+        } catch (RejectedExecutionException e) {
+            // 关服过程中主线程队列已关闭——CUtil.dispatchMessage 处理的同一个异常
+            log.debug("Dropping tool {} because the server is shutting down", toolName);
+            return MCPMessage.responseBuilder()
+                             .result(MCPResponse.Result.of(
+                                     new MCPError(MCPError.INTERNAL_ERROR, "服务器正在关闭，工具未执行")))
+                             .build();
+        }
+        
+        try {
+            return future.get(SERVER_THREAD_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        } catch (TimeoutException e) {
+            log.warn("Tool {} timed out waiting for the server thread", toolName);
+            return MCPMessage.responseBuilder()
+                             .result(MCPResponse.Result.of(
+                                     new MCPError(MCPError.INTERNAL_ERROR, "等待服务器主线程超时，工具未执行")))
+                             .build();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();              // 恢复中断标志
+            return MCPMessage.responseBuilder()
+                             .result(MCPResponse.Result.of(
+                                     new MCPError(MCPError.INTERNAL_ERROR, "工具执行被中断")))
+                             .build();
+        } catch (ExecutionException e) {
+            log.error("Tool {} failed on the server thread", toolName, e.getCause());
+            return MCPMessage.responseBuilder()
+                             .result(MCPResponse.Result.of(
+                                     new MCPError(MCPError.INTERNAL_ERROR, "工具执行失败"+e.getCause())))
+                             .build();
+        }
     }
 
     private @NotNull OpenAiTool toOpenAiTool(@NotNull MCPTool tool) {
@@ -300,15 +364,14 @@ public class MCPController {
         return schema;
     }
 
-    private @NotNull MCPTool findToolByOpenAiName(@NotNull String functionName) {
+    private @NotNull Optional<MCPTool> findToolByOpenAiName(@NotNull String functionName) {
         MCPTool exact = mcpManager.getToolByName(functionName);
         if (exact != null) {
-            return exact;
+            return Optional.of(exact);
         }
         return mcpManager.getTools().stream()
-                .filter(tool -> toOpenAiFunctionName(tool.getId().value()).equals(functionName))
-                .findFirst()
-                .orElse(null);
+                         .filter(tool -> toOpenAiFunctionName(tool.getId().value()).equals(functionName))
+                         .findFirst();
     }
 
     private static @NotNull String toOpenAiFunctionName(@NotNull String toolId) {

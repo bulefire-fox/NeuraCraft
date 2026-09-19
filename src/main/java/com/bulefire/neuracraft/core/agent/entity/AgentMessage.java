@@ -33,13 +33,13 @@ public record AgentMessage(
     }
 
     public void toFormattedMessages() {
-        messages.set(0, new Content("text", player.toFormatedString()+messages.get(0)));
+        messages.set(0, new Content("text", player.toFormatedString()+messages.getFirst()));
     }
     
     @Contract(pure = true)
     public @NotNull List<Content> getFormattedMessages() {
         List<Content> result = new ArrayList<>(messages);
-        result.set(0, new Content("text", player.toFormatedString()+result.get(0)));
+        result.set(0, new Content("text", player.toFormatedString()+result.getFirst()));
         return result;
     }
 

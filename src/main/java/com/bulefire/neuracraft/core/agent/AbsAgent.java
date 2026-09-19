@@ -213,17 +213,18 @@ public abstract class AbsAgent implements Agent {
                 throw new AgentOutOfTime("out of times", timePerMin);
             }
             lastToolCalls = List.of();
+            // message 方法可以通过 setToolCalls 设置工具调用
             String rawResponse = message(msg);
-
+            // tool call
             if (!lastToolCalls.isEmpty()) {
                 MessageState prev = messageState.getAndSet(MessageState.MCP_CALLING);
                 keepMcpState = true;
                 AgentResponse.State s = (prev == MessageState.MCP_CALLING)
                         ? AgentResponse.State.MCP_CALLING
                         : AgentResponse.State.START_MCP_CALL;
-                return new AgentResponse(rawResponse == null ? "" : rawResponse, s, msg.player(), lastToolCalls);
+                return new AgentResponse(rawResponse, s, msg.player(), lastToolCalls);
             }
-
+            // 如果message没有处理tool call则在此兜底
             if (isMCPCall(rawResponse)) {
                 MessageState prev = messageState.getAndSet(MessageState.MCP_CALLING);
                 keepMcpState = true;
@@ -239,10 +240,6 @@ public abstract class AbsAgent implements Agent {
             }
             timer.add();
             return new AgentResponse(rawResponse, AgentResponse.State.NORMAL, msg.player());
-        } catch (AgentOutOfTime | UnSupportFormattedMessage e) {
-            throw e;
-        } catch (Exception e) {
-            throw e;
         } finally {
             if (!keepMcpState)
                 messageState.set(MessageState.IDLE);
@@ -278,9 +275,11 @@ public abstract class AbsAgent implements Agent {
      * @return 返回消息
      * @implSpec 此方法必须返回原始消息，格式化由框架处理, 传入的 {@code messages} 为格式化后的扁平消息，无需再次格式化.
      *         {@code messages.get(0)} 为用户输入的消息.其他为环境信息等由框架生成的消息. 如使用 {@code Open AI} 格式的 api 可以附加. 也可以直接忽略.
-     * @implNote 可以使用{@link CUtil#AiPOST(String, String, String)} 将消息发送至ai平台
+     * @implNote 可以使用{@link CUtil#AiPOST(String, String, String)} 将消息发送至ai平台. 可以自行处理工具调用，并将调用的工具通过AbsAgent#setToolCalls(List)
+     * 告知框架。
      * @see AbsAgent#sendMessage(AgentMessage)
      * @see CUtil#AiPOST(String, String, String)
+     * @see AbsAgent#setToolCalls(List)
      */
     protected @NotNull String message(@NotNull List<Content> messages) throws UnSupportFormattedMessage {
         throw new UnsupportedOperationException("This agent does not implement the list-based message entry point");

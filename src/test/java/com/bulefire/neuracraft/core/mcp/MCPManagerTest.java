@@ -3,6 +3,7 @@ package com.bulefire.neuracraft.core.mcp;
 import com.bulefire.neuracraft.compatibility.entity.Content;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPRequest;
 import com.bulefire.neuracraft.core.mcp.mssage.MCPResponse;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -32,7 +33,7 @@ class MCPManagerTest {
         MCPManager manager = new MCPManager();
         MCPTool invalid = new AbsMCPTool("bad", "", MCPToolInfo.builder().build()) {
             @Override
-            public MCPResponse execute(MCPRequest request, Consumer print) {
+            public @NonNull MCPResponse execute(@NonNull MCPRequest request, @NonNull Consumer print) {
                 return null;
             }
         };
@@ -62,7 +63,7 @@ class MCPManagerTest {
                 .optional(Map.of())
                 .build()) {
             @Override
-            public MCPResponse execute(MCPRequest request, Consumer print) {
+            public @NonNull MCPResponse execute(@NonNull MCPRequest request, @NonNull Consumer print) {
                 return MCPResponse.builder()
                         .id(request.getId())
                         .result(new MCPResponse.Result(List.of(new Content("text", "ok")), false))

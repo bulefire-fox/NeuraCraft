@@ -7,13 +7,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public record ToolId(@NotNull String value) {
     public ToolId {
-        if (value == null || value.isBlank()) {
+        if (value.isBlank()) {
             throw new IllegalArgumentException("Tool ID must not be blank");
         }
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return value;
     }
 }
