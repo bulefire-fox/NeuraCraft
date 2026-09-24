@@ -182,6 +182,11 @@ public abstract class AbsAgent implements Agent {
     }
 
     @Override
+    public boolean tryLockMessageLock() {
+        return sendLock.tryLock();
+    }
+    
+    @Override
     public void releaseMessageLock() {
         if (sendLock.isHeldByCurrentThread())
             sendLock.unlock();

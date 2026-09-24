@@ -71,7 +71,6 @@ public abstract class AbsRemoteMCPServer implements RemoteMCPServer {
         Map<String, Object> properties = inputSchema.get("properties") instanceof Map<?, ?> value
                 ? (Map<String, Object>) value
                 : Collections.emptyMap();
-        @SuppressWarnings("unchecked")
         List<String> require = inputSchema.get("required") instanceof List<?> value
                 ? value.stream().filter(String.class::isInstance).map(String.class::cast).toList()
                 : Collections.emptyList();
@@ -103,11 +102,9 @@ public abstract class AbsRemoteMCPServer implements RemoteMCPServer {
                            .build(),
                 (request, print) -> {
                     var result = client.callTool(
-                            McpSchema.CallToolRequest
-                                    .builder()
-                                    .name(name)
-                                    .arguments(request.getParams())
-                                    .build()
+                            McpSchema.CallToolRequest.builder(name)
+                                                     .arguments(request.getParams())
+                                                     .build()
                     );
                     var content = result.content().stream()
                           .filter(c -> c.type().equals("text"))

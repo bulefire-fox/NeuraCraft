@@ -36,6 +36,7 @@
   "neuracraft.agent.chat.error.modelResponse": "Invalid model response: %s",
   "neuracraft.agent.chat.error.notInChatRoom": "You have not joined any Agent",
   "neuracraft.agent.chat.error.notInChatRoom.help": "Use the /neuracraft agent command to join or create a Agent.",
+  "neuracraft.agent.chat.error.locked": "The agent is locked for unknown reason, please wait for the agent to unlock",
   "neuracraft.agent.chat.message.format.player": "<%s> %s",
   "neuracraft.mcp.hello": "Hello! Welcome to NeuraCraft MCP Manager System!",
   "neuracraft.mcp.message.format.system": "[MCP] %s is calling %s",

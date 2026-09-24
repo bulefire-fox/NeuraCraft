@@ -140,6 +140,12 @@ public interface Agent {
     void lockMessageLock();
     
     /**
+    * 尝试给当前对象加锁，如果锁已经被其他线程持有，则返回false，否则返回true
+    * @return 是否成功加锁，是为{@code true}，否为{@code false}
+    */
+    boolean tryLockMessageLock();
+    
+    /**
      * 释放消息锁
      */
     void releaseMessageLock();

@@ -21,7 +21,6 @@ import com.bulefire.neuracraft.core.util.AgentOutOfTime;
 import com.bulefire.neuracraft.core.util.UnSupportFormattedMessage;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
@@ -324,7 +323,17 @@ public class AgentController {
             return;
         }
         
-        agent.lockMessageLock();
+        if (!agent.tryLockMessageLock()) {
+            CUtil.broadcastMessageToGroupPlayer(
+                    new SendMessage(
+                            Component.translatable("neuracraft.agent.chat.error.locked"),
+                            chatMessage.env(),
+                            chatMessage.player()
+                    ),
+                    agent.getPlayers().stream().toList()
+            );
+            return;
+        }
         try {
             // 防止多重调用的幻觉
             if (agent.isMCPCalling()) {
@@ -503,15 +512,15 @@ public class AgentController {
 
     public synchronized void stop() {
         acceptingMessages = false;
+        executor.shutdown();
         try {
-            if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
-                log.warn("Agent executor timed out");
+            if (executor.awaitTermination(10, TimeUnit.SECONDS)) {
+                return; // Normal termination
             }
         } catch (InterruptedException e) {
             log.warn("await is interrupt");
-        } finally {
-            executor.shutdownNow();
         }
+        executor.shutdownNow();
     }
 
     private static @NotNull ExecutorService createExecutor() {

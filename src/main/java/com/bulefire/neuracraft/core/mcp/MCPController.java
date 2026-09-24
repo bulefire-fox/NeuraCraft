@@ -298,6 +298,8 @@ public class MCPController {
             return future.get(SERVER_THREAD_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (TimeoutException e) {
             log.warn("Tool {} timed out waiting for the server thread", toolName);
+            // 超时取消任务
+            future.cancel(true);
             return MCPMessage.responseBuilder()
                              .result(MCPResponse.Result.of(
                                      new MCPError(MCPError.INTERNAL_ERROR, "等待服务器主线程超时，工具未执行")))
