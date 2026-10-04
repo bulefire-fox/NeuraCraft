@@ -5,7 +5,6 @@ import com.bulefire.neuracraft.compatibility.entity.APlayer;
 import com.bulefire.neuracraft.compatibility.util.FileUtil;
 import com.bulefire.neuracraft.core.agent.Agent;
 import com.bulefire.neuracraft.core.agent.AgentController;
-import com.bulefire.neuracraft.core.agent.PlayerManager;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -48,7 +47,7 @@ public class Delete extends FullCommand.AbsCommand {
                 feedback(commandContext.getSource(), Component.translatable("neuracraft.agent.command.delete.manyAgents", agents.size(), agentName));
                 return 1;
             }
-            agent = agents.get(0);
+            agent = agents.getFirst();
         } else if (agentName == null && agentUUID != null) {
             agent = agentManager.getAgent(agentUUID);
             if (agent == null) {

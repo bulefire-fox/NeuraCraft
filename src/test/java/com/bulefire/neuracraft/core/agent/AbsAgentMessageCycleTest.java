@@ -4,7 +4,6 @@ import com.bulefire.neuracraft.compatibility.entity.APlayer;
 import com.bulefire.neuracraft.core.agent.entity.AgentMessage;
 import com.bulefire.neuracraft.core.agent.entity.AgentResponse;
 import com.bulefire.neuracraft.core.util.AgentOutOfTime;
-import com.bulefire.neuracraft.core.util.UnSupportFormattedMessage;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +19,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
