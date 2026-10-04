@@ -135,15 +135,36 @@ public interface Agent {
     boolean isMessaging();
     
     /**
-     * 给当前对象加锁，不允许其他线程发送消息
+     * 尝试开始一个消息周期. 这是该 Agent 的消息级互斥入口: 同一时刻只允许存在一个周期.
+     * <p>
+     * 实现必须以 {@code IDLE -> MESSAGING} 的原子 CAS 为基础. 返回 {@code false} 表示该 Agent
+     * 正在处理另一条消息, 调用方应当拒绝本次消息并提示玩家, 而不是排队等待 —— 排队会让调用方
+     * 长时间持有资源, 并可能演变为锁反转.
+     *
+     * @return 是否成功取得该 Agent 的消息周期
+     * @see Agent#endMessageCycle()
+     */
+    boolean beginMessageCycle();
+
+    /**
+     * 结束当前线程持有的消息周期, 把状态复位为 {@code IDLE}.
+     * <p>
+     * 只有周期所有者才能结束周期; 实现应当忽略来自其他线程的调用, 以免一个线程把另一个线程
+     * 正在进行的周期提前结束.
+     *
+     * @see Agent#beginMessageCycle()
+     */
+    void endMessageCycle();
+
+    /**
+     * 给当前对象加锁，不允许其他线程发送消息.
+     *
+     * @apiNote 该锁只用于保护消息历史与状态机的一次<b>瞬时</b>步进.
+     *          消息级互斥请使用 {@link Agent#beginMessageCycle()}.
+     *          <b>禁止</b>持有该锁去等待服务器主线程 (例如 {@code MCPController.onServerThread}),
+     *          那会让主线程与工作线程互相等待.
      */
     void lockMessageLock();
-    
-    /**
-    * 尝试给当前对象加锁，如果锁已经被其他线程持有，则返回false，否则返回true
-    * @return 是否成功加锁，是为{@code true}，否为{@code false}
-    */
-    boolean tryLockMessageLock();
     
     /**
      * 释放消息锁

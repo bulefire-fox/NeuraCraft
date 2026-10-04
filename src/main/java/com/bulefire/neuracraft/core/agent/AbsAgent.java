@@ -80,6 +80,9 @@ public abstract class AbsAgent implements Agent {
     private enum MessageState { IDLE, MESSAGING, MCP_CALLING }
     // Runtime-only state; never persist locks or the current message cycle.
     private final transient AtomicReference<MessageState> messageState = new AtomicReference<>(MessageState.IDLE);
+    // 周期所有者: 只有持有者才能结束周期 / 复位状态. 用于防止一个线程把另一个线程正在进行的周期结束掉.
+    private final transient AtomicReference<Thread> cycleOwner = new AtomicReference<>();
+    // 瞬时锁: 只保护消息历史与状态机的一次步进, 绝不在持有时等待服务器主线程.
     private final transient ReentrantLock sendLock = new ReentrantLock();
     private transient List<OpenAiToolCall> lastToolCalls = List.of();
     
@@ -176,16 +179,39 @@ public abstract class AbsAgent implements Agent {
         return messageState.get() != MessageState.IDLE;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * 以 {@code IDLE -> MESSAGING} 的 CAS 取得周期, 并把周期所有权记到当前线程名下.
+     * 取得周期后 {@code messageState} 保证不为 {@code IDLE}, 因此在周期结束前, 其他线程的
+     * {@link AbsAgent#beginMessageCycle()} 一定失败.
+     */
+    @Override
+    public boolean beginMessageCycle() {
+        if (!messageState.compareAndSet(MessageState.IDLE, MessageState.MESSAGING))
+            return false;
+        cycleOwner.set(Thread.currentThread());
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * 只有周期所有者可以结束周期; 非所有者调用会被忽略, 避免提前放行其他线程.
+     */
+    @Override
+    public void endMessageCycle() {
+        if (cycleOwner.get() != Thread.currentThread())
+            return;
+        messageState.set(MessageState.IDLE);
+        cycleOwner.set(null);
+    }
+
     @Override
     public void lockMessageLock() {
         sendLock.lock();
     }
 
-    @Override
-    public boolean tryLockMessageLock() {
-        return sendLock.tryLock();
-    }
-    
     @Override
     public void releaseMessageLock() {
         if (sendLock.isHeldByCurrentThread())
@@ -199,21 +225,37 @@ public abstract class AbsAgent implements Agent {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * 仅当调用者是当前周期所有者时才放弃周期, 否则会把其他线程正在进行的周期状态踩回 {@code IDLE}.
+     */
     @Override
     public void abortMessage() {
+        if (cycleOwner.get() != Thread.currentThread())
+            return;
         messageState.set(MessageState.IDLE);
+        cycleOwner.set(null);
     }
 
     /**
      * 发送消息 — 频率限制 + MCP调用状态机.
-     * 每次调用都获取自己拥有的锁计数，结束时只释放当前调用获取的那一层。
+     * <p>
+     * 本方法只持有 {@link AbsAgent#sendLock} 保护消息历史与状态机的一次步进, 不会在整个 MCP
+     * 循环期间持有任何长锁. 消息级互斥由 {@link AbsAgent#beginMessageCycle()} 提供的状态机负责.
+     * <p>
+     * 正常路径由 {@link AgentController} 先取得周期再调用本方法; 若调用者没有持有周期
+     * (例如插件直接调用), 本方法会自行建立一个周期并在结束时释放, 保证状态机不会停留在中间态.
+     *
+     * @throws AgentOutOfTime 当发送频率太快, 或该 Agent 已被其他消息周期占用时抛出
      */
     @Override
     public @NotNull AgentResponse sendMessage(@NotNull AgentMessage msg) throws AgentOutOfTime, UnSupportFormattedMessage {
+        final boolean ownsCycle = cycleOwner.get() == Thread.currentThread();
+        if (!ownsCycle && !beginMessageCycle())
+            throw new AgentOutOfTime("agent is busy", timePerMin);
         sendLock.lock();
-        boolean keepMcpState = false;
         try {
-            messageState.set(MessageState.MESSAGING);
             if (timer.isOutOfTimes()) {
                 throw new AgentOutOfTime("out of times", timePerMin);
             }
@@ -223,7 +265,6 @@ public abstract class AbsAgent implements Agent {
             // tool call
             if (!lastToolCalls.isEmpty()) {
                 MessageState prev = messageState.getAndSet(MessageState.MCP_CALLING);
-                keepMcpState = true;
                 AgentResponse.State s = (prev == MessageState.MCP_CALLING)
                         ? AgentResponse.State.MCP_CALLING
                         : AgentResponse.State.START_MCP_CALL;
@@ -232,23 +273,22 @@ public abstract class AbsAgent implements Agent {
             // 如果message没有处理tool call则在此兜底
             if (isMCPCall(rawResponse)) {
                 MessageState prev = messageState.getAndSet(MessageState.MCP_CALLING);
-                keepMcpState = true;
                 AgentResponse.State s = (prev == MessageState.MCP_CALLING)
                         ? AgentResponse.State.MCP_CALLING
                         : AgentResponse.State.START_MCP_CALL;
                 return new AgentResponse(rawResponse, s, msg.player());
             }
 
-            // 非MCP响应
-            if (messageState.getAndSet(MessageState.IDLE) == MessageState.MCP_CALLING) {
+            // 非MCP响应 — 周期仍在进行, 保持非 IDLE, 避免出现可被其他线程抢占的瞬时窗口
+            if (messageState.getAndSet(MessageState.MESSAGING) == MessageState.MCP_CALLING) {
                 return new AgentResponse(rawResponse, AgentResponse.State.FINISH_MCP_CALL, msg.player());
             }
             timer.add();
             return new AgentResponse(rawResponse, AgentResponse.State.NORMAL, msg.player());
         } finally {
-            if (!keepMcpState)
-                messageState.set(MessageState.IDLE);
             releaseMessageLock();
+            if (!ownsCycle)
+                endMessageCycle();
         }
     }
     

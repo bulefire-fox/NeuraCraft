@@ -12,12 +12,14 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FakeAgent implements Agent {
     private final UUID uuid;
     private final String name;
     private final Set<APlayer> players = new HashSet<>();
     private final Set<APlayer> admins = new HashSet<>();
+    private final AtomicBoolean messaging = new AtomicBoolean(false);
 
     public FakeAgent() {
         this(UUID.randomUUID(), "fake");
@@ -46,7 +48,9 @@ public class FakeAgent implements Agent {
     @Override public @NotNull String getModelName() { return "fake"; }
     @Override public @NotNull String getDisPlayName() { return "Fake"; }
     @Override public boolean isMCPCalling() { return false; }
-    @Override public boolean isMessaging() { return false; }
+    @Override public boolean isMessaging() { return messaging.get(); }
+    @Override public boolean beginMessageCycle() { return messaging.compareAndSet(false, true); }
+    @Override public void endMessageCycle() { messaging.set(false); }
     @Override public void lockMessageLock() {}
     @Override public void releaseMessageLock() {}
     @Override public void releaseAllMessageLock() {}

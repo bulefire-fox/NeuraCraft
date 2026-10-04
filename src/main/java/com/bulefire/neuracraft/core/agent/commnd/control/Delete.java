@@ -80,14 +80,24 @@ public class Delete extends FullCommand.AbsCommand {
 
         UUID targetAgentUuid = agentUUID;
         boolean accepted = AgentController.getInstance().submitAsync(() -> {
-            agent.lockMessageLock();
+            // 用消息周期而不是 sendLock 来串行化: sendLock 现在只保护瞬时步进,
+            // 持有它无法阻止一个已经在进行中的消息周期.
+            if (!agent.beginMessageCycle()) {
+                sendFeedbackOnServerThread(
+                        source,
+                        Component.translatable("neuracraft.agent.command.delete.pending", resolvedAgentName)
+                );
+                return;
+            }
             try {
                 agent.getPlayers().forEach(playerManager::removePlayer);
                 agentManager.removeAgent(targetAgentUuid);
 
-                boolean deleted = FileUtil.deleteFile(AgentController.getAgentPath(agent));
-                if (!deleted) {
-                    throw new IllegalStateException("agent file was not deleted");
+                synchronized (agent) {
+                    boolean deleted = FileUtil.deleteFile(AgentController.getAgentPath(agent));
+                    if (!deleted) {
+                        throw new IllegalStateException("agent file was not deleted");
+                    }
                 }
 
                 sendFeedbackOnServerThread(
@@ -104,7 +114,7 @@ public class Delete extends FullCommand.AbsCommand {
                         Component.translatable("neuracraft.agent.command.delete.failure", resolvedAgentName)
                 );
             } finally {
-                agent.releaseMessageLock();
+                agent.endMessageCycle();
             }
         });
         if (!accepted) {

@@ -323,7 +323,7 @@ public class AgentController {
             return;
         }
         
-        if (!agent.tryLockMessageLock()) {
+        if (!agent.beginMessageCycle()) {
             CUtil.broadcastMessageToGroupPlayer(
                     new SendMessage(
                             Component.translatable("neuracraft.agent.chat.error.locked"),
@@ -335,19 +335,6 @@ public class AgentController {
             return;
         }
         try {
-            // 防止多重调用的幻觉
-            if (agent.isMCPCalling()) {
-                CUtil.broadcastMessageToGroupPlayer(
-                        new SendMessage(
-                                Component.translatable("neuracraft.agent.chat.error.mcpcalling"),
-                                chatMessage.env(),
-                                chatMessage.player()
-                        ),
-                        agent.getPlayers().stream().toList()
-                );
-                return;
-            }
-
             AgentResponse remessage;
             try {
                 remessage = agent.sendMessage(new AgentMessage(List.of(new Content("text", msg)), chatMessage.player()));
@@ -373,6 +360,8 @@ public class AgentController {
                 return;
             }
 
+            // MCP 循环期间不持有任何长锁: 此时互斥由 MCP_CALLING 状态负责.
+            // 因此这里等待服务器主线程不会与主线程形成锁反转.
             if (remessage.state() == AgentResponse.State.START_MCP_CALL || remessage.state() == AgentResponse.State.MCP_CALLING) {
                 remessage = mcpCall(
                         agent, remessage,
@@ -395,7 +384,9 @@ public class AgentController {
 
             if (!acceptingMessages)
                 return;
-            agent.saveToFile(getAgentPath(agent));
+            synchronized (agent) {
+                agent.saveToFile(getAgentPath(agent));
+            }
 
             CUtil.broadcastMessageToGroupPlayer(
                     new SendMessage(
@@ -422,7 +413,7 @@ public class AgentController {
             }
             log.error("Agent message processing failed for {}", agent.getUUID(), e);
         } finally {
-            agent.releaseMessageLock();
+            agent.endMessageCycle();
         }
     }
     
